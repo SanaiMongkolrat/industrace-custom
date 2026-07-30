@@ -69,6 +69,8 @@ import itDiscoveredDevices from './it/discoveredDevices.json'
 import enDiscoveredDevices from './en/discoveredDevices.json'
 import itCore from './it/core.json'
 import enCore from './en/core.json'
+import itModelLifecycles from './it/modelLifecycles.json'
+import enModelLifecycles from './en/modelLifecycles.json'
 
 // Funzione per appiattire gli oggetti annidati
 const flattenObject = (obj, prefix = '') => {
@@ -127,7 +129,8 @@ const messages = {
     mfa: itMfa,
     networkProbes: itNetworkProbes,
     discoveredDevices: itDiscoveredDevices,
-    core: itCore
+    core: itCore,
+    modelLifecycles: itModelLifecycles
   }),
   en: flattenObject({
     common: enCommon,
@@ -162,7 +165,8 @@ const messages = {
     mfa: enMfa,
     networkProbes: enNetworkProbes,
     discoveredDevices: enDiscoveredDevices,
-    core: enCore
+    core: enCore,
+    modelLifecycles: enModelLifecycles
   })
 }
 

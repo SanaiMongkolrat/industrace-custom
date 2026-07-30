@@ -308,6 +308,24 @@ export default {
   deleteAssetType(id) {
     return api.delete(`/asset-types/${id}`)
   },
+  getModelLifecycles(params = {}) {
+    return api.get('/model-lifecycles', { params })
+  },
+  getModelLifecycle(id) {
+    return api.get(`/model-lifecycles/${id}`)
+  },
+  createModelLifecycle(data) {
+    return api.post('/model-lifecycles', data)
+  },
+  updateModelLifecycle(id, data) {
+    return api.put(`/model-lifecycles/${id}`, data)
+  },
+  deleteModelLifecycle(id) {
+    return api.delete(`/model-lifecycles/${id}`)
+  },
+  getModelLifecycleStats() {
+    return api.get('/model-lifecycles/stats')
+  },
   getUsers() {
     return api.get('/users')
   },

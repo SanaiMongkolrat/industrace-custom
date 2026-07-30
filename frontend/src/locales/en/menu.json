@@ -28,7 +28,8 @@
     "setup": "Setup",
     "settings": "Settings",
     "logout": "Logout",
-    "utility": "Utility"
+    "utility": "Utility",
+    "modelLifecycles": "Model Lifecycles"
   },
   "section": {
     "management": "Management",

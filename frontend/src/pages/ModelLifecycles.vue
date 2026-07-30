@@ -1,0 +1,282 @@
+<template>
+  <div class="model-lifecycles-page">
+    <div class="page-header">
+      <h1>{{ t('modelLifecycles.title') }}</h1>
+      <div class="header-actions">
+        <Button 
+          v-if="canWrite('model_lifecycles')" 
+          :label="t('common.actions.create')" 
+          icon="pi pi-plus" 
+          @click="showCreateDialog = true" 
+        />
+      </div>
+    </div>
+
+    <div class="stats-bar" v-if="stats">
+      <div class="stat-card" v-for="(count, status) in stats" :key="status">
+        <span class="stat-value">{{ count }}</span>
+        <span class="stat-label">{{ t('modelLifecycles.status.' + status) }}</span>
+      </div>
+    </div>
+
+    <DataTable 
+      :value="lifecycles" 
+      :loading="loading" 
+      paginator 
+      :rows="15" 
+      :rowsPerPageOptions="[10, 15, 25, 50]"
+      sortField="manufacturer_name"
+      :sortOrder="1"
+    >
+      <Column field="manufacturer_name" :header="t('common.fields.manufacturer')" sortable></Column>
+      <Column field="model_name" :header="t('common.fields.model')" sortable></Column>
+      <Column field="lifecycle_status" :header="t('modelLifecycles.fields.lifecycleStatus')" sortable>
+        <template #body="{ data }">
+          <Tag :value="t('modelLifecycles.status.' + data.lifecycle_status)" :severity="getStatusSeverity(data.lifecycle_status)" />
+        </template>
+      </Column>
+      <Column field="end_of_life_date" :header="t('modelLifecycles.fields.eolDate')" sortable>
+        <template #body="{ data }">
+          <span :class="{ 'text-danger': isOverdue(data.end_of_life_date) }">{{ formatDate(data.end_of_life_date) }}</span>
+        </template>
+      </Column>
+      <Column field="end_of_support_date" :header="t('modelLifecycles.fields.eosDate')" sortable>
+        <template #body="{ data }">
+          <span :class="{ 'text-danger': isOverdue(data.end_of_support_date) }">{{ formatDate(data.end_of_support_date) }}</span>
+        </template>
+      </Column>
+      <Column field="spare_part_availability" :header="t('modelLifecycles.fields.spareParts')" sortable>
+        <template #body="{ data }">
+          <Tag v-if="data.spare_part_availability" :value="t('modelLifecycles.spareParts.' + data.spare_part_availability)" :severity="getSpareSeverity(data.spare_part_availability)" />
+          <span v-else>-</span>
+        </template>
+      </Column>
+      <Column field="asset_count" :header="t('modelLifecycles.fields.assetCount')" sortable></Column>
+      <Column field="replacement_model" :header="t('modelLifecycles.fields.replacement')"></Column>
+      <Column :header="t('common.strings.actions')" v-if="canWrite('model_lifecycles') || canDelete('model_lifecycles')">
+        <template #body="{ data }">
+          <Button 
+            v-if="canWrite('model_lifecycles')"
+            icon="pi pi-pencil" 
+            class="p-button-rounded p-button-text p-button-info" 
+            @click="editLifecycle(data)" 
+          />
+          <Button 
+            v-if="canDelete('model_lifecycles')"
+            icon="pi pi-trash" 
+            class="p-button-rounded p-button-text p-button-danger" 
+            @click="deleteLifecycle(data.id)" 
+          />
+        </template>
+      </Column>
+    </DataTable>
+
+    <Dialog 
+      v-model:visible="showCreateDialog" 
+      :header="t('common.actions.create')" 
+      :modal="true" 
+      :style="{ width: '50vw' }"
+    >
+      <ModelLifecycleForm 
+        :manufacturers="manufacturers"
+        @submit="createLifecycle" 
+        @cancel="showCreateDialog = false" 
+      />
+    </Dialog>
+
+    <Dialog 
+      v-model:visible="showEditDialog" 
+      :header="t('common.actions.edit')" 
+      :modal="true" 
+      :style="{ width: '50vw' }"
+    >
+      <ModelLifecycleForm 
+        :manufacturers="manufacturers"
+        :lifecycle="editingLifecycle" 
+        @submit="updateLifecycle" 
+        @cancel="onEditCancel" 
+      />
+    </Dialog>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, nextTick } from 'vue'
+import { useToast } from 'primevue/usetoast'
+import { useI18n } from 'vue-i18n'
+import { usePermissions } from '../composables/usePermissions'
+import api from '../api/api'
+import ModelLifecycleForm from '../components/forms/ModelLifecycleForm.vue'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
+import Tag from 'primevue/tag'
+
+const toast = useToast()
+const { t } = useI18n()
+const { canWrite, canDelete } = usePermissions()
+
+const lifecycles = ref([])
+const manufacturers = ref([])
+const loading = ref(false)
+const showCreateDialog = ref(false)
+const showEditDialog = ref(false)
+const editingLifecycle = ref(null)
+const stats = ref(null)
+
+onMounted(() => {
+  fetchLifecycles()
+  fetchManufacturers()
+  fetchStats()
+})
+
+async function fetchLifecycles() {
+  loading.value = true
+  try {
+    const response = await api.getModelLifecycles()
+    lifecycles.value = response.data
+  } catch (error) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('modelLifecycles.messages.fetchError'), life: 3000 })
+  } finally {
+    loading.value = false
+  }
+}
+
+async function fetchManufacturers() {
+  try {
+    const response = await api.getManufacturers()
+    manufacturers.value = response.data
+  } catch (error) {
+    // Silently fail - manufacturers are optional for the form
+  }
+}
+
+async function fetchStats() {
+  try {
+    const response = await api.getModelLifecycleStats()
+    stats.value = response.data
+  } catch (error) {
+    // Stats are optional
+  }
+}
+
+function editLifecycle(lc) {
+  editingLifecycle.value = { ...lc }
+  nextTick(() => showEditDialog.value = true)
+}
+
+function onEditCancel() {
+  showEditDialog.value = false
+  editingLifecycle.value = null
+}
+
+async function createLifecycle(data) {
+  try {
+    await api.createModelLifecycle(data)
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('modelLifecycles.messages.created'), life: 3000 })
+    showCreateDialog.value = false
+    fetchLifecycles()
+    fetchStats()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('modelLifecycles.messages.createError'), life: 3000 })
+  }
+}
+
+async function updateLifecycle(data) {
+  try {
+    await api.updateModelLifecycle(editingLifecycle.value.id, data)
+    toast.add({ severity: 'success', summary: t('common.messages.updated'), detail: t('modelLifecycles.messages.updated'), life: 3000 })
+    showEditDialog.value = false
+    fetchLifecycles()
+    fetchStats()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.updateError'), detail: t('modelLifecycles.messages.updateError'), life: 3000 })
+  }
+}
+
+async function deleteLifecycle(id) {
+  if (!confirm(t('modelLifecycles.deleteConfirm'))) return
+  try {
+    await api.deleteModelLifecycle(id)
+    toast.add({ severity: 'success', summary: t('common.messages.deleted'), detail: t('modelLifecycles.messages.deleted'), life: 3000 })
+    fetchLifecycles()
+    fetchStats()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.deleteError'), detail: t('modelLifecycles.messages.deleteError'), life: 3000 })
+  }
+}
+
+function getStatusSeverity(status) {
+  const map = {
+    'in_support': 'success',
+    'phase_out': 'warn',
+    'limited_support': 'warn',
+    'no_spare_parts': 'danger',
+    'obsolete': 'danger',
+    'total': 'info'
+  }
+  return map[status] || 'info'
+}
+
+function getSpareSeverity(avail) {
+  const map = { 'available': 'success', 'limited': 'warn', 'unavailable': 'danger' }
+  return map[avail] || 'info'
+}
+
+function isOverdue(date) {
+  if (!date) return false
+  return new Date(date) < new Date()
+}
+
+function formatDate(date) {
+  if (!date) return '-'
+  return new Date(date).toLocaleDateString()
+}
+</script>
+
+<style scoped>
+.model-lifecycles-page {
+  padding: 1rem;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.stats-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.stat-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+  margin-top: 0.25rem;
+}
+.text-danger {
+  color: #ef4444;
+  font-weight: 600;
+}
+</style>

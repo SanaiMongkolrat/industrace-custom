@@ -112,6 +112,7 @@ const menuSections = computed(() => {
   if (canRead('vulnerabilities')) managementItems.push({ label: t('menu.navigation.vulnerabilities'), icon: 'pi-exclamation-triangle', to: '/vulnerabilities' })
   if (canRead('asset_types')) managementItems.push({ label: t('menu.navigation.assettypes'), icon: 'pi-tags', to: '/asset-types' })
   if (canRead('asset_statuses')) managementItems.push({ label: t('menu.navigation.assetstatuses'), icon: 'pi-list', to: '/asset-statuses' })
+  if (canRead('model_lifecycles')) managementItems.push({ label: t('menu.navigation.modelLifecycles'), icon: 'pi-calendar-clock', to: '/model-lifecycles' })
   
   if (managementItems.length > 0) {
     sections.push({

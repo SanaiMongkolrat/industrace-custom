@@ -1,0 +1,37 @@
+{
+  "title": "Cicli di Vita Modelli",
+  "fields": {
+    "lifecycleStatus": "Stato Ciclo di Vita",
+    "statusDate": "Data Stato",
+    "eolDate": "Fine Vita (EOL)",
+    "eosDate": "Fine Supporto (EOS)",
+    "spareParts": "Ricambi",
+    "replacement": "Modello Sostitutivo",
+    "replacementManufacturer": "Produttore Sostitutivo",
+    "assetCount": "Asset",
+    "lastReviewed": "Ultima Revisione"
+  },
+  "status": {
+    "in_support": "In Supporto",
+    "phase_out": "Fase di Uscita",
+    "limited_support": "Supporto Limitato",
+    "no_spare_parts": "Senza Ricambi",
+    "obsolete": "Obsoleto",
+    "total": "Totale"
+  },
+  "spareParts": {
+    "available": "Disponibile",
+    "limited": "Limitato",
+    "unavailable": "Non Disponibile"
+  },
+  "messages": {
+    "fetchError": "Errore nel caricamento dei cicli di vita",
+    "created": "Ciclo di vita creato con successo",
+    "createError": "Errore nella creazione del ciclo di vita",
+    "updated": "Ciclo di vita aggiornato con successo",
+    "updateError": "Errore nell'aggiornamento del ciclo di vita",
+    "deleted": "Ciclo di vita eliminato con successo",
+    "deleteError": "Errore nell'eliminazione del ciclo di vita"
+  },
+  "deleteConfirm": "Sei sicuro di voler eliminare questo record del ciclo di vita?"
+}
