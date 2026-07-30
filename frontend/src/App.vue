@@ -48,7 +48,7 @@ const languages = [
   { label: 'English', code: 'en' }
 ]
 
-const currentLocale = ref(localStorage.getItem('user-lang') || 'it')
+const currentLocale = ref('en')
 
 const menuItems = [
   { labelKey: 'menu.dashboard', icon: 'pi pi-home', route: '/' },

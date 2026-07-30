@@ -88,23 +88,8 @@ const flattenObject = (obj, prefix = '') => {
 
 // Funzione per rilevare la lingua dell'utente
 const getUserLanguage = () => {
-  if (typeof localStorage !== 'undefined') {
-    const savedLang = localStorage.getItem('user-lang')
-    if (savedLang && (savedLang === 'it' || savedLang === 'en')) {
-      return savedLang
-    }
-  }
-  
-  // Rileva lingua del browser
-  if (typeof navigator !== 'undefined' && navigator.language) {
-    const browserLang = navigator.language.split('-')[0]
-    if (browserLang === 'it' || browserLang === 'en') {
-      return browserLang
-    }
-  }
-  
-  // Default italiano
-  return 'it'
+  // Always return English
+  return 'en'
 }
 
 // Appiattisci tutte le traduzioni

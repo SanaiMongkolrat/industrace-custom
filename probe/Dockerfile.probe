@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     build-essential \
     python3-dev \
+    libpcap-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Crea utente non-root per sicurezza
@@ -32,8 +33,8 @@ COPY probe.conf.example .
 # Cambia proprietario
 RUN chown -R probe:probe /app
 
-# Passa all'utente non-root
-USER probe
+# Run as root for packet capture capabilities
+USER root
 
 # Esponi porta per monitoraggio (opzionale)
 EXPOSE 8080
