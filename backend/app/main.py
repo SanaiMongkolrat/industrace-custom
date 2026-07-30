@@ -190,6 +190,7 @@ from app.routers import sso
 from app.routers import asset_capabilities
 from app.routers import evidence
 from app.routers import network_probes
+from app.routers import model_lifecycles
 from app.routers import discovered_devices
 from app.routers import tenant_features
 from app.routers import mfa
@@ -246,6 +247,7 @@ app.include_router(evidence.router, tags=["evidence"])
 app.include_router(sso.router, tags=["sso"])
 app.include_router(mfa.router, tags=["mfa"])
 app.include_router(network_probes.router, tags=["network-probes"])
+app.include_router(model_lifecycles.router, tags=["model-lifecycles"])
 app.include_router(discovered_devices.router, tags=["discovered-devices"])
 app.include_router(asset_photos.router, tags=["asset_photo"])
 app.include_router(asset_documents.router, tags=["asset_document"])

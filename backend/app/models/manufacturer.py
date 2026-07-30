@@ -31,3 +31,6 @@ class Manufacturer(Base):
     assets = relationship(
         "Asset", back_populates="manufacturer", cascade="all, delete-orphan"
     )
+    model_lifecycles = relationship(
+        "ModelLifecycle", back_populates="manufacturer", foreign_keys="ModelLifecycle.manufacturer_id"
+    )

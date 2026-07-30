@@ -38,6 +38,7 @@ def seed_roles(tenant_id=None):
                 "sso": 3,
                 "api_keys": 3,
                 "network_probes": 3,
+                "model_lifecycles": 3,
             },
         },
         {
@@ -70,6 +71,7 @@ def seed_roles(tenant_id=None):
                 "sso": 1,
                 "api_keys": 1,
                 "network_probes": 1,
+                "model_lifecycles": 2,
             },
         },
         {
@@ -102,6 +104,7 @@ def seed_roles(tenant_id=None):
                 "sso": 0,
                 "api_keys": 0,
                 "network_probes": 1,
+                "model_lifecycles": 1,
             },
         },
     ]
