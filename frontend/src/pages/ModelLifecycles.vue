@@ -31,7 +31,7 @@
     </div>
 
     <DataTable 
-      :value="lifecycles" 
+      :value="filteredLifecycles" 
       :loading="loading" 
       paginator 
       :rows="15" 
@@ -39,6 +39,25 @@
       sortField="manufacturer_name"
       :sortOrder="1"
     >
+      <template #header>
+        <div class="flex justify-content-between align-items-center gap-2">
+          <div class="flex align-items-center gap-2">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search" />
+              <InputText 
+                v-model="searchQuery" 
+                :placeholder="t('common.actions.search')" 
+                class="w-12rem"
+              />
+            </span>
+          </div>
+          <div class="flex gap-2">
+            <span class="text-sm text-600">
+              {{ t('assets.strings.filteredAssets', { filtered: filteredLifecycles.length, total: lifecycles.length }) }}
+            </span>
+          </div>
+        </div>
+      </template>
       <Column field="manufacturer_name" :header="t('common.fields.manufacturer')" sortable></Column>
       <Column field="model_name" :header="t('common.fields.model')" sortable></Column>
       <Column field="asset_type_name" :header="t('modelLifecycles.fields.assetType')" sortable></Column>
@@ -114,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useI18n } from 'vue-i18n'
 import { usePermissions } from '../composables/usePermissions'
@@ -125,6 +144,7 @@ import Column from 'primevue/column'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import Tag from 'primevue/tag'
+import InputText from 'primevue/inputtext'
 
 const toast = useToast()
 const { t } = useI18n()
@@ -139,6 +159,20 @@ const editingLifecycle = ref(null)
 const stats = ref(null)
 const fileInput = ref(null)
 const templateUrl = '/template_import_model_lifecycle.csv'
+const searchQuery = ref('')
+
+const filteredLifecycles = computed(() => {
+  const q = searchQuery.value.toLowerCase().trim()
+  if (!q) return lifecycles.value
+  return lifecycles.value.filter(lc => {
+    return (lc.manufacturer_name && lc.manufacturer_name.toLowerCase().includes(q))
+      || (lc.model_name && lc.model_name.toLowerCase().includes(q))
+      || (lc.asset_type_name && lc.asset_type_name.toLowerCase().includes(q))
+      || (lc.lifecycle_status && lc.lifecycle_status.toLowerCase().includes(q))
+      || (lc.replacement_model && lc.replacement_model.toLowerCase().includes(q))
+      || (lc.notes && lc.notes.toLowerCase().includes(q))
+  })
+})
 
 onMounted(() => {
   fetchLifecycles()
