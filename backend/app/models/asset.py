@@ -146,5 +146,6 @@ class Asset(Base):
     vulnerabilities = relationship("AssetVulnerability", back_populates="asset", cascade="all, delete-orphan")
     capabilities = relationship("AssetCapability", back_populates="asset", cascade="all, delete-orphan")
     conduit_assets = relationship("ConduitAsset", back_populates="asset", cascade="all, delete-orphan")
+    components = relationship("AssetComponent", back_populates="asset", cascade="all, delete-orphan")
 
     discovered_devices = relationship("DiscoveredDevice", back_populates="matched_asset")

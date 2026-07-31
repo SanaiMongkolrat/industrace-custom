@@ -239,6 +239,7 @@
     "review": "Review",
     "dependencies": "Dependencies",
     "vulnerabilities": "Vulnerabilities",
+    "components": "Components",
     "riskTooltip": "Risk analysis and risk score breakdown",
     "documentsTooltip": "Documents and documentation for this asset",
     "contactsTooltip": "Contacts and points of contact for this asset",
@@ -250,6 +251,7 @@
     "reviewTooltip": "Review status and periodic review management",
     "dependenciesTooltip": "Logical dependencies and risk propagation",
     "vulnerabilitiesTooltip": "Known vulnerabilities and patching status",
+    "componentsTooltip": "BOM components and spare parts for this asset",
     "timelineTooltip": "Event history and changes timeline",
     "iec62443Tooltip": "ISA/IEC 62443 Compliance, Security Zones and Compliance"
   },

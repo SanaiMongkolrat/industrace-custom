@@ -62,5 +62,6 @@ from .discovered_device import DiscoveredDevice, DeviceDiscoveryStatus
 from .supplier import Supplier, SupplierDocument
 from .model_lifecycle import ModelLifecycle
 from .lifecycle_status import LifecycleStatus
+from .asset_component import AssetComponent
 from .asset import Asset
 from .role import Role

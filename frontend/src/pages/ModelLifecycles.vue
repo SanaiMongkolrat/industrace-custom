@@ -63,7 +63,7 @@
       <Column field="asset_type_name" :header="t('modelLifecycles.fields.assetType')" sortable></Column>
       <Column field="lifecycle_status" :header="t('modelLifecycles.fields.lifecycleStatus')" sortable>
         <template #body="{ data }">
-          <Tag :value="t('modelLifecycles.status.' + data.lifecycle_status)" :severity="getStatusSeverity(data.lifecycle_status)" />
+          <Tag :value="getStatusLabel(data.lifecycle_status)" :severity="getStatusSeverity(data.lifecycle_status)" />
         </template>
       </Column>
       <Column field="useful_life_years" :header="t('modelLifecycles.fields.usefulLifeYears')" sortable>
@@ -170,7 +170,6 @@ const filteredLifecycles = computed(() => {
       || (lc.asset_type_name && lc.asset_type_name.toLowerCase().includes(q))
       || (lc.lifecycle_status && lc.lifecycle_status.toLowerCase().includes(q))
       || (lc.replacement_model && lc.replacement_model.toLowerCase().includes(q))
-      || (lc.notes && lc.notes.toLowerCase().includes(q))
   })
 })
 
@@ -267,6 +266,19 @@ function getStatusSeverity(status) {
     'total': 'info'
   }
   return map[status] || 'info'
+}
+
+function getStatusLabel(status) {
+  const map = {
+    'in_support': t('modelLifecycles.status.in_support'),
+    'phase_out': t('modelLifecycles.status.phase_out'),
+    'limited_support': t('modelLifecycles.status.limited_support'),
+    'no_spare_parts': t('modelLifecycles.status.no_spare_parts'),
+    'obsolete': t('modelLifecycles.status.obsolete'),
+    'not_applicable': t('modelLifecycles.status.not_applicable'),
+    'total': t('modelLifecycles.status.total'),
+  }
+  return map[status] || status
 }
 
 function getSpareSeverity(avail) {

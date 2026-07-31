@@ -1,0 +1,13 @@
+{
+  "title": "Components",
+  "quantity": "Qty",
+  "noComponents": "No components added to this asset",
+  "selectModel": "Select Model",
+  "fetchError": "Failed to load components",
+  "created": "Component added successfully",
+  "updated": "Component updated successfully",
+  "deleted": "Component removed successfully",
+  "saveError": "Failed to save component",
+  "deleteError": "Failed to remove component",
+  "deleteConfirm": "Are you sure you want to remove this component?"
+}

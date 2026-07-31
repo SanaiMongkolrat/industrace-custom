@@ -89,6 +89,7 @@
     "riskScore": "Risk Score",
     "businessCriticality": "Business Criticality",
     "manufacturer": "Manufacturer",
+    "model": "Model",
     "area": "Area",
     "location": "Location",
     "notes": "Note",

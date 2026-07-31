@@ -138,6 +138,14 @@
         </template>
         <AssetDetailVulnerabilitiesTab :assetId="asset.id" :canWrite="canWrite('vulnerabilities')" @updated="fetchAsset" />
       </TabPanel>
+      <TabPanel>
+        <template #header>
+          <span :title="t('assets.tabs.componentsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
+            <i class="pi pi-box"></i> {{ t('assets.tabs.components') }}
+          </span>
+        </template>
+        <AssetDetailComponentsTab :assetId="asset.id" :canWrite="canWrite('assets')" @updated="fetchAsset" />
+      </TabPanel>
       <TabPanel v-if="isIec62443Enabled">
         <template #header>
           <span :title="t('assets.tabs.iec62443Tooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
@@ -208,6 +216,7 @@ import AssetDetailTimelineTab from '../components/features/assets/tabs/AssetDeta
 import AssetDetailConnectionsTab from '../components/features/assets/tabs/AssetDetailConnectionsTab.vue'
 import AssetDetailCommunicationsTab from '../components/features/assets/tabs/AssetDetailCommunicationsTab.vue'
 import AssetDetailIEC62443Tab from '../components/features/assets/tabs/AssetDetailIEC62443Tab.vue'
+import AssetDetailComponentsTab from '../components/features/assets/macrosections/AssetDetailComponentsTab.vue'
 import DOMPurify from 'dompurify'
 const { loadTemplates } = usePrint()
 

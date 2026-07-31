@@ -160,6 +160,7 @@ from app.routers import assets
 from app.routers import asset_photos
 from app.routers import asset_documents
 from app.routers import asset_connections
+from app.routers import asset_components
 from app.routers import global_connections
 from app.routers import asset_interfaces
 from app.routers import sites
@@ -257,6 +258,7 @@ app.include_router(asset_types.router, tags=["asset_type"])
 app.include_router(sites.router, tags=["sites"])
 app.include_router(asset_interfaces.router, tags=["asset_interfaces"])
 app.include_router(asset_connections.router, tags=["asset_connection"])
+app.include_router(asset_components.router, tags=["asset_components"])
 app.include_router(global_connections.router, tags=["connections"])
 app.include_router(locations_floormap.router, tags=["locations_floormap"])
 app.include_router(users.router, tags=["users"])
