@@ -17,13 +17,9 @@
           @click="triggerImport" 
         />
         <input type="file" ref="fileInput" accept=".csv" style="display:none" @change="onFileSelected" />
-        <Button 
-          v-if="canWrite('model_lifecycles')"
-          :label="t('common.actions.download')" 
-          icon="pi pi-download" 
-          class="p-button-secondary p-button-outlined"
-          @click="downloadTemplate" 
-        />
+        <a :href="templateUrl" download class="p-button p-button-sm p-button-outlined">
+          <i class="pi pi-download mr-2" />{{ t('common.actions.download') }}
+        </a>
       </div>
     </div>
 
@@ -142,6 +138,7 @@ const showEditDialog = ref(false)
 const editingLifecycle = ref(null)
 const stats = ref(null)
 const fileInput = ref(null)
+const templateUrl = '/template_import_model_lifecycle.csv'
 
 onMounted(() => {
   fetchLifecycles()
