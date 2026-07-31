@@ -1,0 +1,13 @@
+{
+  "title": "Componenti",
+  "quantity": "Qtà",
+  "noComponents": "Nessun componente aggiunto a questo asset",
+  "selectModel": "Seleziona Modello",
+  "fetchError": "Caricamento componenti fallito",
+  "created": "Componente aggiunto con successo",
+  "updated": "Componente aggiornato con successo",
+  "deleted": "Componente rimosso con successo",
+  "saveError": "Salvataggio componente fallito",
+  "deleteError": "Rimozione componente fallita",
+  "deleteConfirm": "Sei sicuro di voler rimuovere questo componente?"
+}
