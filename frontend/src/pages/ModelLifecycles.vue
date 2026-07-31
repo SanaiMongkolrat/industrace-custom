@@ -182,7 +182,7 @@ onMounted(() => {
 async function fetchLifecycles() {
   loading.value = true
   try {
-    const response = await api.getModelLifecycles()
+    const response = await api.getModelLifecycles({ limit: 1000 })
     lifecycles.value = response.data
   } catch (error) {
     toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('modelLifecycles.messages.fetchError'), life: 3000 })
