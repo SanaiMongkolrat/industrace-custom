@@ -80,6 +80,8 @@ import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useI18n } from 'vue-i18n'
 import api from '../../../../api/api'
+import InputNumber from 'primevue/inputnumber'
+import Textarea from 'primevue/textarea'
 
 const props = defineProps({
   assetId: { type: String, required: true },
