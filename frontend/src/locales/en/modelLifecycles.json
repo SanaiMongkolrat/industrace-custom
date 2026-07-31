@@ -4,11 +4,14 @@
     "lifecycleStatus": "Lifecycle Status",
     "statusDate": "Status Date",
     "eolDate": "End of Life",
+    "usefulLife": "Useful Life",
+    "usefulLifeYears": "Useful Life (Years)",
     "eosDate": "End of Support",
     "spareParts": "Spare Parts",
     "replacement": "Replacement Model",
     "replacementManufacturer": "Replacement Manufacturer",
     "assetCount": "Assets",
+    "assetType": "Asset Type",
     "lastReviewed": "Last Reviewed"
   },
   "status": {

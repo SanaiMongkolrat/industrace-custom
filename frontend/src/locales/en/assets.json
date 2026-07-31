@@ -124,6 +124,7 @@
     "connections": "Connections",
     "communications": "Communications",
     "protocolsNote": "Enter the supported protocols for the device",
+    "modelDropdownNote": "Search or type to select a model from lifecycle records",
     "remoteAccessTypeAttended": "Attended Remote Access",
     "remoteAccessTypeUnattended": "Unattended Remote Access",
     "remoteAccessTypeNone": "No Remote Access",

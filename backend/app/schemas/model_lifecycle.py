@@ -7,9 +7,10 @@ import uuid
 class ModelLifecycleBase(BaseModel):
     manufacturer_id: uuid.UUID
     model_name: str = Field(..., max_length=255, description="Model name")
+    asset_type_id: Optional[uuid.UUID] = None
     lifecycle_status: str = Field(default="in_support", description="Lifecycle status: in_support, phase_out, limited_support, no_spare_parts, obsolete")
     status_date: Optional[date] = None
-    end_of_life_date: Optional[date] = None
+    useful_life_years: Optional[int] = Field(None, description="Useful life in years (e.g. 10, 15)")
     end_of_support_date: Optional[date] = None
     spare_part_availability: Optional[str] = Field(None, description="Spare part availability: available, limited, unavailable")
     replacement_model: Optional[str] = Field(None, max_length=255, description="Recommended replacement model")
@@ -25,9 +26,10 @@ class ModelLifecycleCreate(ModelLifecycleBase):
 class ModelLifecycleUpdate(BaseModel):
     manufacturer_id: Optional[uuid.UUID] = None
     model_name: Optional[str] = Field(None, max_length=255, description="Model name")
+    asset_type_id: Optional[uuid.UUID] = None
     lifecycle_status: Optional[str] = Field(None, description="Lifecycle status: in_support, phase_out, limited_support, no_spare_parts, obsolete")
     status_date: Optional[date] = None
-    end_of_life_date: Optional[date] = None
+    useful_life_years: Optional[int] = Field(None, description="Useful life in years (e.g. 10, 15)")
     end_of_support_date: Optional[date] = None
     spare_part_availability: Optional[str] = Field(None, description="Spare part availability: available, limited, unavailable")
     replacement_model: Optional[str] = Field(None, max_length=255, description="Recommended replacement model")
@@ -44,5 +46,6 @@ class ModelLifecycle(ModelLifecycleBase):
     manufacturer_name: Optional[str] = None
     replacement_manufacturer_name: Optional[str] = None
     asset_count: Optional[int] = None
+    asset_type_name: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)

@@ -326,6 +326,10 @@ export default {
   getModelLifecycleStats() {
     return api.get('/model-lifecycles/stats')
   },
+  getModelsByManufacturer(manufacturerId = null) {
+    const params = manufacturerId ? { manufacturer_id: manufacturerId } : {}
+    return api.get('/model-lifecycles/models-by-manufacturer', { params })
+  },
   getUsers() {
     return api.get('/users')
   },

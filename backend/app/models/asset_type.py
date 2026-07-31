@@ -20,3 +20,4 @@ class AssetType(Base):
     purdue_level = Column(Float, nullable=True)
     created_at = Column(DateTime, default=func.now())
     assets = relationship("Asset", back_populates="asset_type")
+    model_lifecycles = relationship("ModelLifecycle", back_populates="asset_type")

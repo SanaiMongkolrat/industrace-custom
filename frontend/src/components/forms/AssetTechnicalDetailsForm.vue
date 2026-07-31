@@ -24,6 +24,27 @@
 
         <div class="col-12 md:col-6">
           <div class="p-field">
+            <label for="model">{{ t('assets.fields.model') }}</label>
+            <Dropdown
+              id="model"
+              v-model="form.model"
+              :options="modelOptions"
+              :filter="true"
+              :editable="true"
+              :placeholder="t('common.strings.select') + ' ' + t('assets.fields.model')"
+              class="w-full"
+            >
+              <template #value="slotProps">
+                <div v-if="slotProps.value">{{ slotProps.value }}</div>
+                <span v-else>{{ t('common.strings.select') + ' ' + t('assets.fields.model') }}</span>
+              </template>
+            </Dropdown>
+            <small class="text-gray-600">{{ t('assets.strings.modelDropdownNote') }}</small>
+          </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <div class="p-field">
             <label for="firmware_version">{{ t('assets.fields.firmwareVersion') }}</label>
             <InputText id="firmware_version" v-model="form.firmware_version" class="w-full" />
           </div>
@@ -58,12 +79,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue/usetoast'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
+import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
 import api from '@/api/api'
 
@@ -78,6 +100,24 @@ const toast = useToast()
 
 const newProtocol = ref('')
 const protocolOptions = ref([])
+const modelOptions = ref([])
+
+// Load models from lifecycle records, filtered by selected manufacturer
+async function loadModelOptions() {
+  try {
+    const manufacturerId = props.form?.manufacturer_id || null
+    const response = await api.getModelsByManufacturer(manufacturerId)
+    modelOptions.value = response.data.map(m => m.model_name)
+  } catch (error) {
+    // Silently fail - model dropdown is optional
+    modelOptions.value = []
+  }
+}
+
+// Watch for manufacturer changes to reload model options
+watch(() => props.form?.manufacturer_id, () => {
+  loadModelOptions()
+})
 
 // Load supported protocols from backend
 const loadSupportedProtocols = async () => {
@@ -128,6 +168,7 @@ function addProtocol() {
 
 onMounted(() => {
   loadSupportedProtocols()
+  loadModelOptions()
 })
 </script>
 
@@ -135,10 +176,9 @@ onMounted(() => {
 .p-field {
   margin-bottom: 1rem;
 }
-
 .p-field label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
-</style> 
+</style>

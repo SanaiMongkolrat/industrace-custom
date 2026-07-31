@@ -30,14 +30,16 @@
     >
       <Column field="manufacturer_name" :header="t('common.fields.manufacturer')" sortable></Column>
       <Column field="model_name" :header="t('common.fields.model')" sortable></Column>
+      <Column field="asset_type_name" :header="t('modelLifecycles.fields.assetType')" sortable></Column>
       <Column field="lifecycle_status" :header="t('modelLifecycles.fields.lifecycleStatus')" sortable>
         <template #body="{ data }">
           <Tag :value="t('modelLifecycles.status.' + data.lifecycle_status)" :severity="getStatusSeverity(data.lifecycle_status)" />
         </template>
       </Column>
-      <Column field="end_of_life_date" :header="t('modelLifecycles.fields.eolDate')" sortable>
+      <Column field="useful_life_years" :header="t('modelLifecycles.fields.usefulLifeYears')" sortable>
         <template #body="{ data }">
-          <span :class="{ 'text-danger': isOverdue(data.end_of_life_date) }">{{ formatDate(data.end_of_life_date) }}</span>
+          <span v-if="data.useful_life_years">{{ data.useful_life_years }} {{ t('common.strings.years') }}</span>
+          <span v-else>-</span>
         </template>
       </Column>
       <Column field="end_of_support_date" :header="t('modelLifecycles.fields.eosDate')" sortable>

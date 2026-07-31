@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, aliased
 from sqlalchemy import func, or_
-from app.models import ModelLifecycle, Manufacturer, Asset
+from app.models import ModelLifecycle, Manufacturer, Asset, AssetType
 from app.schemas.model_lifecycle import ModelLifecycleCreate, ModelLifecycleUpdate
 import uuid
 from typing import List, Optional
@@ -14,21 +14,24 @@ def get_model_lifecycle(db: Session, lifecycle_id: uuid.UUID) -> Optional[dict]:
             ModelLifecycle,
             Manufacturer.name.label("manufacturer_name"),
             repl_mfr.name.label("replacement_manufacturer_name"),
+            AssetType.name.label("asset_type_name"),
         )
         .outerjoin(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
         .outerjoin(
             repl_mfr,
             repl_mfr.id == ModelLifecycle.replacement_manufacturer_id,
         )
+        .outerjoin(AssetType, AssetType.id == ModelLifecycle.asset_type_id)
         .filter(ModelLifecycle.id == lifecycle_id)
         .first()
     )
     if not result:
         return None
-    lifecycle, mfr_name, repl_mfr_name = result
+    lifecycle, mfr_name, repl_mfr_name, at_name = result
     lifecycle_dict = lifecycle.__dict__.copy()
     lifecycle_dict["manufacturer_name"] = mfr_name
     lifecycle_dict["replacement_manufacturer_name"] = repl_mfr_name
+    lifecycle_dict["asset_type_name"] = at_name
     lifecycle_dict["asset_count"] = (
         db.query(func.count(Asset.id))
         .filter(Asset.model == lifecycle.model_name)
@@ -50,8 +53,10 @@ def list_model_lifecycles(
         db.query(
             ModelLifecycle,
             Manufacturer.name.label("manufacturer_name"),
+            AssetType.name.label("asset_type_name"),
         )
         .outerjoin(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
+        .outerjoin(AssetType, AssetType.id == ModelLifecycle.asset_type_id)
     )
     if tenant_id:
         query = query.filter(
@@ -65,9 +70,10 @@ def list_model_lifecycles(
     results = query.offset(skip).limit(limit).all()
     output = []
     for row in results:
-        lifecycle, mfr_name = row
+        lifecycle, mfr_name, at_name = row
         lifecycle_dict = lifecycle.__dict__.copy()
         lifecycle_dict["manufacturer_name"] = mfr_name
+        lifecycle_dict["asset_type_name"] = at_name
         lifecycle_dict["asset_count"] = (
             db.query(func.count(Asset.id))
             .filter(Asset.model == lifecycle.model_name)

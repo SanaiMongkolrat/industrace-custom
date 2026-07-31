@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Date
+from sqlalchemy import Column, String, DateTime, ForeignKey, Text, Date, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -13,9 +13,10 @@ class ModelLifecycle(Base):
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=True)
     manufacturer_id = Column(UUID(as_uuid=True), ForeignKey("manufacturers.id"), nullable=False, index=True)
     model_name = Column(String(255), nullable=False)
+    asset_type_id = Column(UUID(as_uuid=True), ForeignKey("asset_types.id"), nullable=True, index=True)
     lifecycle_status = Column(String(20), nullable=False, default="in_support")  # in_support, phase_out, limited_support, no_spare_parts, obsolete
     status_date = Column(Date, nullable=True)
-    end_of_life_date = Column(Date, nullable=True)
+    useful_life_years = Column(Integer, nullable=True)  # replaces end_of_life_date
     end_of_support_date = Column(Date, nullable=True)
     spare_part_availability = Column(String(20), nullable=True)  # available, limited, unavailable
     replacement_model = Column(String(255), nullable=True)
@@ -27,3 +28,4 @@ class ModelLifecycle(Base):
 
     manufacturer = relationship("Manufacturer", back_populates="model_lifecycles", foreign_keys=[manufacturer_id])
     replacement_manufacturer = relationship("Manufacturer", foreign_keys=[replacement_manufacturer_id])
+    asset_type = relationship("AssetType", back_populates="model_lifecycles")

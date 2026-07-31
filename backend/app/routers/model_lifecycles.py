@@ -8,7 +8,8 @@ from app.errors.exceptions import ErrorCodeException
 from app.errors.error_codes import ErrorCode
 from app.services.audit_decorator import audit_log_action
 from app.database import get_db
-from app.models import User, ModelLifecycle
+from app.models import User, ModelLifecycle, Asset
+from sqlalchemy import or_
 from app.schemas.model_lifecycle import (
     ModelLifecycle as ModelLifecycleSchema,
     ModelLifecycleCreate,
@@ -56,6 +57,54 @@ def list_model_lifecycles(
         skip=skip,
         limit=limit,
     )
+
+
+@router.get("/models-by-manufacturer", response_model=List[dict])
+def list_models_by_manufacturer(
+    manufacturer_id: Optional[uuid.UUID] = Query(None, description="Filter by manufacturer"),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """List distinct model names grouped by manufacturer for dropdown selection"""
+    query = (
+        db.query(ModelLifecycle.model_name, ModelLifecycle.manufacturer_id)
+        .filter(
+            or_(ModelLifecycle.tenant_id == current_user.tenant_id, ModelLifecycle.tenant_id.is_(None))
+        )
+        .distinct()
+    )
+    if manufacturer_id:
+        query = query.filter(ModelLifecycle.manufacturer_id == manufacturer_id)
+    results = query.all()
+    # Also include models from assets that don't have lifecycle records
+    from sqlalchemy import literal_column
+    asset_models = (
+        db.query(Asset.model, Asset.manufacturer_id)
+        .filter(
+            Asset.tenant_id == current_user.tenant_id,
+            Asset.deleted_at == None,
+            Asset.model != None,
+            Asset.model != '',
+        )
+        .distinct()
+    )
+    if manufacturer_id:
+        asset_models = asset_models.filter(Asset.manufacturer_id == manufacturer_id)
+    asset_results = asset_models.all()
+    
+    seen = set()
+    output = []
+    for model_name, mfr_id in results:
+        key = (model_name, str(mfr_id) if mfr_id else '')
+        if key not in seen:
+            seen.add(key)
+            output.append({"model_name": model_name, "manufacturer_id": str(mfr_id) if mfr_id else None})
+    for model_name, mfr_id in asset_results:
+        key = (model_name, str(mfr_id) if mfr_id else '')
+        if key not in seen:
+            seen.add(key)
+            output.append({"model_name": model_name, "manufacturer_id": str(mfr_id) if mfr_id else None})
+    return sorted(output, key=lambda x: x["model_name"])
 
 
 @router.get("/stats", response_model=dict)

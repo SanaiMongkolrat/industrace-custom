@@ -1,6 +1,26 @@
+# Industrace Asset Import Template
+# ================================
+# MANDATORY fields (must be filled): name, site_code, asset_type
+# RECOMMENDED fields: manufacturer, model, serial_number, ip_address
+# OPTIONAL fields: tag, firmware_version, description, business_criticality,
+#                  physical_access_ease, purdue_level, installation_date
+#
+# Notes:
+# - name: Asset display name (required)
+# - site_code: Must match an existing site code in the system (required)
+# - asset_type: Must match an existing asset type name (required)
+# - manufacturer: Will be auto-created if not found
+# - tag: Used to match existing assets for update (if tag exists, asset is updated)
+# - ip_address: Creates a network interface named "LAN" of type "ethernet"
+# - business_criticality: One of low, medium, high, critical
+# - physical_access_ease: One of internal, dmz, external, unrestricted, controlled, restricted
+# - purdue_level: 0.0 to 5.0 (Purdue model level)
+# - installation_date: Format YYYY-MM-DD
+#
+# Example rows (remove the # comment lines before importing):
 name,tag,site_code,asset_type,ip_address,manufacturer,serial_number,model,firmware_version,description,business_criticality,physical_access_ease,purdue_level,installation_date
 PLC Assembly Line A,PLC001,MPP,PLC,192.168.5.55,Rockwell Automation,SN123456789,ControlLogix 5580,v32.01,Main PLC for Assembly Line A control system,high,internal,1.0,2023-01-15
-EWS Engineering Station,EWS001,MPP,EWS,192.168.7.66,HP,SN987654321,ProLiant DL380,v2.45,Engineering Workstation for system configuration and maintenance,medium,internal,3.0,2023-02-20
+EWS Engineering Station,EWS001,MPP,EWS,192.168.7.66,HP,SN987654321,ProLiant DL380,v2.45,Engineering Workstation for system configuration,medium,internal,3.0,2023-02-20
 HMI Operator Interface,HMI001,MPP,HMI,192.168.10.100,Siemens,SN456789123,TP1200 Comfort,v17.0,Main operator interface for production monitoring,high,internal,2.0,2023-03-10
 Historian Server,HIST001,MPP,Server,10.0.1.50,Dell,SN789123456,PowerEdge R740,v3.2,Data historian server for production data archiving,critical,internal,3.0,2023-01-30
 Core Network Switch,SW001,MPP,Switch,192.168.1.1,Cisco,SN321654987,Catalyst 9300,v16.12,Core network switch for industrial network,critical,internal,1.0,2023-01-05
