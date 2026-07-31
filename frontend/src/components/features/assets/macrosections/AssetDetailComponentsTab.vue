@@ -123,7 +123,7 @@ async function fetchComponents() {
 
 async function fetchModelOptions() {
   try {
-    const res = await api.getModelLifecycles({ limit: 1000 })
+    const res = await api.getModelLifecycles({ limit: 500 })
     modelOptions.value = (res.data || []).map(lc => ({
       id: lc.id,
       label: `${lc.manufacturer_name || '?'} - ${lc.model_name}${lc.asset_type_name ? ' (' + lc.asset_type_name + ')' : ''}`

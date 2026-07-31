@@ -59,7 +59,7 @@ def list_model_lifecycles(
     manufacturer_id: Optional[uuid.UUID] = Query(None, description="Filter by manufacturer"),
     lifecycle_status: Optional[str] = Query(None, description="Filter by lifecycle status"),
     skip: int = Query(0, ge=0),
-    limit: int = Query(100, ge=1, le=500),
+    limit: int = Query(100, ge=1, le=1000),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
