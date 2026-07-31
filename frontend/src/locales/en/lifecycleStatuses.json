@@ -1,0 +1,13 @@
+{
+  "title": "Lifecycle Statuses",
+  "messages": {
+    "fetchError": "Error loading lifecycle statuses",
+    "created": "Lifecycle status created successfully",
+    "createError": "Error creating lifecycle status",
+    "updated": "Lifecycle status updated successfully",
+    "updateError": "Error updating lifecycle status",
+    "deleted": "Lifecycle status deleted successfully",
+    "deleteError": "Error deleting lifecycle status"
+  },
+  "deleteConfirm": "Are you sure you want to delete this lifecycle status?"
+}

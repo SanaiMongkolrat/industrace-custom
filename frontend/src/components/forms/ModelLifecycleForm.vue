@@ -7,7 +7,7 @@
       </div>
 
       <div class="p-field">
-        <label for="model_name">{{ t('common.fields.model') }} <span class="required">*</span></label>
+        <label for="model_name">{{ t('modelLifecycles.fields.modelName') }} <span class="required">*</span></label>
         <InputText id="model_name" v-model="form.model_name" required />
       </div>
 
@@ -28,7 +28,7 @@
 
       <div class="p-field">
         <label for="useful_life_years">{{ t('modelLifecycles.fields.usefulLifeYears') }}</label>
-        <Dropdown id="useful_life_years" v-model="form.useful_life_years" :options="usefulLifeOptions" :placeholder="t('common.strings.select')" :showClear="true" />
+        <InputNumber id="useful_life_years" v-model="form.useful_life_years" :min="0" :max="100" :useGrouping="false" class="w-full" />
       </div>
 
       <div class="p-field">
@@ -73,6 +73,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InputText from 'primevue/inputtext'
+import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown'
@@ -102,7 +103,7 @@ const form = ref({
   replacement_model: '',
   replacement_manufacturer_id: null,
   notes: '',
-  last_reviewed_date: null
+  last_reviewed_date: new Date(),
 })
 
 const usefulLifeOptions = [

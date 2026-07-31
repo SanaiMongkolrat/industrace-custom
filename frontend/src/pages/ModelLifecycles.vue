@@ -9,6 +9,21 @@
           icon="pi pi-plus" 
           @click="showCreateDialog = true" 
         />
+        <Button 
+          v-if="canWrite('model_lifecycles')"
+          :label="t('common.actions.import')" 
+          icon="pi pi-upload" 
+          class="p-button-secondary"
+          @click="triggerImport" 
+        />
+        <input type="file" ref="fileInput" accept=".csv" style="display:none" @change="onFileSelected" />
+        <Button 
+          v-if="canWrite('model_lifecycles')"
+          :label="t('common.actions.download')" 
+          icon="pi pi-download" 
+          class="p-button-secondary p-button-outlined"
+          @click="downloadTemplate" 
+        />
       </div>
     </div>
 
@@ -126,6 +141,7 @@ const showCreateDialog = ref(false)
 const showEditDialog = ref(false)
 const editingLifecycle = ref(null)
 const stats = ref(null)
+const fileInput = ref(null)
 
 onMounted(() => {
   fetchLifecycles()
@@ -234,6 +250,34 @@ function isOverdue(date) {
 function formatDate(date) {
   if (!date) return '-'
   return new Date(date).toLocaleDateString()
+}
+
+function triggerImport() {
+  fileInput.value?.click()
+}
+
+async function onFileSelected(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  try {
+    const result = await api.importModelLifecycles(file)
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: `${result.data.created} records imported`, life: 3000 })
+    if (result.data.errors?.length) {
+      toast.add({ severity: 'warn', summary: t('common.messages.warning'), detail: `${result.data.errors.length} errors`, life: 5000 })
+    }
+    fetchLifecycles()
+    fetchStats()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('common.messages.importError'), life: 3000 })
+  }
+  event.target.value = ''
+}
+
+function downloadTemplate() {
+  const link = document.createElement('a')
+  link.href = '/template_import_model_lifecycle.csv'
+  link.download = 'template_import_model_lifecycle.csv'
+  link.click()
 }
 </script>
 

@@ -61,5 +61,6 @@ from .discovered_device import DiscoveredDevice, DeviceDiscoveryStatus
 # Questi modelli dipendono dagli altri (devono venire dopo)
 from .supplier import Supplier, SupplierDocument
 from .model_lifecycle import ModelLifecycle
+from .lifecycle_status import LifecycleStatus
 from .asset import Asset
 from .role import Role

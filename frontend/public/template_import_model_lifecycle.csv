@@ -1,0 +1,31 @@
+# Industrace Model Lifecycle Import Template
+# ============================================
+# MANDATORY fields (must be filled): manufacturer, model_name
+# RECOMMENDED fields: lifecycle_status, useful_life_years, asset_type
+# OPTIONAL fields: end_of_support_date, spare_part_availability, replacement_model,
+#                  replacement_manufacturer, notes, last_reviewed_date
+#
+# Notes:
+# - manufacturer: Manufacturer name (required). Will be auto-created if not found.
+# - model_name: Model name/identifier (required)
+# - lifecycle_status: One of in_support, phase_out, limited_support, no_spare_parts, obsolete
+#                     (defaults to in_support if not specified)
+# - useful_life_years: Integer number of years (e.g. 10, 15, 20)
+# - asset_type: Must match an existing asset type name (optional)
+# - end_of_support_date: Format YYYY-MM-DD
+# - spare_part_availability: One of available, limited, unavailable
+# - replacement_manufacturer: Name of replacement manufacturer (optional)
+# - last_reviewed_date: Format YYYY-MM-DD
+#
+# Example rows (remove the # comment lines before importing):
+manufacturer,model_name,lifecycle_status,useful_life_years,asset_type,end_of_support_date,spare_part_availability,replacement_model,notes
+Rockwell Automation,ControlLogix 5580,in_support,15,PLC,2035-12-31,available,ControlLogix 5580 v33,Main PLC for assembly line
+Siemens,TP1200 Comfort,phase_out,10,HMI,2028-06-30,limited,TP1200 Comfort v18,Being phased out
+Dell,PowerEdge R740,in_support,10,Server,2030-01-01,available,PowerEdge R750,Production server
+Cisco,Catalyst 9300,in_support,10,Switch,2029-03-15,available,Catalyst 9400,Core network switch
+Schneider Electric,Modicon M580,in_support,15,RTU,2032-08-01,available,Modicon M580 v2,Remote terminal unit
+HP,ProLiant DL380,limited_support,8,Server,2027-11-30,limited,ProLiant DL385,Engineering workstation server
+Check Point,UTM-1 3070,no_spare_parts,5,Firewall,2026-01-01,unavailable,Quantum Spark 1570,No spare parts available
+IBM,Power System S922,obsolete,0,Server,2024-06-30,unavailable,Power System E1050,Completely obsolete
+Juniper,MX204,in_support,10,Router,2031-05-20,available,MX304,DMZ router
+Rockwell Automation,ControlLogix 5580 v33,in_support,15,PLC,2036-12-31,available,,Newer revision

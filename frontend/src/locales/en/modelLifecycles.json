@@ -2,6 +2,7 @@
   "title": "Model Lifecycles",
   "fields": {
     "lifecycleStatus": "Lifecycle Status",
+    "modelName": "Model Name",
     "statusDate": "Status Date",
     "eolDate": "End of Life",
     "usefulLife": "Useful Life",

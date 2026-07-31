@@ -29,7 +29,8 @@
     "settings": "Settings",
     "logout": "Logout",
     "utility": "Utility",
-    "modelLifecycles": "Model Lifecycles"
+    "modelLifecycles": "Model Lifecycles",
+    "lifecycleStatuses": "Lifecycle Statuses"
   },
   "section": {
     "management": "Management",

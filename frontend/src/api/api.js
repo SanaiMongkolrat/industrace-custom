@@ -323,12 +323,31 @@ export default {
   deleteModelLifecycle(id) {
     return api.delete(`/model-lifecycles/${id}`)
   },
+  importModelLifecycles(file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post('/model-lifecycles/import-csv', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+  },
   getModelLifecycleStats() {
     return api.get('/model-lifecycles/stats')
   },
   getModelsByManufacturer(manufacturerId = null) {
     const params = manufacturerId ? { manufacturer_id: manufacturerId } : {}
     return api.get('/model-lifecycles/models-by-manufacturer', { params })
+  },
+  getLifecycleStatuses(params = {}) {
+    return api.get('/lifecycle-statuses', { params })
+  },
+  createLifecycleStatus(data) {
+    return api.post('/lifecycle-statuses', data)
+  },
+  updateLifecycleStatus(id, data) {
+    return api.put(`/lifecycle-statuses/${id}`, data)
+  },
+  deleteLifecycleStatus(id) {
+    return api.delete(`/lifecycle-statuses/${id}`)
   },
   getUsers() {
     return api.get('/users')

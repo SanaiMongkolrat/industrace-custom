@@ -1,8 +1,11 @@
 import uuid
 from typing import List, Optional
+from datetime import datetime
 
-from fastapi import APIRouter, Depends, status, Request, Query
+from fastapi import APIRouter, Depends, status, Request, Query, UploadFile, File
 from sqlalchemy.orm import Session
+import pandas as pd
+import io
 
 from app.errors.exceptions import ErrorCodeException
 from app.errors.error_codes import ErrorCode
@@ -160,3 +163,83 @@ def delete_model_lifecycle(
         )
     crud_model_lifecycles.delete_model_lifecycle(db, lifecycle_id)
     return None
+
+
+@router.post("/import-csv")
+async def import_model_lifecycles_csv(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Import model lifecycles from CSV file"""
+    from app.models import Manufacturer, AssetType
+    
+    if not file.filename.lower().endswith('.csv'):
+        raise ErrorCodeException(status_code=400, error_code=ErrorCode.INVALID_INPUT, detail="Only CSV files are supported")
+    
+    content = await file.read()
+    df = pd.read_csv(io.StringIO(content.decode('utf-8')), dtype=str)
+    df = df.where(pd.notnull(df), None)
+    
+    created, errors = [], []
+    for idx, row in df.iterrows():
+        try:
+            manufacturer_name = row.get("manufacturer")
+            model_name = row.get("model_name")
+            lifecycle_status = row.get("lifecycle_status", "in_support")
+            useful_life_years = row.get("useful_life_years")
+            asset_type_name = row.get("asset_type")
+            
+            if not manufacturer_name or not model_name:
+                errors.append({"row": int(idx) + 2, "error": "manufacturer and model_name are required"})
+                continue
+            
+            # Find or create manufacturer
+            manufacturer = db.query(Manufacturer).filter(
+                Manufacturer.name.ilike(manufacturer_name.strip()),
+                (Manufacturer.tenant_id == current_user.tenant_id) | (Manufacturer.tenant_id.is_(None))
+            ).first()
+            if not manufacturer:
+                manufacturer = Manufacturer(
+                    tenant_id=current_user.tenant_id,
+                    name=manufacturer_name.strip()
+                )
+                db.add(manufacturer)
+                db.flush()
+            
+            # Find asset type if provided
+            asset_type_id = None
+            if asset_type_name:
+                asset_type = db.query(AssetType).filter(
+                    AssetType.name.ilike(asset_type_name.strip()),
+                    (AssetType.tenant_id == current_user.tenant_id) | (AssetType.tenant_id.is_(None))
+                ).first()
+                if asset_type:
+                    asset_type_id = asset_type.id
+            
+            # Parse useful_life_years
+            useful_life = None
+            if useful_life_years:
+                try:
+                    useful_life = int(float(useful_life_years))
+                except (ValueError, TypeError):
+                    pass
+            
+            lifecycle = ModelLifecycle(
+                tenant_id=current_user.tenant_id,
+                manufacturer_id=manufacturer.id,
+                model_name=model_name.strip(),
+                lifecycle_status=lifecycle_status,
+                useful_life_years=useful_life,
+                asset_type_id=asset_type_id,
+            )
+            db.add(lifecycle)
+            db.flush()
+            created.append({"row": int(idx) + 2, "model_name": model_name})
+        except Exception as e:
+            db.rollback()
+            errors.append({"row": int(idx) + 2, "error": str(e)})
+            continue
+    
+    db.commit()
+    return {"created": len(created), "errors": errors}

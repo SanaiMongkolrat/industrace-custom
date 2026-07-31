@@ -16,6 +16,7 @@ import Sites from './pages/Sites.vue'
 import Areas from './pages/Areas.vue'
 import Users from './pages/Users.vue'
 import Utility from './pages/Utility.vue'
+import LifecycleStatuses from './pages/LifecycleStatuses.vue'
 import AssetStatuses from './pages/AssetStatuses.vue'
 import Locations from './pages/Locations.vue'
 import Contacts from './pages/Contacts.vue'
@@ -68,6 +69,7 @@ const routes = [
   { path: '/users', name: 'Users', component: Users, meta: { requiresAuth: true } },
   { path: '/users/:id', name: 'UserDetail', component: () => import('./pages/UserDetail.vue'), meta: { requiresAuth: true } },
   { path: '/asset-statuses', name: 'AssetStatuses', component: AssetStatuses, meta: { requiresAuth: true } },
+  { path: '/lifecycle-statuses', name: 'LifecycleStatuses', component: LifecycleStatuses, meta: { requiresAuth: true, requiresPermission: 'lifecycle_statuses' } },
   { path: '/locations', name: 'Locations', component: Locations, meta: { requiresAuth: true } },
   { path: '/contacts', name: 'Contacts', component: Contacts, meta: { requiresAuth: true } },
   { path: '/contacts/:id', name: 'ContactDetail', component: ContactDetail,meta: { requiresAuth: true }  },
