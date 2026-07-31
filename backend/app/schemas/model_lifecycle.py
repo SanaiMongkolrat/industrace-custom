@@ -8,7 +8,7 @@ class ModelLifecycleBase(BaseModel):
     manufacturer_id: uuid.UUID
     model_name: str = Field(..., max_length=255, description="Model name")
     asset_type_id: Optional[uuid.UUID] = None
-    lifecycle_status: str = Field(default="in_support", description="Lifecycle status: in_support, phase_out, limited_support, no_spare_parts, obsolete")
+    lifecycle_status: str = Field(default="not_applicable", description="Lifecycle status: in_support, phase_out, limited_support, no_spare_parts, obsolete, not_applicable")
     status_date: Optional[date] = None
     useful_life_years: Optional[int] = Field(None, description="Useful life in years (e.g. 10, 15)")
     end_of_support_date: Optional[date] = None
@@ -27,7 +27,7 @@ class ModelLifecycleUpdate(BaseModel):
     manufacturer_id: Optional[uuid.UUID] = None
     model_name: Optional[str] = Field(None, max_length=255, description="Model name")
     asset_type_id: Optional[uuid.UUID] = None
-    lifecycle_status: Optional[str] = Field(None, description="Lifecycle status: in_support, phase_out, limited_support, no_spare_parts, obsolete")
+    lifecycle_status: Optional[str] = Field(None, description="Lifecycle status: in_support, phase_out, limited_support, no_spare_parts, obsolete, not_applicable")
     status_date: Optional[date] = None
     useful_life_years: Optional[int] = Field(None, description="Useful life in years (e.g. 10, 15)")
     end_of_support_date: Optional[date] = None

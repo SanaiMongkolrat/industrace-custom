@@ -29,6 +29,14 @@ router = APIRouter(
     dependencies=[Depends(require_section_access("model_lifecycles"))],
 )
 
+VALID_LIFECYCLE_STATUSES = {"in_support", "phase_out", "limited_support", "no_spare_parts", "obsolete", "not_applicable"}
+
+def normalize_lifecycle_status(status: Optional[str]) -> str:
+    """Normalize lifecycle status: if not in valid list, default to not_applicable"""
+    if status and status.strip().lower() in VALID_LIFECYCLE_STATUSES:
+        return status.strip().lower()
+    return "not_applicable"
+
 
 @router.post("", response_model=ModelLifecycleSchema)
 @audit_log_action("create", "ModelLifecycle", model_class=ModelLifecycle)
@@ -38,8 +46,11 @@ def create_model_lifecycle(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Normalize lifecycle_status
+    data = lifecycle_in.model_dump()
+    data["lifecycle_status"] = normalize_lifecycle_status(data.get("lifecycle_status"))
     return crud_model_lifecycles.create_model_lifecycle(
-        db, lifecycle_in, tenant_id=current_user.tenant_id
+        db, ModelLifecycleCreate(**data), tenant_id=current_user.tenant_id
     )
 
 
@@ -145,6 +156,11 @@ def update_model_lifecycle(
         raise ErrorCodeException(
             status_code=404, error_code=ErrorCode.MODEL_LIFECYCLE_NOT_FOUND
         )
+    # Normalize lifecycle_status if provided
+    update_data = lifecycle_update.model_dump(exclude_unset=True)
+    if "lifecycle_status" in update_data:
+        update_data["lifecycle_status"] = normalize_lifecycle_status(update_data["lifecycle_status"])
+        lifecycle_update = ModelLifecycleUpdate(**update_data)
     return crud_model_lifecycles.update_model_lifecycle(db, lifecycle_id, lifecycle_update)
 
 
@@ -186,7 +202,7 @@ async def import_model_lifecycles_csv(
         try:
             manufacturer_name = row.get("manufacturer")
             model_name = row.get("model_name")
-            lifecycle_status = row.get("lifecycle_status", "in_support")
+            lifecycle_status = normalize_lifecycle_status(row.get("lifecycle_status", "not_applicable"))
             useful_life_years = row.get("useful_life_years")
             asset_type_name = row.get("asset_type")
             

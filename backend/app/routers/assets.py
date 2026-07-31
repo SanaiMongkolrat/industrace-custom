@@ -33,6 +33,8 @@ from app.schemas.asset import AssetContact, AssetContactCreate
 from app.schemas.asset import AssetBulkUpdateRequest, AssetBulkSoftDeleteRequest
 from app.schemas.asset import RiskScoreRequest, RiskScoreResponse, RiskOverviewResponse
 from app.services.risk_scoring import CompositeRiskScoringEngine
+from app.models.model_lifecycle import ModelLifecycle
+from app.models.manufacturer import Manufacturer
 import io
 import json
 import math
@@ -70,6 +72,9 @@ def create_asset(
     from app.services.vulnerability_auto_match import VulnerabilityAutoMatcher
     if VulnerabilityAutoMatcher.should_auto_match_asset(result):
         VulnerabilityAutoMatcher.match_asset_async(result.id, current_user.tenant_id)
+    
+    # Auto-create lifecycle record if model is new
+    _auto_create_lifecycle_for_asset(db, result, current_user.tenant_id)
     
     return result
 
@@ -1315,6 +1320,9 @@ def update_asset(
             logger.error(f"Error recalculating risk for asset {asset_id}: {e}", exc_info=True)
             # Don't fail the update if risk calculation fails
     
+    # Auto-create lifecycle record if model was updated
+    _auto_create_lifecycle_for_asset(db, result, current_user.tenant_id)
+    
     return result
 
 
@@ -1892,3 +1900,35 @@ def sanitize_for_json(obj):
         return obj
     else:
         return obj
+
+
+def _auto_create_lifecycle_for_asset(db: Session, asset: Asset, tenant_id: uuid.UUID):
+    """Auto-create a lifecycle record when an asset is saved with a new model name"""
+    if not asset.model or not asset.model.strip():
+        return
+    if not asset.manufacturer_id:
+        return
+    
+    # Check if lifecycle record already exists for this manufacturer + model
+    existing = (
+        db.query(ModelLifecycle)
+        .filter(
+            ModelLifecycle.manufacturer_id == asset.manufacturer_id,
+            ModelLifecycle.model_name.ilike(asset.model.strip()),
+            (ModelLifecycle.tenant_id == tenant_id) | (ModelLifecycle.tenant_id.is_(None)),
+        )
+        .first()
+    )
+    if existing:
+        return  # Already exists
+    
+    # Create a new lifecycle record with not_applicable status
+    lifecycle = ModelLifecycle(
+        tenant_id=tenant_id,
+        manufacturer_id=asset.manufacturer_id,
+        model_name=asset.model.strip(),
+        lifecycle_status="not_applicable",
+        asset_type_id=asset.asset_type_id,
+    )
+    db.add(lifecycle)
+    db.commit()

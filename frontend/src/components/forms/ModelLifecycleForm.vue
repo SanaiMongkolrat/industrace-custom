@@ -120,7 +120,8 @@ const statusOptions = [
   { value: 'phase_out', label: t('modelLifecycles.status.phase_out') },
   { value: 'limited_support', label: t('modelLifecycles.status.limited_support') },
   { value: 'no_spare_parts', label: t('modelLifecycles.status.no_spare_parts') },
-  { value: 'obsolete', label: t('modelLifecycles.status.obsolete') }
+  { value: 'obsolete', label: t('modelLifecycles.status.obsolete') },
+  { value: 'not_applicable', label: t('modelLifecycles.status.not_applicable') }
 ]
 
 const spareOptions = [

@@ -46,6 +46,7 @@
     "refresh": "Refresh",
     "reset": "Reset",
     "exportCsv": "Export CSV",
+    "downloadTemplate": "Download Template",
     "chooseColumns": "Choose columns",
     "showActive": "Show Active",
     "showTrash": "Show Trash",

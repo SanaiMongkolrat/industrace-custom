@@ -14,7 +14,7 @@ class ModelLifecycle(Base):
     manufacturer_id = Column(UUID(as_uuid=True), ForeignKey("manufacturers.id"), nullable=False, index=True)
     model_name = Column(String(255), nullable=False)
     asset_type_id = Column(UUID(as_uuid=True), ForeignKey("asset_types.id"), nullable=True, index=True)
-    lifecycle_status = Column(String(20), nullable=False, default="in_support")  # in_support, phase_out, limited_support, no_spare_parts, obsolete
+    lifecycle_status = Column(String(20), nullable=False, default="not_applicable")  # in_support, phase_out, limited_support, no_spare_parts, obsolete, not_applicable
     status_date = Column(Date, nullable=True)
     useful_life_years = Column(Integer, nullable=True)  # replaces end_of_life_date
     end_of_support_date = Column(Date, nullable=True)

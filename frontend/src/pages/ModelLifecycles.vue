@@ -18,7 +18,7 @@
         />
         <input type="file" ref="fileInput" accept=".csv" style="display:none" @change="onFileSelected" />
         <a :href="templateUrl" download class="p-button p-button-sm p-button-outlined">
-          <i class="pi pi-download mr-2" />{{ t('common.actions.download') }}
+          <i class="pi pi-download mr-2" />{{ t('common.actions.downloadTemplate') }}
         </a>
       </div>
     </div>
@@ -229,6 +229,7 @@ function getStatusSeverity(status) {
     'limited_support': 'warn',
     'no_spare_parts': 'danger',
     'obsolete': 'danger',
+    'not_applicable': 'info',
     'total': 'info'
   }
   return map[status] || 'info'
