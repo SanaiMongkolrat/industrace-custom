@@ -33,7 +33,7 @@
     </div>
 
     <!-- TABS: Rischio, Documenti, Contatti, Timeline -->
-    <TabView class="modern-tabs">
+    <TabView class="modern-tabs" :scrollable="true">
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabs.riskTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
