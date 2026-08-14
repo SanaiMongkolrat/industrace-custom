@@ -14,6 +14,10 @@ class AssetComponentBase(BaseModel):
 
 
 class AssetComponentCreate(AssetComponentBase):
+    # asset_id is optional on create — the router sets it from the URL path
+    # (/assets/{asset_id}/components). Making it optional here prevents
+    # Pydantic VALIDATION_ERROR when the frontend omits it from the body.
+    asset_id: Optional[uuid.UUID] = None
     tenant_id: Optional[uuid.UUID] = None
 
 
