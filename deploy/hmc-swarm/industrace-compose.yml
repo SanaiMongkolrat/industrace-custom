@@ -1,0 +1,116 @@
+services:
+  industrace-db:
+    image: 192.168.99.58:5000/postgres:15
+    environment:
+      POSTGRES_USER: industrace_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: industrace
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U industrace_user -d industrace"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app-node-2 == true
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  industrace-backend:
+    image: 192.168.99.58:5000/industrace-backend:2.3.5
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    environment:
+      DATABASE_URL: postgresql://industrace_user:${DB_PASSWORD}@industrace-db:5432/industrace
+      SECRET_KEY: ${SECRET_KEY}
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+      CORS_ORIGINS: https://192.168.99.60:8002
+      ENVIRONMENT: production
+      DEBUG: "false"
+      SECURE_COOKIES: "true"
+      SAME_SITE_COOKIES: strict
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      SETUP_TOKEN: ${SETUP_TOKEN}
+    volumes:
+      - industrace_uploads:/app/uploads
+      - industrace_logs:/app/logs
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app-node-2 == true
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 5
+
+  industrace-frontend:
+    image: 192.168.99.58:5000/industrace-frontend:2.3.4
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app-node-2 == true
+      restart_policy:
+        condition: any
+
+  industrace-nginx:
+    image: 192.168.99.58:5000/nginx-alpine:latest
+    ports:
+      - "8002:443"
+    volumes:
+      - industrace_uploads:/app/uploads:ro
+    configs:
+      - source: industrace_nginx_conf_v3
+        target: /etc/nginx/nginx.conf
+      - source: industrace_ssl_cert
+        target: /etc/nginx/ssl/cert.pem
+      - source: industrace_ssl_key
+        target: /etc/nginx/ssl/key.pem
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app-node-2 == true
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hmcadmin/docker-persistent/industrace/db
+  industrace_uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hmcadmin/docker-persistent/industrace/uploads
+  industrace_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/hmcadmin/docker-persistent/industrace/logs
+
+configs:
+  industrace_nginx_conf_v3:
+    file: ./industrace-nginx.conf
+  industrace_ssl_cert:
+    file: ./industrace-ssl-cert.pem
+  industrace_ssl_key:
+    file: ./industrace-ssl-key.pem
