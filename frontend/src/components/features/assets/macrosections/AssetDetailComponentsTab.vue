@@ -82,6 +82,12 @@ import { useI18n } from 'vue-i18n'
 import api from '../../../../api/api'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Tag from 'primevue/tag'
+import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
+import Dropdown from 'primevue/dropdown'
 
 const props = defineProps({
   assetId: { type: String, required: true },
