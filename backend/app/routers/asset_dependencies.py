@@ -275,7 +275,7 @@ def get_risk_propagation(
     max_depth: int = Query(5, ge=1, le=10),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    perm=Depends(require_permission("asset_dependencies", 4)),
+    perm=Depends(require_permission("asset_dependencies", 1)),
 ):
     """Calculate risk propagation from an asset through dependencies"""
     # Verify asset exists
@@ -308,7 +308,7 @@ def get_risk_from_dependencies(
     asset_id: uuid.UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    perm=Depends(require_permission("asset_dependencies", 4)),
+    perm=Depends(require_permission("asset_dependencies", 1)),
 ):
     """
     Calculate how much of this asset's risk comes from its dependencies.
@@ -409,7 +409,7 @@ def get_impact_analysis(
     max_depth: int = Query(5, ge=1, le=10),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    perm=Depends(require_permission("asset_dependencies", 4)),
+    perm=Depends(require_permission("asset_dependencies", 1)),
 ):
     """Analyze impact if this asset fails"""
     # Verify asset exists
@@ -470,7 +470,7 @@ def get_affected_assets(
     max_depth: int = Query(5, ge=1, le=10),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
-    perm=Depends(require_permission("asset_dependencies", 4)),
+    perm=Depends(require_permission("asset_dependencies", 1)),
 ):
     """Get all assets that would be affected if this asset fails"""
     # Verify asset exists
