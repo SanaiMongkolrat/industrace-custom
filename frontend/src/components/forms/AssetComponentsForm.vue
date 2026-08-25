@@ -26,9 +26,9 @@
           </Column>
         </DataTable>
 
-        <div v-if="editable" class="p-fluid grid">
-          <div class="col-12 md:col-4 p-field">
-            <label>{{ t('assetComponents.model') }}*</label>
+        <div v-if="editable" class="bom-entry">
+          <div class="field bom-field">
+            <label class="bom-label">{{ t('assetComponents.model') }}*</label>
             <Dropdown
               v-model="draft.model_lifecycle_id"
               :options="modelOptions"
@@ -39,15 +39,15 @@
               class="w-full"
             />
           </div>
-          <div class="col-12 md:col-2 p-field">
-            <label>{{ t('assetComponents.quantity') }}*</label>
+          <div class="field bom-field">
+            <label class="bom-label">{{ t('assetComponents.quantity') }}*</label>
             <InputNumber v-model="draft.quantity" :min="1" class="w-full" />
           </div>
-          <div class="col-12 md:col-5 p-field">
-            <label>{{ t('assetComponents.notes') }}</label>
-            <Textarea v-model="draft.notes" :rows="1" autoResize class="w-full" />
+          <div class="field bom-field">
+            <label class="bom-label">{{ t('assetComponents.notes') }}</label>
+            <Textarea v-model="draft.notes" :rows="2" autoResize class="w-full" />
           </div>
-          <div class="col-12 md:col-1 p-field flex align-items-end justify-content-center">
+          <div class="bom-add-row">
             <Button icon="pi pi-plus" :label="t('assetComponents.addComponent')" class="p-button-sm" @click="addComponent" :disabled="!draft.model_lifecycle_id" />
           </div>
         </div>
@@ -149,4 +149,28 @@ onMounted(() => {
   color: #6c757d;
   font-style: italic;
 }
+
+/* Stack each label on its own line with a clear gap above the control */
+.bom-entry {
+  display: block;
+}
+.bom-field {
+  margin-bottom: 1rem;
+}
+.bom-field .bom-label,
+.bom-field label.bom-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.bom-field .p-dropdown,
+.bom-field .p-inputnumber,
+.bom-field textarea {
+  width: 100%;
+}
+.bom-add-row {
+  margin-top: 0.25rem;
+}
+
 </style>
