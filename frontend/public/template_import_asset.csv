@@ -3,7 +3,8 @@
 # MANDATORY fields (must be filled): name, site_code, asset_type
 # RECOMMENDED fields: manufacturer, model, serial_number, ip_address
 # OPTIONAL fields: tag, firmware_version, description, business_criticality,
-#                  physical_access_ease, purdue_level, installation_date
+#                  physical_access_ease, purdue_level, installation_date,
+#                  status, location, area, security_zone, protocols, remote_access
 #
 # Notes:
 # - name: Asset display name (required)
@@ -16,23 +17,25 @@
 # - physical_access_ease: One of unrestricted, controlled, restricted
 # - purdue_level: 0.0 to 5.0 (Purdue model level, optional)
 # - installation_date: Format YYYY-MM-DD
-#
-# NOTE: The following Add-Asset form fields are NOT part of the CSV import yet:
-# status (auto-set to "Active"), location, area, security_zone, protocols,
-# remote_access, and BOM components.
+# - status: Must match an existing asset status name; if empty, defaults to "Active"
+# - location: Name or code of a location that belongs to the same site; optional
+# - area: Name or code of an area that belongs to the same site; optional
+# - security_zone: Must match an existing security zone name; optional
+# - protocols: Comma-separated list, e.g. "Modbus TCP,EtherNet/IP"; optional
+# - remote_access: true/false, or attended/unattended/none; optional (defaults to false)
 #
 # Example rows (remove the # comment lines before importing):
-name,tag,site_code,asset_type,ip_address,manufacturer,serial_number,model,firmware_version,description,business_criticality,physical_access_ease,purdue_level,installation_date
-PLC Assembly Line A,PLC001,MPP,PLC,192.168.5.55,Rockwell Automation,SN123456789,ControlLogix 5580,v32.01,Main PLC for Assembly Line A control system,high,restricted,1.0,2023-01-15
-EWS Engineering Station,EWS001,MPP,EWS,192.168.7.66,HP,SN987654321,ProLiant DL380,v2.45,Engineering Workstation for system configuration,medium,restricted,3.0,2023-02-20
-HMI Operator Interface,HMI001,MPP,HMI,192.168.10.100,Siemens,SN456789123,TP1200 Comfort,v17.0,Main operator interface for production monitoring,high,restricted,2.0,2023-03-10
-Historian Server,HIST001,MPP,Server,10.0.1.50,Dell,SN789123456,PowerEdge R740,v3.2,Data historian server for production data archiving,critical,restricted,3.0,2023-01-30
-Core Network Switch,SW001,MPP,Switch,192.168.1.1,Cisco,SN321654987,Catalyst 9300,v16.12,Core network switch for industrial network,critical,controlled,1.0,2023-01-05
-Industrial Firewall,FW001,MPP,Firewall,192.168.1.254,Check Point,SN147258369,UTM-1 3070,v80.10,Industrial firewall for OT network protection,critical,controlled,2.0,2023-02-15
-Remote RTU Unit,RTU001,RDC,RTU,10.0.5.100,Schneider Electric,SN963852741,Modicon M580,v2.90,Remote Terminal Unit for remote monitoring,medium,unrestricted,1.0,2023-04-05
-Database Server,DB001,RDC,Server,10.0.1.100,IBM,SN852963741,Power System S922,v2.1,Main database server for R&D applications,critical,controlled,3.0,2023-01-20
-Engineering Workstation,ENG001,RDC,Workstation,192.168.20.50,Dell,SN741852963,Precision 5820,v1.8,Engineering workstation for design and development,medium,controlled,3.0,2023-03-25
-DMZ Router,ROUT001,RDC,Router,192.168.100.1,Juniper,SN369258147,MX204,v20.4,Router for DMZ network segmentation,high,controlled,2.0,2023-02-10
-Warehouse PLC,PLC002,DW,PLC,192.168.15.25,Rockwell Automation,SN555666777,ControlLogix 5580,v32.01,PLC for warehouse automation system,high,restricted,1.0,2023-05-10
-Warehouse HMI,HMI002,DW,HMI,192.168.15.50,Siemens,SN888999000,TP1200 Comfort,v17.0,Operator interface for warehouse operations,medium,restricted,2.0,2023-05-15
-Warehouse Switch,SW002,DW,Switch,192.168.15.1,Cisco,SN111222333,Catalyst 2960,v15.2,Network switch for warehouse connectivity,medium,controlled,1.0,2023-05-20
+name,tag,site_code,asset_type,ip_address,manufacturer,serial_number,model,firmware_version,description,business_criticality,physical_access_ease,purdue_level,installation_date,status,location,area,security_zone,protocols,remote_access
+PLC Assembly Line A,PLC001,MPP,PLC,192.168.5.55,Rockwell Automation,SN123456789,ControlLogix 5580,v32.01,Main PLC for Assembly Line A control system,high,restricted,1.0,2023-01-15,Active,Packaging Line 1,Packaging Zone,Zone 1,Modbus TCP,false
+EWS Engineering Station,EWS001,MPP,EWS,192.168.7.66,HP,SN987654321,ProLiant DL380,v2.45,Engineering Workstation for system configuration,medium,restricted,3.0,2023-02-20,Active,Engineering Room,ECR 1,Zone 2,EtherNet/IP,attended
+HMI Operator Interface,HMI001,MPP,HMI,192.168.10.100,Siemens,SN456789123,TP1200 Comfort,v17.0,Main operator interface for production monitoring,high,restricted,2.0,2023-03-10,Active,Control Room,ECR 1,Zone 1,OPC UA,false
+Historian Server,HIST001,MPP,Server,10.0.1.50,Dell,SN789123456,PowerEdge R740,v3.2,Data historian server for production data archiving,critical,restricted,3.0,2023-01-30,Active,Server Room,ECR 2,Zone 2,,false
+Core Network Switch,SW001,MPP,Switch,192.168.1.1,Cisco,SN321654987,Catalyst 9300,v16.12,Core network switch for industrial network,critical,controlled,1.0,2023-01-05,Active,Network Room,MCC 1,Zone 2,SNMP,false
+Industrial Firewall,FW001,MPP,Firewall,192.168.1.254,Check Point,SN147258369,UTM-1 3070,v80.10,Industrial firewall for OT network protection,critical,controlled,2.0,2023-02-15,Active,DMZ Room,ECR 2,Zone 2,,false
+Remote RTU Unit,RTU001,RDC,RTU,10.0.5.100,Schneider Electric,SN963852741,Modicon M580,v2.90,Remote Terminal Unit for remote monitoring,medium,unrestricted,1.0,2023-04-05,Active,Field Location,Bulk Area,Zone 3,Modbus RTU,false
+Database Server,DB001,RDC,Server,10.0.1.100,IBM,SN852963741,Power System S922,v2.1,Main database server for R&D applications,critical,controlled,3.0,2023-01-20,Active,Server Room,ECR 1,Zone 3,,false
+Engineering Workstation,ENG001,RDC,Workstation,192.168.20.50,Dell,SN741852963,Precision 5820,v1.8,Engineering workstation for design and development,medium,controlled,3.0,2023-03-25,Active,Engineering Room,ECR 1,Zone 3,EtherNet/IP,unattended
+DMZ Router,ROUT001,RDC,Router,192.168.100.1,Juniper,SN369258147,MX204,v20.4,Router for DMZ network segmentation,high,controlled,2.0,2023-02-10,Active,DMZ Room,ECR 2,Zone 2,,false
+Warehouse PLC,PLC002,DW,PLC,192.168.15.25,Rockwell Automation,SN555666777,ControlLogix 5580,v32.01,PLC for warehouse automation system,high,restricted,1.0,2023-05-10,Active,Warehouse Floor,Bagging Area,Zone 4,EtherNet/IP,false
+Warehouse HMI,HMI002,DW,HMI,192.168.15.50,Siemens,SN888999000,TP1200 Comfort,v17.0,Operator interface for warehouse operations,medium,restricted,2.0,2023-05-15,Active,Warehouse Floor,Bagging Area,Zone 4,OPC UA,false
+Warehouse Switch,SW002,DW,Switch,192.168.15.1,Cisco,SN111222333,Catalyst 2960,v15.2,Network switch for warehouse connectivity,medium,controlled,1.0,2023-05-20,Active,Warehouse Floor,Bagging Area,Zone 4,SNMP,false

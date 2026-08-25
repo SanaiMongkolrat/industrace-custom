@@ -683,6 +683,155 @@ def import_assets_xlsx_preview(
                 manufacturer_action = "use_existing"
         else:
             manufacturer_action = None
+
+        # Optional: status by name (fallback to Active/default resolved above)
+        status_name = row.get("status")
+        if (
+            not missing
+            and status_name is not None
+            and str(status_name).strip() != ""
+        ):
+            from app.models.asset_status import AssetStatus as _AS
+
+            st_match = (
+                db.query(_AS)
+                .filter(
+                    func.lower(_AS.name) == str(status_name).strip().lower(),
+                    _AS.tenant_id == current_user.tenant_id,
+                )
+                .first()
+            )
+            if st_match:
+                status_id = st_match.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"Status con name '{status_name}' non trovato",
+                    }
+                )
+
+        # Optional: location by name/code (scoped to the asset's site)
+        location_id = None
+        location_value = row.get("location")
+        if (
+            not missing
+            and site_id
+            and location_value is not None
+            and str(location_value).strip() != ""
+        ):
+            from app.models.location import Location as _Loc
+
+            loc = (
+                db.query(_Loc)
+                .filter(
+                    _Loc.site_id == site_id,
+                    _Loc.tenant_id == current_user.tenant_id,
+                    db.or_(
+                        func.lower(_Loc.name) == str(location_value).strip().lower(),
+                        func.lower(_Loc.code)
+                        == str(location_value).strip().lower(),
+                    ),
+                )
+                .first()
+            )
+            if loc:
+                location_id = loc.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"Location '{location_value}' non trovata nel sito",
+                    }
+                )
+
+        # Optional: area by name/code (scoped to the asset's site)
+        area_id = None
+        area_value = row.get("area")
+        if (
+            not missing
+            and site_id
+            and area_value is not None
+            and str(area_value).strip() != ""
+        ):
+            from app.models.area import Area as _Area
+
+            ar = (
+                db.query(_Area)
+                .filter(
+                    _Area.site_id == site_id,
+                    _Area.tenant_id == current_user.tenant_id,
+                    db.or_(
+                        func.lower(_Area.name) == str(area_value).strip().lower(),
+                        func.lower(_Area.code) == str(area_value).strip().lower(),
+                    ),
+                )
+                .first()
+            )
+            if ar:
+                area_id = ar.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"Area '{area_value}' non trovata nel sito",
+                    }
+                )
+
+        # Optional: security_zone by name (tenant-scoped)
+        security_zone_id = None
+        zone_value = row.get("security_zone")
+        if (
+            not missing
+            and zone_value is not None
+            and str(zone_value).strip() != ""
+        ):
+            from app.models.security_zone import SecurityZone as _SZ
+
+            z = (
+                db.query(_SZ)
+                .filter(
+                    func.lower(_SZ.name) == str(zone_value).strip().lower(),
+                    _SZ.tenant_id == current_user.tenant_id,
+                )
+                .first()
+            )
+            if z:
+                security_zone_id = z.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"SecurityZone '{zone_value}' non trovata",
+                    }
+                )
+
+        # Optional: protocols (comma-separated in one cell) + remote_access
+        protocols_value = row.get("protocols")
+        protocols = []
+        if (
+            protocols_value is not None
+            and str(protocols_value).strip() != ""
+        ):
+            protocols = [
+                p.strip()
+                for p in str(protocols_value).split(",")
+                if p.strip()
+            ]
+        remote_access_value = row.get("remote_access")
+        remote_access = False
+        remote_access_type = "none"
+        if (
+            remote_access_value is not None
+            and str(remote_access_value).strip() != ""
+        ):
+            ra = str(remote_access_value).strip().lower()
+            if ra in ("true", "yes", "1", "attended", "unattended"):
+                remote_access = True
+                if ra in ("attended", "unattended"):
+                    remote_access_type = ra
+                else:
+                    remote_access_type = "attended"
         if missing or not site_id or not asset_type_id:
             if missing:
                 errors.append(
@@ -728,6 +877,12 @@ def import_assets_xlsx_preview(
                 "physical_access_ease": row.get("physical_access_ease"),
                 "purdue_level": row.get("purdue_level"),
                 "installation_date": row.get("installation_date"),
+                "status": status_name,
+                "location": location_value,
+                "area": area_value,
+                "security_zone": zone_value,
+                "protocols": ",".join(protocols) if protocols else None,
+                "remote_access": "true" if remote_access else None,
             }
             
             for field, new_value in csv_fields.items():
@@ -749,6 +904,22 @@ def import_assets_xlsx_preview(
                     old_asset_type = asset.asset_type.name if asset.asset_type else None
                     if str(old_asset_type) != str(new_value):
                         diff[field] = {"old": old_asset_type, "new": new_value}
+                elif field == "status":
+                    old_status = asset.status.name if asset.status else None
+                    if str(old_status).strip().lower() != str(new_value).strip().lower():
+                        diff[field] = {"old": old_status, "new": new_value}
+                elif field == "location":
+                    old_loc = asset.location.name if asset.location else None
+                    if str(old_loc).strip().lower() != str(new_value).strip().lower():
+                        diff[field] = {"old": old_loc, "new": new_value}
+                elif field == "area":
+                    old_area = asset.area.name if asset.area else None
+                    if str(old_area).strip().lower() != str(new_value).strip().lower():
+                        diff[field] = {"old": old_area, "new": new_value}
+                elif field == "security_zone":
+                    old_zone = asset.security_zone.name if asset.security_zone else None
+                    if str(old_zone).strip().lower() != str(new_value).strip().lower():
+                        diff[field] = {"old": old_zone, "new": new_value}
                 else:
                     old_value = getattr(asset, field, None)
                     if str(old_value) != str(new_value):
@@ -780,6 +951,12 @@ def import_assets_xlsx_preview(
                     "physical_access_ease": row.get("physical_access_ease"),
                     "purdue_level": row.get("purdue_level"),
                     "installation_date": row.get("installation_date"),
+                    "status": status_name,
+                    "location": location_value,
+                    "area": area_value,
+                    "security_zone": zone_value,
+                    "protocols": protocols,
+                    "remote_access": remote_access,
                     "manufacturer_action": manufacturer_action,
                     "interfaces": interfaces,
                 }
@@ -933,6 +1110,151 @@ def import_assets_xlsx_confirm(
                     )
                     continue
             manufacturer_id = manufacturer.id
+
+        # Optional: status by name (override the default Active resolved above)
+        status_name = row.get("status")
+        if (
+            not missing
+            and status_name is not None
+            and str(status_name).strip() != ""
+        ):
+            from app.models.asset_status import AssetStatus as _AS
+
+            st_match = (
+                db.query(_AS)
+                .filter(
+                    func.lower(_AS.name) == str(status_name).strip().lower(),
+                    _AS.tenant_id == current_user.tenant_id,
+                )
+                .first()
+            )
+            if st_match:
+                status_id = st_match.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"Status con name '{status_name}' non trovato",
+                    }
+                )
+
+        # Optional: location by name/code (scoped to the asset's site)
+        location_id = None
+        location_value = row.get("location")
+        if (
+            not missing
+            and site_id
+            and location_value is not None
+            and str(location_value).strip() != ""
+        ):
+            from app.models.location import Location as _Loc
+
+            loc = (
+                db.query(_Loc)
+                .filter(
+                    _Loc.site_id == site_id,
+                    _Loc.tenant_id == current_user.tenant_id,
+                    db.or_(
+                        func.lower(_Loc.name) == str(location_value).strip().lower(),
+                        func.lower(_Loc.code)
+                        == str(location_value).strip().lower(),
+                    ),
+                )
+                .first()
+            )
+            if loc:
+                location_id = loc.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"Location '{location_value}' non trovata nel sito",
+                    }
+                )
+
+        # Optional: area by name/code (scoped to the asset's site)
+        area_id = None
+        area_value = row.get("area")
+        if (
+            not missing
+            and site_id
+            and area_value is not None
+            and str(area_value).strip() != ""
+        ):
+            from app.models.area import Area as _Area
+
+            ar = (
+                db.query(_Area)
+                .filter(
+                    _Area.site_id == site_id,
+                    _Area.tenant_id == current_user.tenant_id,
+                    db.or_(
+                        func.lower(_Area.name) == str(area_value).strip().lower(),
+                        func.lower(_Area.code) == str(area_value).strip().lower(),
+                    ),
+                )
+                .first()
+            )
+            if ar:
+                area_id = ar.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"Area '{area_value}' non trovata nel sito",
+                    }
+                )
+
+        # Optional: security_zone by name (tenant-scoped)
+        security_zone_id = None
+        zone_value = row.get("security_zone")
+        if (
+            not missing
+            and zone_value is not None
+            and str(zone_value).strip() != ""
+        ):
+            from app.models.security_zone import SecurityZone as _SZ
+
+            z = (
+                db.query(_SZ)
+                .filter(
+                    func.lower(_SZ.name) == str(zone_value).strip().lower(),
+                    _SZ.tenant_id == current_user.tenant_id,
+                )
+                .first()
+            )
+            if z:
+                security_zone_id = z.id
+            else:
+                errors.append(
+                    {
+                        "row": int(idx) + 2,
+                        "error": f"SecurityZone '{zone_value}' non trovata",
+                    }
+                )
+
+        # Optional: protocols (comma-separated) + remote_access
+        protocols_value = row.get("protocols")
+        protocols = []
+        if (
+            protocols_value is not None
+            and str(protocols_value).strip() != ""
+        ):
+            protocols = [
+                p.strip() for p in str(protocols_value).split(",") if p.strip()
+            ]
+        remote_access_value = row.get("remote_access")
+        remote_access = False
+        remote_access_type = "none"
+        if (
+            remote_access_value is not None
+            and str(remote_access_value).strip() != ""
+        ):
+            ra = str(remote_access_value).strip().lower()
+            if ra in ("true", "yes", "1", "attended", "unattended"):
+                remote_access = True
+                remote_access_type = ra if ra in ("attended", "unattended") else "attended"
+
         if missing or not site_id or not asset_type_id:
             if missing:
                 errors.append(
@@ -982,6 +1304,19 @@ def import_assets_xlsx_confirm(
                 asset.physical_access_ease = row.get("physical_access_ease")
                 asset.purdue_level = purdue_level
                 asset.installation_date = installation_date
+                # New extended fields
+                if status_id:
+                    asset.status_id = status_id
+                if location_id:
+                    asset.location_id = location_id
+                if area_id:
+                    asset.area_id = area_id
+                if security_zone_id:
+                    asset.security_zone_id = security_zone_id
+                if protocols:
+                    asset.protocols = protocols
+                asset.remote_access = remote_access
+                asset.remote_access_type = remote_access_type
                 db.commit()
                 updated.append(tag)
                 # If ip_address present, create LAN interface if not already present
@@ -1043,6 +1378,13 @@ def import_assets_xlsx_confirm(
                     physical_access_ease=row.get("physical_access_ease"),
                     purdue_level=purdue_level,
                     installation_date=installation_date,
+                    # New extended fields
+                    location_id=location_id,
+                    area_id=area_id,
+                    security_zone_id=security_zone_id,
+                    protocols=protocols if protocols else None,
+                    remote_access=remote_access,
+                    remote_access_type=remote_access_type,
                 )
                 db.add(new_asset)
                 db.commit()

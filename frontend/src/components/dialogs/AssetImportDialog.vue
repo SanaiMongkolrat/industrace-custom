@@ -104,7 +104,13 @@ const columns = ref([
   { field: 'manufacturer', header: 'assets.assetForm.manufacturer' },
   { field: 'serial_number', header: 'assets.assetForm.serial_number' },
   { field: 'model', header: 'assets.assetForm.model' },
-  { field: 'description', header: 'assets.assetForm.description' }
+  { field: 'description', header: 'assets.assetForm.description' },
+  { field: 'status', header: 'assets.assetForm.status' },
+  { field: 'location', header: 'assets.assetForm.location' },
+  { field: 'area', header: 'assets.assetForm.area' },
+  { field: 'security_zone', header: 'assets.assetForm.security_zone' },
+  { field: 'protocols', header: 'assets.assetForm.protocols' },
+  { field: 'remote_access', header: 'assets.assetForm.remote_access' }
 ])
 const loading = ref(false)
 const error = ref('')
