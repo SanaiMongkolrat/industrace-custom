@@ -3,7 +3,7 @@ from app.services.auth import get_current_user
 from app.models import User
 from typing import Optional
 
-_BULK_PATH_KEYWORDS = ("bulk", "/import/", "recalculate-all", "recalculate", "/empty")
+_BULK_PATH_KEYWORDS = ("bulk", "recalculate-all", "recalculate", "/empty")
 
 
 def _resolve_min_level(method: str, path: str) -> int:
