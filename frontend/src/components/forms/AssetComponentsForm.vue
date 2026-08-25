@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="flex align-items-center mb-2">
-      <span>{{ t('assetComponents.createSectionHint') }}</span>
-      <Button class="ml-2 p-button-text p-button-sm" :label="expanded ? t('common.actions.hide') : t('common.actions.show')" icon="pi pi-chevron-down" @click="expanded = !expanded" />
+    <div class="bom-header">
+      <span class="bom-hint">{{ t('assetComponents.createSectionHint') }}</span>
+      <div class="bom-header-actions">
+        <Button class="p-button-text p-button-sm" :label="expanded ? t('common.actions.hide') : t('common.actions.show')" icon="pi pi-chevron-down" @click="expanded = !expanded" />
+      </div>
     </div>
 
     <transition name="fade">
@@ -154,6 +156,22 @@ onMounted(() => {
 .bom-entry {
   display: block;
 }
+
+/* Header: hint text on one line, Show/Hide button on the next line */
+.bom-header {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.bom-hint {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #6c757d;
+  font-style: italic;
+}
+.bom-header-actions {
+  display: block;
+}
+
 .bom-field {
   margin-bottom: 1rem;
 }
