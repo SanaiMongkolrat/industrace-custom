@@ -9,5 +9,11 @@
   "deleted": "Componente rimosso con successo",
   "saveError": "Salvataggio componente fallito",
   "deleteError": "Rimozione componente fallita",
-  "deleteConfirm": "Sei sicuro di voler rimuovere questo componente?"
+  "deleteConfirm": "Sei sicuro di voler rimuovere questo componente?",
+  "createSectionTitle": "Componenti (BOM)",
+  "createSectionHint": "Aggiungi componenti da creare insieme a questo asset",
+  "addComponent": "Aggiungi Componente",
+  "removeComponent": "Rimuovi",
+  "model": "Modello",
+  "notes": "Note"
 }

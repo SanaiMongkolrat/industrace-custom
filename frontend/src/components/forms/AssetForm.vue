@@ -55,6 +55,22 @@
         :form="form"
       />
 
+      <!-- Components (BOM) — create-only; components auto-POSTed after asset creation -->
+      <Card v-if="!props.asset" class="mb-4">
+        <template #title>
+          <div class="flex align-items-center">
+            <i class="pi pi-box mr-2"></i>
+            {{ t('assetComponents.createSectionTitle') }}
+          </div>
+        </template>
+        <template #content>
+          <AssetComponentsForm
+            v-model:components="form.components"
+            :editable="true"
+          />
+        </template>
+      </Card>
+
       <!-- Dates and Notes -->
       <AssetDatesForm 
         :form="form"
@@ -79,6 +95,7 @@ import AssetLocationForm from './AssetLocationForm.vue'
 import AssetTechnicalDetailsForm from './AssetTechnicalDetailsForm.vue'
 import AssetSecurityForm from './AssetSecurityForm.vue'
 import AssetDatesForm from './AssetDatesForm.vue'
+import AssetComponentsForm from './AssetComponentsForm.vue'
 
 const { t } = useI18n()
 const toast = useToast()
@@ -160,7 +177,8 @@ const {
   business_criticality: 'low',
   description: '',
   interfaces: props.asset?.interfaces ? [...props.asset.interfaces] : [],
-  protocols: [] 
+  protocols: [],
+  components: []
 })
 
 
@@ -234,7 +252,10 @@ async function handleSubmit() {
       installation_date: formatDate(formData.installation_date),
       last_update_date: formatDateTime(formData.last_update_date)
     }
-    emit('submit', dataWithFormattedDates)
+    // Separate components (BOM) from the asset payload — the backend creates the
+    // asset first, then components are POSTed to /assets/{id}/components.
+    const { components, ...assetPayload } = dataWithFormattedDates
+    emit('submit', { asset: assetPayload, components: components || [] })
   }, {
     successMessage: props.asset ? null : t('assets.messages.created'), // Non mostrare toast per update
     errorContext: t('assets.messages.saveError')

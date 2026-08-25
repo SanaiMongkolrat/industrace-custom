@@ -333,6 +333,9 @@ export default {
   getModelLifecycleStats() {
     return api.get('/model-lifecycles/stats')
   },
+  createAssetComponent(assetId, componentData) {
+    return api.post(`/assets/${assetId}/components`, componentData)
+  },
   getModelsByManufacturer(manufacturerId = null) {
     const params = manufacturerId ? { manufacturer_id: manufacturerId } : {}
     return api.get('/model-lifecycles/models-by-manufacturer', { params })

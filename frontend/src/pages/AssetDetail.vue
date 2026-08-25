@@ -431,7 +431,8 @@ function editAsset() {
   router.push(`/assets/${asset.value.id}/edit`)
 }
 
-async function onAssetEditSubmit(updatedAsset) {
+async function onAssetEditSubmit(payload) {
+  const updatedAsset = payload.asset || payload
   try {
     await api.updateAsset(asset.value.id, updatedAsset)
     toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.updated') })

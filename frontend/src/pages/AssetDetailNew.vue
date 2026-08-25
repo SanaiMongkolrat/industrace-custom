@@ -313,7 +313,8 @@ async function loadInitialData() {
   }
 }
 
-function onAssetEditSubmit(updatedAsset) {
+function onAssetEditSubmit(payload) {
+  const updatedAsset = payload.asset || payload
   asset.value = updatedAsset
   showEditDialog.value = false
   toast.add({

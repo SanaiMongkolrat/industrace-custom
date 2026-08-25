@@ -451,16 +451,20 @@ function cleanAssetData(assetData) {
 }
 
 // Funzione unificata per gestire submit (creazione e modifica)
-async function handleSubmit(assetData) {
-  
+async function handleSubmit(payload) {
+  // New shape: { asset, components }. For edit, AssetForm emits the same shape
+  // with components: [] (the create-only section is hidden on edit).
+  const assetData = payload.asset || payload
+  const components = payload.components || []
+
   const cleanedData = cleanAssetData(assetData)
-  
+
   if (editingAsset.value) {
     // Modalità modifica
     await updateAsset(cleanedData)
   } else {
     // Modalità creazione
-    await createAsset(cleanedData)
+    await createAsset(cleanedData, components)
   }
 }
 
@@ -893,9 +897,20 @@ function viewAsset(id) {
   router.push(`/assets/${id}`)
 }
 
-async function createAsset(assetData) {
+async function createAsset(assetData, components = []) {
   try {
     const result = await api.createAsset(assetData)
+    // After the asset is created, POST any BOM components entered in the Create dialog
+    if (result?.id && Array.isArray(components) && components.length) {
+      for (const comp of components) {
+        if (!comp.model_lifecycle_id) continue
+        await api.createAssetComponent(result.id, {
+          model_lifecycle_id: comp.model_lifecycle_id,
+          quantity: comp.quantity || 1,
+          notes: comp.notes || null
+        })
+      }
+    }
     close()
     await fetchAssets()
   } catch (error) {
