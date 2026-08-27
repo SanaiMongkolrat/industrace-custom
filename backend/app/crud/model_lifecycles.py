@@ -88,7 +88,7 @@ def create_model_lifecycle(
 ) -> ModelLifecycle:
     """Create a new model lifecycle record"""
     db_lifecycle = ModelLifecycle(
-        tenant_id=tenant_id, **lifecycle_in.model_dump(exclude_unset=True)
+        tenant_id=tenant_id, **lifecycle_in.model_dump(exclude_unset=True, exclude={"tenant_id"})
     )
     db.add(db_lifecycle)
     db.commit()

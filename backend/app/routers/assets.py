@@ -5,7 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, Request, UploadFile, File, Form, Query
 from pydantic import BaseModel
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from sqlalchemy import func, or_
 import pandas as pd
 from sqlalchemy.exc import IntegrityError
 
@@ -727,7 +727,7 @@ def import_assets_xlsx_preview(
                 .filter(
                     _Loc.site_id == site_id,
                     _Loc.tenant_id == current_user.tenant_id,
-                    db.or_(
+                    or_(
                         func.lower(_Loc.name) == str(location_value).strip().lower(),
                         func.lower(_Loc.code)
                         == str(location_value).strip().lower(),
@@ -761,7 +761,7 @@ def import_assets_xlsx_preview(
                 .filter(
                     _Area.site_id == site_id,
                     _Area.tenant_id == current_user.tenant_id,
-                    db.or_(
+                    or_(
                         func.lower(_Area.name) == str(area_value).strip().lower(),
                         func.lower(_Area.code) == str(area_value).strip().lower(),
                     ),
@@ -1154,7 +1154,7 @@ def import_assets_xlsx_confirm(
                 .filter(
                     _Loc.site_id == site_id,
                     _Loc.tenant_id == current_user.tenant_id,
-                    db.or_(
+                    or_(
                         func.lower(_Loc.name) == str(location_value).strip().lower(),
                         func.lower(_Loc.code)
                         == str(location_value).strip().lower(),
@@ -1188,7 +1188,7 @@ def import_assets_xlsx_confirm(
                 .filter(
                     _Area.site_id == site_id,
                     _Area.tenant_id == current_user.tenant_id,
-                    db.or_(
+                    or_(
                         func.lower(_Area.name) == str(area_value).strip().lower(),
                         func.lower(_Area.code) == str(area_value).strip().lower(),
                     ),
