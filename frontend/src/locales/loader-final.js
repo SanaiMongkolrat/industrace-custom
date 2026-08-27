@@ -73,6 +73,30 @@ import itModelLifecycles from './it/modelLifecycles.json'
 import enModelLifecycles from './en/modelLifecycles.json'
 import itAssetComponents from './it/assetComponents.json'
 import enAssetComponents from './en/assetComponents.json'
+import itAssetConnections from './it/assetConnections.json'
+import enAssetConnections from './en/assetConnections.json'
+import itAssetCommunications from './it/assetCommunications.json'
+import enAssetCommunications from './en/assetCommunications.json'
+import itAssetStatusesNew from './it/assetStatuses.json'
+import enAssetStatusesNew from './en/assetStatuses.json'
+import itAssetTypesNew from './it/assetTypes.json'
+import enAssetTypesNew from './en/assetTypes.json'
+import itAssetDetail from './it/assetDetail.json'
+import enAssetDetail from './en/assetDetail.json'
+import itAssetImport from './it/assetImport.json'
+import enAssetImport from './en/assetImport.json'
+import itAssetSuppliersTab from './it/assetSuppliersTab.json'
+import enAssetSuppliersTab from './en/assetSuppliersTab.json'
+import itDocuments from './it/documents.json'
+import enDocuments from './en/documents.json'
+import itFloorplan from './it/floorplanWithMarkers.json'
+import enFloorplan from './en/floorplanWithMarkers.json'
+import itForm from './it/form.json'
+import enForm from './en/form.json'
+import itManufacturerImport from './it/manufacturerImport.json'
+import enManufacturerImport from './en/manufacturerImport.json'
+import itSupplierImport from './it/supplierImport.json'
+import enSupplierImport from './en/supplierImport.json'
 
 // Funzione per appiattire gli oggetti annidati
 const flattenObject = (obj, prefix = '') => {
@@ -133,7 +157,19 @@ const messages = {
     discoveredDevices: itDiscoveredDevices,
     core: itCore,
     modelLifecycles: itModelLifecycles,
-    assetComponents: itAssetComponents
+    assetComponents: itAssetComponents,
+    assetConnections: itAssetConnections,
+    assetCommunications: itAssetCommunications,
+    assetStatuses: itAssetStatusesNew,
+    assetTypes: itAssetTypesNew,
+    assetDetail: itAssetDetail,
+    assetImport: itAssetImport,
+    assetSuppliersTab: itAssetSuppliersTab,
+    documents: itDocuments,
+    floorplanWithMarkers: itFloorplan,
+    form: itForm,
+    manufacturerImport: itManufacturerImport,
+    supplierImport: itSupplierImport
   }),
   en: flattenObject({
     common: enCommon,
@@ -170,7 +206,19 @@ const messages = {
     discoveredDevices: enDiscoveredDevices,
     core: enCore,
     modelLifecycles: enModelLifecycles,
-    assetComponents: enAssetComponents
+    assetComponents: enAssetComponents,
+    assetConnections: enAssetConnections,
+    assetCommunications: enAssetCommunications,
+    assetStatuses: enAssetStatusesNew,
+    assetTypes: enAssetTypesNew,
+    assetDetail: enAssetDetail,
+    assetImport: enAssetImport,
+    assetSuppliersTab: enAssetSuppliersTab,
+    documents: enDocuments,
+    floorplanWithMarkers: enFloorplan,
+    form: enForm,
+    manufacturerImport: enManufacturerImport,
+    supplierImport: enSupplierImport
   })
 }
 

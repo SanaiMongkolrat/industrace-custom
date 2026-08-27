@@ -1,0 +1,13 @@
+{
+  "title": "Stati Asset",
+  "deleteConfirm": "Sei sicuro di voler eliminare questo stato asset?",
+  "messages": {
+    "fetchError": "Errore caricamento stati asset",
+    "created": "Stato asset creato con successo",
+    "createError": "Errore creazione stato asset",
+    "updated": "Stato asset aggiornato con successo",
+    "updateError": "Errore aggiornamento stato asset",
+    "deleted": "Stato asset eliminato con successo",
+    "deleteError": "Errore eliminazione stato asset"
+  }
+}

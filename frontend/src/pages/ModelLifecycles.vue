@@ -53,7 +53,7 @@
           </div>
           <div class="flex gap-2">
             <span class="text-sm text-600">
-              {{ t('assets.strings.filteredAssets', { filtered: filteredLifecycles.length, total: lifecycles.length }) }}
+              {{ t('assets.messages.filteredAssets', { filtered: filteredLifecycles.length, total: lifecycles.length }) }}
             </span>
           </div>
         </div>
@@ -68,7 +68,7 @@
       </Column>
       <Column field="useful_life_years" :header="t('modelLifecycles.fields.usefulLifeYears')" sortable>
         <template #body="{ data }">
-          <span v-if="data.useful_life_years">{{ data.useful_life_years }} {{ t('common.strings.years') }}</span>
+          <span v-if="data.useful_life_years">{{ data.useful_life_years }} {{ t('common.years') }}</span>
           <span v-else>-</span>
         </template>
       </Column>

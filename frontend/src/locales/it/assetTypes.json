@@ -1,0 +1,13 @@
+{
+  "title": "Tipi Asset",
+  "deleteConfirm": "Sei sicuro di voler eliminare questo tipo di asset?",
+  "messages": {
+    "fetchError": "Errore caricamento tipi asset",
+    "created": "Tipo asset creato con successo",
+    "createError": "Errore creazione tipo asset",
+    "updated": "Tipo asset aggiornato con successo",
+    "updateError": "Errore aggiornamento tipo asset",
+    "deleted": "Tipo asset eliminato con successo",
+    "deleteError": "Errore eliminazione tipo asset"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Asset Communications",
+  "import": "Import",
+  "importPcap": "Import PCAP",
+  "importPcapDesc": "Import a PCAP file to auto-detect asset communications",
+  "physicalLinks": "Physical Links",
+  "logicalDependencies": "Logical Dependencies",
+  "noGraphData": "No graph data available"
+}

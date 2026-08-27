@@ -1,0 +1,13 @@
+{
+  "title": "Asset Types",
+  "deleteConfirm": "Are you sure you want to delete this asset type?",
+  "messages": {
+    "fetchError": "Failed to load asset types",
+    "created": "Asset type created successfully",
+    "createError": "Failed to create asset type",
+    "updated": "Asset type updated successfully",
+    "updateError": "Failed to update asset type",
+    "deleted": "Asset type deleted successfully",
+    "deleteError": "Failed to delete asset type"
+  }
+}

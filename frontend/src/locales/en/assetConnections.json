@@ -1,0 +1,19 @@
+{
+  "title": "Asset Connections",
+  "add": "Add",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "ports": "Ports",
+  "localInterface": "Local Interface",
+  "remoteInterface": "Remote Interface",
+  "remoteAsset": "Remote Asset",
+  "noConnections": "No connections found",
+  "searchAssetByName": "Search asset by name",
+  "addConnection": "Add Connection",
+  "fetchError": "Failed to load connections",
+  "fetchAssetsError": "Failed to load assets",
+  "addConnectionSuccess": "Connection added successfully",
+  "addConnectionError": "Failed to add connection",
+  "deleteConnectionSuccess": "Connection deleted successfully",
+  "deleteConnectionError": "Failed to delete connection"
+}

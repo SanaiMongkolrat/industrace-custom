@@ -1,0 +1,19 @@
+{
+  "title": "Connessioni Asset",
+  "add": "Aggiungi",
+  "cancel": "Annulla",
+  "delete": "Elimina",
+  "ports": "Porte",
+  "localInterface": "Interfaccia locale",
+  "remoteInterface": "Interfaccia remota",
+  "remoteAsset": "Asset remoto",
+  "noConnections": "Nessuna connessione trovata",
+  "searchAssetByName": "Cerca asset per nome",
+  "addConnection": "Aggiungi connessione",
+  "fetchError": "Errore caricamento connessioni",
+  "fetchAssetsError": "Errore caricamento asset",
+  "addConnectionSuccess": "Connessione aggiunta con successo",
+  "addConnectionError": "Errore aggiunta connessione",
+  "deleteConnectionSuccess": "Connessione eliminata con successo",
+  "deleteConnectionError": "Errore eliminazione connessione"
+}
