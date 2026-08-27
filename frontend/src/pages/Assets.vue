@@ -127,7 +127,7 @@
       </div>
       <div class="text-sm text-600" v-if="assets.length !== totalAssetsCount">
         <i class="pi pi-filter mr-2"></i>
-        {{ t('assets.strings.filteredAssets', { filtered: assets.length, total: totalAssetsCount }) }}
+        {{ t('assets.messages.filteredAssets', { filtered: assets.length, total: totalAssetsCount }) }}
       </div>
     </div>
 

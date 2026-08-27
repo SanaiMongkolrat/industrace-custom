@@ -172,7 +172,7 @@
 
         <!-- Fornitori -->
         <div v-if="asset.suppliers && asset.suppliers.length > 0" class="suppliers-section">
-          <h3 class="section-title">{{ t('assets.strings.suppliers') || 'Suppliers' }}</h3>
+          <h3 class="section-title">{{ t('assets.tabs.suppliers') || 'Suppliers' }}</h3>
           <div class="suppliers-list">
             <div v-for="supplier in asset.suppliers" :key="supplier.id || supplier.name" class="supplier-item">
               <div class="supplier-name">{{ supplier.name }}</div>
