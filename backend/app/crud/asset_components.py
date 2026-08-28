@@ -108,3 +108,34 @@ def delete_asset_component(db: Session, component_id: uuid.UUID) -> bool:
         db.commit()
         return True
     return False
+
+
+def bulk_apply_installation_date(
+    db: Session,
+    asset_id: uuid.UUID,
+    tenant_id: Optional[uuid.UUID],
+    installation_date,
+) -> int:
+    """Set installation_date on all components of the asset where it is NULL.
+
+    Used when user clicks "Pull asset date to all empty". Existing non-null
+    values are NEVER touched — only empty slots are filled.
+
+    Returns the number of components updated.
+    """
+    if installation_date is None:
+        return 0
+    query = (
+        db.query(AssetComponent)
+        .filter(AssetComponent.asset_id == asset_id)
+        .filter(AssetComponent.installation_date.is_(None))
+    )
+    if tenant_id:
+        query = query.filter(
+            or_(AssetComponent.tenant_id == tenant_id, AssetComponent.tenant_id.is_(None))
+        )
+    rows = query.all()
+    for row in rows:
+        row.installation_date = installation_date
+    db.commit()
+    return len(rows)

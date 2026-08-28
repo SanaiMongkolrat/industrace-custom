@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, date
 import uuid
 
 
@@ -8,6 +8,10 @@ class AssetComponentBase(BaseModel):
     asset_id: uuid.UUID
     model_lifecycle_id: uuid.UUID
     quantity: int = Field(default=1, ge=1, description="Number of units")
+    installation_date: Optional[date] = Field(
+        None,
+        description="When this component was installed in the parent asset (overwritten on field replacement)",
+    )
     notes: Optional[str] = Field(None, max_length=10000)
 
     model_config = ConfigDict(protected_namespaces=())
@@ -24,6 +28,7 @@ class AssetComponentCreate(AssetComponentBase):
 class AssetComponentUpdate(BaseModel):
     model_lifecycle_id: Optional[uuid.UUID] = None
     quantity: Optional[int] = Field(None, ge=1)
+    installation_date: Optional[date] = None
     notes: Optional[str] = Field(None, max_length=10000)
 
 

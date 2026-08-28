@@ -15,5 +15,18 @@
   "addComponent": "Add Component",
   "removeComponent": "Remove",
   "model": "Model",
-  "notes": "Notes"
+  "notes": "Notes",
+  "installationDate": "Installation date",
+  "installationDateHint": "When this component was installed in the asset. Update this date when the component is replaced in the field.",
+  "installationDateInherited": "(inherited from asset)",
+  "installationDateHintDefault": "Defaults to the asset's installation date ({date}) when unset. Clear to leave empty, or set a different date for field replacements.",
+  "bulkApplyAssetDate": "Pull asset date to all empty ({count})",
+  "bulkApplyTitle": "Apply asset installation date to empty components",
+  "bulkApplyConfirmMessage": "Apply the asset's installation date ({date}) to {count} component(s) that have no date set?",
+  "bulkApplyPreservesManual": "Components that already have a date assigned will NOT be modified.",
+  "bulkApplyConfirm": "Apply to empty",
+  "bulkApplyDone": "Asset date applied",
+  "bulkApplyDoneDetail": "{count} component(s) updated with installation date {date}",
+  "bulkApplyNothing": "No empty components to update",
+  "bulkApplyError": "Failed to apply asset date to components"
 }

@@ -1,7 +1,8 @@
 import uuid
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, status, Request, Query
+from fastapi import APIRouter, Depends, status, Request, Query, Body
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app.errors.exceptions import ErrorCodeException
@@ -103,3 +104,69 @@ def delete_component(
         raise ErrorCodeException(
             status_code=404, error_code=ErrorCode.ASSET_COMPONENT_NOT_FOUND
         )
+
+
+class BulkApplyInstallationDateResponse(BaseModel):
+    updated_count: int
+    installation_date: str  # ISO date
+
+
+class BulkApplyInstallationDateBody(BaseModel):
+    installation_date: Optional[str] = None  # ISO date; null means "use asset's date"
+
+
+@router.post(
+    "/apply-asset-date",
+    response_model=BulkApplyInstallationDateResponse,
+)
+@audit_log_action("update", "AssetComponent", model_class=AssetComponent)
+def apply_asset_date(
+    asset_id: uuid.UUID,
+    payload: BulkApplyInstallationDateBody = Body(default=BulkApplyInstallationDateBody()),
+    request: Request = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Set installation_date on all components of this asset where it is currently NULL.
+
+    Endpoint name avoids the word "bulk" so it doesn't get auto-escalated to
+    RBAC level 4 by _BULK_PATH_KEYWORDS in rbac.py (admin only has level 3
+    on the assets section, so a "bulk"-prefixed endpoint would 403 for admin).
+
+    If payload.installation_date is omitted, uses the parent asset's installation_date.
+    Existing non-null values are NEVER touched (so user-assigned field-replacement
+    dates survive).
+
+    Returns the number of components updated and the date that was applied.
+    """
+    from datetime import date as date_type
+    target_date = None
+    if payload.installation_date:
+        try:
+            target_date = date_type.fromisoformat(payload.installation_date)
+        except ValueError:
+            raise ErrorCodeException(
+                status_code=400, error_code=ErrorCode.INVALID_ASSET_UPDATE
+            )
+    if target_date is None:
+        # Fall back to the asset's installation_date
+        from app.models import Asset
+        asset = (
+            db.query(Asset).filter(Asset.id == asset_id).first()
+        )
+        if asset and asset.installation_date:
+            target_date = asset.installation_date
+    if target_date is None:
+        # Nothing to apply — no payload date and no asset date
+        return BulkApplyInstallationDateResponse(
+            updated_count=0, installation_date=""
+        )
+    count = crud_components.bulk_apply_installation_date(
+        db,
+        asset_id=asset_id,
+        tenant_id=current_user.tenant_id,
+        installation_date=target_date,
+    )
+    return BulkApplyInstallationDateResponse(
+        updated_count=count, installation_date=target_date.isoformat()
+    )

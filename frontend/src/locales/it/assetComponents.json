@@ -15,5 +15,18 @@
   "addComponent": "Aggiungi Componente",
   "removeComponent": "Rimuovi",
   "model": "Modello",
-  "notes": "Note"
+  "notes": "Note",
+  "installationDate": "Data di installazione",
+  "installationDateHint": "Quando questo componente è stato installato nell'asset. Aggiorna questa data quando il componente viene sostituito sul campo.",
+  "installationDateInherited": "(ereditato dall'asset)",
+  "installationDateHintDefault": "Predefinito sulla data di installazione dell'asset ({date}) se non impostato. Cancellare per lasciare vuoto, o impostare una data diversa per le sostituzioni sul campo.",
+  "bulkApplyAssetDate": "Applica data asset a tutti i vuoti ({count})",
+  "bulkApplyTitle": "Applica data di installazione dell'asset ai componenti vuoti",
+  "bulkApplyConfirmMessage": "Applicare la data di installazione dell'asset ({date}) a {count} componenti senza data?",
+  "bulkApplyPreservesManual": "I componenti che hanno già una data assegnata NON verranno modificati.",
+  "bulkApplyConfirm": "Applica ai vuoti",
+  "bulkApplyDone": "Data asset applicata",
+  "bulkApplyDoneDetail": "{count} componenti aggiornati con data di installazione {date}",
+  "bulkApplyNothing": "Nessun componente vuoto da aggiornare",
+  "bulkApplyError": "Errore nell'applicare la data dell'asset ai componenti"
 }

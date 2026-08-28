@@ -144,7 +144,7 @@
             <i class="pi pi-box"></i> {{ t('assets.tabs.components') }}
           </span>
         </template>
-        <AssetDetailComponentsTab :assetId="asset.id" :canWrite="canWrite('assets')" @updated="fetchAsset" />
+        <AssetDetailComponentsTab :assetId="asset.id" :assetInstallationDate="asset.installation_date" :canWrite="canWrite('assets')" @updated="fetchAsset" />
       </TabPanel>
       <TabPanel v-if="isIec62443Enabled">
         <template #header>
