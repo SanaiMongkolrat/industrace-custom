@@ -54,7 +54,8 @@
     "api_keys": "API Keys",
     "evidence": "Evidence",
     "basicInfo": "Basic Information",
-    "permissions": "Permissions"
+    "permissions": "Permissions",
+    "inheritedPermissions": "Inherited permissions"
   },
   "levels": {
     "none": "None",
@@ -69,7 +70,8 @@
     "saveError": "Error saving role",
     "inheritanceInfo": "Parent role permissions will be automatically inherited",
     "selectParentRole": "Select parent role",
-    "inheritableDescription": "This role can be used as a parent role for other roles"
+    "inheritableDescription": "This role can be used as a parent role for other roles",
+    "inherited": "Inherited"
   },
   "permissions": {
     "none": "None",
@@ -110,5 +112,6 @@
     "bulkDescription": "Can perform operations on multiple resources at once",
     "resetPassword": "Reset Password",
     "resetPasswordDescription": "Can reset passwords of other users"
-  }
+  },
+  "fetchError": "Error loading roles"
 }

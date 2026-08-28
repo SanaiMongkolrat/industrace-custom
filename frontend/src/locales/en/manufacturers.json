@@ -47,6 +47,13 @@
     "errors": "Errors",
     "row": "Row",
     "confirm": "Confirm",
-    "readError": "Error reading file"
+    "readError": "Error reading file",
+    "differences": "Differences",
+    "tip": "Tip",
+    "tipText": "Download the template to see valid format examples.",
+    "websiteFormat": "Website: valid URL format"
+  },
+  "manufacturerForm": {
+    "name": "Name"
   }
 }

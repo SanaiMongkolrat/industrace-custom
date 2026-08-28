@@ -71,6 +71,7 @@
     "changesPending": "Changes pending save",
     "positionSaved": "Position saved successfully",
     "notPositioned": "Not positioned",
-    "confirmClose": "Are you sure you want to close the window without saving the changes?"
+    "confirmClose": "Are you sure you want to close the window without saving the changes?",
+    "saveError": "Error saving floorplan"
   }
 }

@@ -1,0 +1,13 @@
+{
+  "title": "Stati del ciclo di vita",
+  "messages": {
+    "fetchError": "Errore nel caricamento degli stati del ciclo di vita",
+    "created": "Stato del ciclo di vita creato con successo",
+    "createError": "Errore nella creazione dello stato del ciclo di vita",
+    "updated": "Stato del ciclo di vita aggiornato con successo",
+    "updateError": "Errore nell'aggiornamento dello stato del ciclo di vita",
+    "deleted": "Stato del ciclo di vita eliminato con successo",
+    "deleteError": "Errore nell'eliminazione dello stato del ciclo di vita"
+  },
+  "deleteConfirm": "Sei sicuro di voler eliminare questo stato del ciclo di vita?"
+}

@@ -1,19 +1,20 @@
 {
-    "title": "Tipi di Dispositivi",
-    "fields": {
-        "purdueLevel": "Livello Purdue"
-    },
-    "messages": {
-        "fetchError": "Errore nel caricamento dei tipi di dispositivi",
-        "created": "Tipo di dispositivo creato con successo",
-        "createError": "Errore nella creazione del tipo di dispositivo",
-        "updated": "Tipo di dispositivo aggiornato con successo",
-        "updateError": "Errore nell'aggiornamento del tipo di dispositivo"
-    },
-    "level0": "0",
-    "level1": "1",
-    "level1_5": "1.5",
-    "level2": "2",
-    "level3": "3",
-    "level4": "4"
+  "title": "Tipi di Dispositivi",
+  "fields": {
+    "purdueLevel": "Livello Purdue"
+  },
+  "messages": {
+    "fetchError": "Errore nel caricamento dei tipi di dispositivi",
+    "created": "Tipo di dispositivo creato con successo",
+    "createError": "Errore nella creazione del tipo di dispositivo",
+    "updated": "Tipo di dispositivo aggiornato con successo",
+    "updateError": "Errore nell'aggiornamento del tipo di dispositivo"
+  },
+  "level0": "0",
+  "level1": "1",
+  "level1_5": "1.5",
+  "level2": "2",
+  "level3": "3",
+  "level4": "4",
+  "level": "Livello"
 }

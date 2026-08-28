@@ -183,7 +183,7 @@
         
         <div class="flex justify-end gap-2 mt-6">
           <Button 
-            :label="t('common.actionscancel')" 
+            :label="t('common.actions.cancel')" 
             severity="secondary"
             @click="closeBulkDialog" 
           />

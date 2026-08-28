@@ -14,7 +14,9 @@
     "updateError": "Error updating user",
     "deleteError": "Error deleting user",
     "bulkUpdateError": "Error in bulk update of users",
-    "userNotFound": "User not found"
+    "userNotFound": "User not found",
+    "resetPasswordError": "Error resetting password",
+    "resetPasswordSuccess": "Password reset successfully"
   },
   "strings": {
     "active": "Active",
@@ -35,5 +37,13 @@
     "confirm": "Confirm",
     "readError": "Error reading file",
     "differences": "Differences"
-  }
+  },
+  "copyError": "Error copying to clipboard",
+  "passwordSecurityWarning": "For security, share this password securely.",
+  "resetPassword": "Reset password",
+  "resetPasswordSuccess": "Password reset",
+  "temporaryPassword": "Temporary password",
+  "temporaryPasswordInfo": "The user will be asked to change this on first login.",
+  "userEmail": "User email",
+  "warning": "Warning"
 }

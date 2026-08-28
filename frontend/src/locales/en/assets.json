@@ -10,7 +10,8 @@
     "bySite": "Filter by site",
     "byArea": "Filter by area",
     "byRisk": "Filter by risk",
-    "advanced": "Advanced filters"
+    "advanced": "Advanced filters",
+    "hasCriticalVulns": "Has critical vulnerabilities"
   },
   "fields": {
     "ipAddress": "IP Address",
@@ -46,7 +47,9 @@
     "purdueLevel": "Purdue Level",
     "impactValue": "Impact Value",
     "exposureLevel": "Exposure Level",
-    "updateStatus": "Update Status"
+    "updateStatus": "Update Status",
+    "macAddress": "MAC Address",
+    "name": "Name"
   },
   "messages": {
     "created": "Asset created successfully",
@@ -69,7 +72,31 @@
     "fetchSitesError": "Error loading sites",
     "noInterfaces": "No network interfaces configured",
     "noteSaved": "Note saved successfully",
-    "noteSaveError": "Error saving note"
+    "noteSaveError": "Error saving note",
+    "assetUpdated": "Asset updated successfully",
+    "bulkSoftDeleteError": "Error moving assets to trash",
+    "bulkSoftDeleteErrors": "Some assets could not be moved to trash",
+    "bulkSoftDeleted": "Assets moved to trash",
+    "bulkUpdateError": "Error updating assets",
+    "bulkUpdated": "Assets updated",
+    "confirmBulkSoftDelete": "Move selected assets to trash?",
+    "confirmBulkSoftDeleteMessage": "This will move {count} asset(s) to trash.",
+    "deleteSuccess": "Asset deleted",
+    "errorLoadingAsset": "Error loading asset",
+    "errorUpdatingAsset": "Error updating asset",
+    "fetchAreasError": "Error loading areas",
+    "fetchAssetTypesError": "Error loading asset types",
+    "fetchLocationsError": "Error loading locations",
+    "fetchManufacturersError": "Error loading manufacturers",
+    "hardDeleteError": "Error permanently deleting asset",
+    "hardDeleted": "Asset permanently deleted",
+    "importErrors": "Import errors",
+    "importedInfo": "Import completed",
+    "restoreError": "Error restoring asset",
+    "restored": "Asset restored",
+    "saveError": "Error saving asset",
+    "trashEmptied": "Trash emptied",
+    "trashEmptyError": "Error emptying trash"
   },
   "actions": {
     "addProtocol": "Add Protocol"
@@ -196,12 +223,7 @@
     "mediumTitle": "Medium Risk",
     "mediumMessage": "This asset has a medium risk ({score}). Monitor regularly."
   },
-  "status": {
-    "active": "Active",
-    "inactive": "Inactive",
-    "maintenance": "In Maintenance",
-    "decommissioned": "Decommissioned"
-  },
+  "status": "Status",
   "relations": {
     "graphTitle": "Relationships Graph",
     "graphPlaceholder": "Visual graph of asset relationships",
@@ -330,7 +352,8 @@
     "chooseLabel": "Choose Document",
     "uploadLabel": "Upload",
     "documentsUploaded": "Documents uploaded successfully",
-    "uploadDocuments": "Upload Documents"
+    "uploadDocuments": "Upload Documents",
+    "downloadError": "Error downloading document"
   },
   "connections": {
     "title": "Connections",
@@ -504,6 +527,17 @@
     "dateFormat": "Date: valid dd/mm/yyyy format",
     "purdueFormat": "Purdue level: valid 1-5 format",
     "tip": "Tip",
-    "tipText": "Download the template to see valid format examples."
-  }
+    "tipText": "Download the template to see valid format examples.",
+    "confirm": "Confirm import",
+    "differences": "Differences",
+    "errors": "Errors",
+    "readError": "Error reading file",
+    "row": "Row",
+    "toCreate": "To create",
+    "toUpdate": "To update"
+  },
+  "assetForm": {
+    "tag": "Tag"
+  },
+  "value": "Value"
 }

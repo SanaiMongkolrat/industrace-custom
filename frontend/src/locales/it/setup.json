@@ -1,131 +1,232 @@
 {
-    "title": "Setup",
-    "checking": "Verificando...",
-    "fields": {
-        "smtp": {
-            "host": "Host SMTP",
-            "port": "Porta",
-            "username": "Nome utente",
-            "password": "Password",
-            "fromEmail": "Email mittente",
-            "useTls": "Usa TLS"
-        },
-        "syslog": {
-            "host": "Server syslog",
-            "port": "Porta",
-            "protocol": "Protocollo",
-            "facility": "Facility (0-23)",
-            "enabled": "Abilita inoltro"
-        }
+  "title": "Setup",
+  "checking": "Verificando...",
+  "fields": {
+    "smtp": {
+      "host": "Host SMTP",
+      "port": "Porta",
+      "username": "Nome utente",
+      "password": "Password",
+      "fromEmail": "Email mittente",
+      "useTls": "Usa TLS"
     },
-    "strings": {
-        "description": "Configura le impostazioni del sistema per il tuo tenant",
-        "sso": {
-            "title": "Configurazione SSO",
-            "description": "Configura l'autenticazione Single Sign-On per il tenant"
-        },
-        "users": {
-            "title": "Gestione Utenti",
-            "description": "Gestisci gli utenti del sistema e i loro permessi"
-        },
-        "roles": {
-            "title": "Gestione Ruoli",
-            "description": "Configura i ruoli e i permessi degli utenti"
-        },
-        "notifications": {
-            "title": "Gestione Notifiche",
-            "description": "Configura le notifiche di sistema e la coda di invio"
-        },
-        "smtp": {
-            "title": "Configurazione SMTP",
-            "description": "Configura le impostazioni del server di posta elettronica",
-            "testConnection": "Test Connessione",
-            "saveSettings": "Salva Impostazioni"
-        },
-        "printTemplates": {
-            "title": "Template di Stampa",
-            "description": "Gestisci i template per la stampa dei dispositivi",
-            "initDescription": "Inizializza i template di default",
-            "initDefaults": "Inizializza Default",
-            "defaultTemplatesInfo": "I template di stampa predefiniti includono:",
-            "defaultTemplatesList": [
-                "Scheda Asset completa",
-                "Riepilogo Asset compatto"
-            ],
-            "defaultTemplate1": "Scheda Asset completa",
-            "defaultTemplate2": "Riepilogo Asset compatto",
-            "templatesInitialized": "Template di default inizializzati con successo",
-            "templatesAlreadyExist": "Template già esistenti per questo tenant",
-            "templatesInitError": "Errore nell'inizializzazione dei template"
-        },
-        "printedKit": {
-            "title": "Kit di Stampa",
-            "description": "Gestisci il kit di stampa dei dispositivi",
-            "generate": "Genera Printed Kit",
-            "generating": "Generazione in corso...",
-            "success": "Printed Kit generato con successo",
-            "error": "Errore nella generazione del Printed Kit",
-            "options": {
-                "includeAssets": "Include schede asset",
-                "includeSites": "Include informazioni stabilimenti",
-                "includeContacts": "Include contatti",
-                "includeSuppliers": "Include fornitori",
-                "includePhotos": "Include foto asset",
-                "includeDocuments": "Include documenti asset"
-            },
-            "info": {
-                "title": "Printed Kit - Documentazione Completa",
-                "description": "Genera una documentazione completa stampabile che include:",
-                "items": [
-                    "Informazioni generali del tenant",
-                    "Lista degli stabilimenti e aree",
-                    "Schede complete di tutti gli asset",
-                    "Contatti e fornitori",
-                    "Documenti e foto degli asset"
-                ],
-                "item1": "Informazioni generali del tenant",
-                "item2": "Lista degli stabilimenti e aree",
-                "item3": "Schede complete di tutti gli asset",
-                "item4": "Contatti e fornitori",
-                "item5": "Documenti e foto degli asset"
-            },
-            "generationOptions": "Opzioni di generazione:"
-        },
-        "vulnerabilityFeeds": {
-            "title": "Feed Vulnerabilità",
-            "description": "Configura i feed di vulnerabilità (remoti e locali) per il matching automatico"
-        },
-        "externalLog": {
-            "title": "Log Esterno (Syslog)",
-            "description": "Inoltra gli eventi dell'audit log a un server syslog esterno",
-            "testConnection": "Test connessione",
-            "saveSettings": "Salva impostazioni",
-            "info": "Tutta l'attività registrata nell'audit log viene inoltre inviata al server syslog configurato."
-        },
-        "features": {
-            "title": "Moduli opzionali",
-            "description": "Abilita o disabilita i moduli del prodotto per questo tenant",
-            "help": "I moduli disabilitati spariscono dal menu e l'interfaccia si semplifica. I dati restano nel database.",
-            "iec62443": "Conformità ISA/IEC 62443",
-            "iec62443Hint": "Zone di sicurezza, condotti, valutazioni SR, evidenze e widget correlati in dashboard.",
-            "save": "Salva moduli",
-            "enabled": "Abilitato",
-            "disabled": "Disabilitato"
-        }
-    },
-    "messages": {
-        "smtpSaved": "Configurazione SMTP salvata",
-        "smtpTestSuccess": "Connessione SMTP testata con successo",
-        "templatesInitialized": "Template di default inizializzati con successo",
-        "templatesAlreadyExist": "Template già esistenti per questo tenant",
-        "smtpSaveError": "Errore nel salvataggio della configurazione SMTP",
-        "smtpTestError": "Errore nel test della connessione SMTP",
-        "syslogSaved": "Configurazione syslog salvata",
-        "syslogTestSuccess": "Messaggio di test inviato al server syslog",
-        "syslogSaveError": "Errore nel salvataggio della configurazione syslog",
-        "syslogTestError": "Errore nell'invio del messaggio di test al server syslog",
-        "templatesInitError": "Errore nell'inizializzazione dei template",
-        "featuresSaved": "Impostazioni moduli salvate. Ricarica la pagina se il menu non si aggiorna.",
-        "featuresSaveError": "Errore nel salvataggio delle impostazioni moduli"
+    "syslog": {
+      "host": "Server syslog",
+      "port": "Porta",
+      "protocol": "Protocollo",
+      "facility": "Facility (0-23)",
+      "enabled": "Abilita inoltro"
     }
+  },
+  "strings": {
+    "description": "Configura le impostazioni del sistema per il tuo tenant",
+    "sso": {
+      "title": "Configurazione SSO",
+      "description": "Configura l'autenticazione Single Sign-On per il tenant"
+    },
+    "users": {
+      "title": "Gestione Utenti",
+      "description": "Gestisci gli utenti del sistema e i loro permessi"
+    },
+    "roles": {
+      "title": "Gestione Ruoli",
+      "description": "Configura i ruoli e i permessi degli utenti"
+    },
+    "notifications": {
+      "title": "Gestione Notifiche",
+      "description": "Configura le notifiche di sistema e la coda di invio"
+    },
+    "smtp": {
+      "title": "Configurazione SMTP",
+      "description": "Configura le impostazioni del server di posta elettronica",
+      "testConnection": "Test Connessione",
+      "saveSettings": "Salva Impostazioni"
+    },
+    "printTemplates": {
+      "title": "Template di Stampa",
+      "description": "Gestisci i template per la stampa dei dispositivi",
+      "initDescription": "Inizializza i template di default",
+      "initDefaults": "Inizializza Default",
+      "defaultTemplatesInfo": "I template di stampa predefiniti includono:",
+      "defaultTemplatesList": [
+        "Scheda Asset completa",
+        "Riepilogo Asset compatto"
+      ],
+      "defaultTemplate1": "Scheda Asset completa",
+      "defaultTemplate2": "Riepilogo Asset compatto",
+      "templatesInitialized": "Template di default inizializzati con successo",
+      "templatesAlreadyExist": "Template già esistenti per questo tenant",
+      "templatesInitError": "Errore nell'inizializzazione dei template",
+      "addField": "Aggiungi campo",
+      "advancedFields": "Campi avanzati",
+      "advancedFieldsDescription": "Configura i campi di stampa avanzati.",
+      "basicInfo": "Informazioni di base",
+      "component": "Componente",
+      "descriptionPlaceholder": "Descrizione modello",
+      "fieldLabel": "Etichetta campo",
+      "fieldLabelPlaceholder": "Etichetta campo",
+      "fieldName": "Nome campo",
+      "fieldSection": "Sezione",
+      "fieldVisible": "Visibile",
+      "fieldWidth": "Larghezza",
+      "icon": "Icona",
+      "includeAuditLog": "Includi registro di controllo",
+      "includeConnections": "Includi connessioni",
+      "includeCustomFields": "Includi campi personalizzati",
+      "includePhoto": "Includi foto",
+      "includeQR": "Includi codice QR",
+      "includeRiskMatrix": "Includi matrice di rischio",
+      "keyFormat": "Formato chiave",
+      "keyPlaceholder": "chiave-modello",
+      "keyRequired": "La chiave è obbligatoria",
+      "namePlaceholder": "Nome modello",
+      "nameRequired": "Il nome è obbligatorio",
+      "printOptions": "Opzioni di stampa",
+      "resetToDefault": "Ripristina predefiniti",
+      "saveError": "Errore nel salvataggio del modello",
+      "selectComponent": "Seleziona componente",
+      "selectField": "Seleziona campo",
+      "selectIcon": "Seleziona icona",
+      "selectSection": "Seleziona sezione",
+      "templateCreated": "Modello creato",
+      "templateDescription": "Descrizione modello",
+      "templateKey": "Chiave modello",
+      "templateName": "Nome modello",
+      "templateUpdated": "Modello aggiornato"
+    },
+    "printedKit": {
+      "title": "Kit di Stampa",
+      "description": "Gestisci il kit di stampa dei dispositivi",
+      "generate": "Genera Printed Kit",
+      "generating": "Generazione in corso...",
+      "success": "Printed Kit generato con successo",
+      "error": "Errore nella generazione del Printed Kit",
+      "options": {
+        "includeAssets": "Include schede asset",
+        "includeSites": "Include informazioni stabilimenti",
+        "includeContacts": "Include contatti",
+        "includeSuppliers": "Include fornitori",
+        "includePhotos": "Include foto asset",
+        "includeDocuments": "Include documenti asset"
+      },
+      "info": {
+        "title": "Printed Kit - Documentazione Completa",
+        "description": "Genera una documentazione completa stampabile che include:",
+        "items": [
+          "Informazioni generali del tenant",
+          "Lista degli stabilimenti e aree",
+          "Schede complete di tutti gli asset",
+          "Contatti e fornitori",
+          "Documenti e foto degli asset"
+        ],
+        "item1": "Informazioni generali del tenant",
+        "item2": "Lista degli stabilimenti e aree",
+        "item3": "Schede complete di tutti gli asset",
+        "item4": "Contatti e fornitori",
+        "item5": "Documenti e foto degli asset"
+      },
+      "generationOptions": "Opzioni di generazione:"
+    },
+    "vulnerabilityFeeds": {
+      "title": "Feed Vulnerabilità",
+      "description": "Configura i feed di vulnerabilità (remoti e locali) per il matching automatico"
+    },
+    "externalLog": {
+      "title": "Log Esterno (Syslog)",
+      "description": "Inoltra gli eventi dell'audit log a un server syslog esterno",
+      "testConnection": "Test connessione",
+      "saveSettings": "Salva impostazioni",
+      "info": "Tutta l'attività registrata nell'audit log viene inoltre inviata al server syslog configurato."
+    },
+    "features": {
+      "title": "Moduli opzionali",
+      "description": "Abilita o disabilita i moduli del prodotto per questo tenant",
+      "help": "I moduli disabilitati spariscono dal menu e l'interfaccia si semplifica. I dati restano nel database.",
+      "iec62443": "Conformità ISA/IEC 62443",
+      "iec62443Hint": "Zone di sicurezza, condotti, valutazioni SR, evidenze e widget correlati in dashboard.",
+      "save": "Salva moduli",
+      "enabled": "Abilitato",
+      "disabled": "Disabilitato"
+    }
+  },
+  "messages": {
+    "smtpSaved": "Configurazione SMTP salvata",
+    "smtpTestSuccess": "Connessione SMTP testata con successo",
+    "templatesInitialized": "Template di default inizializzati con successo",
+    "templatesAlreadyExist": "Template già esistenti per questo tenant",
+    "smtpSaveError": "Errore nel salvataggio della configurazione SMTP",
+    "smtpTestError": "Errore nel test della connessione SMTP",
+    "syslogSaved": "Configurazione syslog salvata",
+    "syslogTestSuccess": "Messaggio di test inviato al server syslog",
+    "syslogSaveError": "Errore nel salvataggio della configurazione syslog",
+    "syslogTestError": "Errore nell'invio del messaggio di test al server syslog",
+    "templatesInitError": "Errore nell'inizializzazione dei template",
+    "featuresSaved": "Impostazioni moduli salvate. Ricarica la pagina se il menu non si aggiorna.",
+    "featuresSaveError": "Errore nel salvataggio delle impostazioni moduli"
+  },
+  "admin": {
+    "description": "Crea l'account amministratore.",
+    "email": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "name": "Nome",
+    "namePlaceholder": "Nome amministratore",
+    "password": "Password",
+    "passwordPlaceholder": "Minimo 8 caratteri",
+    "title": "Amministratore"
+  },
+  "back": "Indietro",
+  "description": "Configura la tua istanza Industrace.",
+  "errors": {
+    "installationFailed": "Installazione non riuscita",
+    "invalidEmail": "Indirizzo email non valido",
+    "invalidSlug": "Slug non valido",
+    "passwordTooShort": "Password troppo corta",
+    "required": "Questo campo è obbligatorio"
+  },
+  "goToLogin": "Vai al login",
+  "install": "Installa",
+  "next": "Avanti",
+  "organization": {
+    "description": "Inserisci i dettagli della tua organizzazione.",
+    "language": "Lingua",
+    "languagePlaceholder": "Seleziona lingua",
+    "name": "Nome organizzazione",
+    "namePlaceholder": "La tua organizzazione",
+    "slug": "Slug",
+    "slugPlaceholder": "slug-organizzazione",
+    "title": "Organizzazione"
+  },
+  "printTemplates": {
+    "createTemplate": "Crea modello",
+    "descriptionPlaceholder": "Descrizione modello",
+    "editTemplate": "Modifica modello"
+  },
+  "refresh": "Aggiorna",
+  "review": {
+    "admin": "Amministratore",
+    "description": "Rivedi la tua configurazione.",
+    "organization": "Organizzazione",
+    "title": "Riepilogo"
+  },
+  "steps": {
+    "admin": "Amministratore",
+    "complete": "Completato",
+    "organization": "Organizzazione",
+    "review": "Riepilogo",
+    "systemCheck": "Verifica di sistema"
+  },
+  "success": {
+    "credentials": "Salva queste credenziali in modo sicuro.",
+    "description": "La tua istanza è pronta.",
+    "installed": "Installazione completata",
+    "title": "Successo",
+    "warning": "Salva le credenziali ora."
+  },
+  "systemCheck": {
+    "database": "Database",
+    "description": "Verifica dei requisiti di sistema.",
+    "freshInstall": "Installazione pulita rilevata",
+    "title": "Verifica di sistema"
+  },
+  "welcome": "Benvenuto in Industrace"
 }

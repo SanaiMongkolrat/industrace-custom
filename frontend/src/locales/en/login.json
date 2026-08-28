@@ -11,7 +11,9 @@
     "error_password_required": "Password is required",
     "error_success": "Login successful",
     "ssoRequired": "This user can only login via SSO. Please use Single Sign-On authentication.",
-    "ssoRequiredTitle": "SSO Login Required"
+    "ssoRequiredTitle": "SSO Login Required",
+    "emailRequired": "Email is required",
+    "ssoError": "SSO login failed"
   },
   "fields": {
     "fullName": "Full name",

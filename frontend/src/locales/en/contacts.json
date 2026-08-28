@@ -15,7 +15,8 @@
     "hardDeleted": "Contact permanently deleted successfully",
     "hardDeleteError": "Error permanently deleting contact",
     "trashEmptied": "Trash emptied successfully",
-    "emptyTrashError": "Error emptying trash"
+    "emptyTrashError": "Error emptying trash",
+    "noContacts": "No contacts"
   },
   "fields": {
     "fullName": "Full name",
@@ -50,6 +51,9 @@
     "errors": "Errors",
     "row": "Row",
     "confirm": "Confirm",
-    "readError": "Error reading file"
+    "readError": "Error reading file",
+    "differences": "Differences",
+    "tip": "Tip",
+    "tipText": "Download the template to see valid format examples."
   }
 }

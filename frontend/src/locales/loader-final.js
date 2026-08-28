@@ -97,6 +97,8 @@ import itManufacturerImport from './it/manufacturerImport.json'
 import enManufacturerImport from './en/manufacturerImport.json'
 import itSupplierImport from './it/supplierImport.json'
 import enSupplierImport from './en/supplierImport.json'
+import itLifecycleStatuses from './it/lifecycleStatuses.json'
+import enLifecycleStatuses from './en/lifecycleStatuses.json'
 
 // Funzione per appiattire gli oggetti annidati
 const flattenObject = (obj, prefix = '') => {
@@ -169,7 +171,8 @@ const messages = {
     floorplanWithMarkers: itFloorplan,
     form: itForm,
     manufacturerImport: itManufacturerImport,
-    supplierImport: itSupplierImport
+    supplierImport: itSupplierImport,
+    lifecycleStatuses: itLifecycleStatuses
   }),
   en: flattenObject({
     common: enCommon,
@@ -218,7 +221,8 @@ const messages = {
     floorplanWithMarkers: enFloorplan,
     form: enForm,
     manufacturerImport: enManufacturerImport,
-    supplierImport: enSupplierImport
+    supplierImport: enSupplierImport,
+    lifecycleStatuses: enLifecycleStatuses
   })
 }
 

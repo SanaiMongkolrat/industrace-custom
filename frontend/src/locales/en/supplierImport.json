@@ -1,3 +1,4 @@
 {
-  "readError": "Failed to read supplier import file"
+  "readError": "Failed to read supplier import file",
+  "row": "Row"
 }

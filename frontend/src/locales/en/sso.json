@@ -112,13 +112,34 @@
         "Enable SSO when you are ready to test login"
       ],
       "fields": [
-        { "label": "Provider Type", "description": "Azure AD (EntraID)" },
-        { "label": "Client ID", "description": "Application (client) ID from Azure AD" },
-        { "label": "Client Secret", "description": "Secret value from Certificates & secrets" },
-        { "label": "Tenant Domain", "description": "Tenant ID, tenant name, or onmicrosoft.com domain" },
-        { "label": "Redirect URI", "description": "Must match exactly the callback URL in Azure AD" },
-        { "label": "Auto-Provisioning", "description": "Keep disabled (recommended): only existing Industrace users can sign in" },
-        { "label": "Domain Restriction", "description": "Optional: limit sign-in to a specific email domain" }
+        {
+          "label": "Provider Type",
+          "description": "Azure AD (EntraID)"
+        },
+        {
+          "label": "Client ID",
+          "description": "Application (client) ID from Azure AD"
+        },
+        {
+          "label": "Client Secret",
+          "description": "Secret value from Certificates & secrets"
+        },
+        {
+          "label": "Tenant Domain",
+          "description": "Tenant ID, tenant name, or onmicrosoft.com domain"
+        },
+        {
+          "label": "Redirect URI",
+          "description": "Must match exactly the callback URL in Azure AD"
+        },
+        {
+          "label": "Auto-Provisioning",
+          "description": "Keep disabled (recommended): only existing Industrace users can sign in"
+        },
+        {
+          "label": "Domain Restriction",
+          "description": "Optional: limit sign-in to a specific email domain"
+        }
       ]
     },
     "step5": {
@@ -196,5 +217,6 @@
     "title": "SSO login error",
     "message": "An error occurred while attempting to login via SSO.",
     "backToLogin": "Back to login"
-  }
+  },
+  "clientSecretDecryptError": "Error decrypting client secret"
 }

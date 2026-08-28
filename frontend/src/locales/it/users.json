@@ -1,39 +1,49 @@
 {
-    "title": "Utenti",
-    "fields": {
-        "role": "Ruolo",
-        "status": "Stato",
-        "lastLogin": "Ultimo Login",
-        "resetPassword": "Reimposta Password",
-        "password": "Password"
-    },
-    "messages": {
-        "fetchError": "Errore nel caricamento degli utenti",
-        "fetchRolesError": "Errore nel caricamento dei ruoli",
-        "createError": "Errore nella creazione dell'utente",
-        "updateError": "Errore nell'aggiornamento dell'utente",
-        "deleteError": "Errore nell'eliminazione dell'utente",
-        "bulkUpdateError": "Errore nell'aggiornamento di massa degli utenti",
-        "userNotFound": "Utente non trovato"
-    },
-    "strings": {
-        "active": "Attivo",
-        "inactive": "Inattivo"
-    },
-    "userImport": {
-        "title": "Importa Utenti",
-        "downloadTemplate": "Scarica Template",
-        "importantInfo": "Informazioni importanti",
-        "nameRequired": "Il nome è obbligatorio",
-        "emailRequired": "L'email è obbligatoria",
-        "roleRequired": "Il nome del ruolo è obbligatorio",
-        "tipText": "I nuovi utenti ricevono una password temporanea se non indicata nel file e devono cambiarla al primo accesso.",
-        "toCreate": "Da creare",
-        "toUpdate": "Da aggiornare",
-        "errors": "Errori",
-        "row": "Riga",
-        "confirm": "Conferma",
-        "readError": "Errore nella lettura del file",
-        "differences": "Differenze"
-    }
+  "title": "Utenti",
+  "fields": {
+    "role": "Ruolo",
+    "status": "Stato",
+    "lastLogin": "Ultimo Login",
+    "resetPassword": "Reimposta Password",
+    "password": "Password"
+  },
+  "messages": {
+    "fetchError": "Errore nel caricamento degli utenti",
+    "fetchRolesError": "Errore nel caricamento dei ruoli",
+    "createError": "Errore nella creazione dell'utente",
+    "updateError": "Errore nell'aggiornamento dell'utente",
+    "deleteError": "Errore nell'eliminazione dell'utente",
+    "bulkUpdateError": "Errore nell'aggiornamento di massa degli utenti",
+    "userNotFound": "Utente non trovato",
+    "resetPasswordError": "Errore nel reset della password",
+    "resetPasswordSuccess": "Password reimpostata con successo"
+  },
+  "strings": {
+    "active": "Attivo",
+    "inactive": "Inattivo"
+  },
+  "userImport": {
+    "title": "Importa Utenti",
+    "downloadTemplate": "Scarica Template",
+    "importantInfo": "Informazioni importanti",
+    "nameRequired": "Il nome è obbligatorio",
+    "emailRequired": "L'email è obbligatoria",
+    "roleRequired": "Il nome del ruolo è obbligatorio",
+    "tipText": "I nuovi utenti ricevono una password temporanea se non indicata nel file e devono cambiarla al primo accesso.",
+    "toCreate": "Da creare",
+    "toUpdate": "Da aggiornare",
+    "errors": "Errori",
+    "row": "Riga",
+    "confirm": "Conferma",
+    "readError": "Errore nella lettura del file",
+    "differences": "Differenze"
+  },
+  "copyError": "Errore nella copia negli appunti",
+  "passwordSecurityWarning": "Per sicurezza, condividi questa password in modo sicuro.",
+  "resetPassword": "Reimposta password",
+  "resetPasswordSuccess": "Password reimpostata",
+  "temporaryPassword": "Password temporanea",
+  "temporaryPasswordInfo": "All'utente verrà chiesto di cambiarla al primo accesso.",
+  "userEmail": "Email utente",
+  "warning": "Avviso"
 }

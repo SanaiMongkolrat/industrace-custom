@@ -112,13 +112,34 @@
         "Abilita SSO quando sei pronto a testare l'accesso"
       ],
       "fields": [
-        { "label": "Tipo Provider", "description": "Azure AD (EntraID)" },
-        { "label": "Client ID", "description": "ID applicazione (client) da Azure AD" },
-        { "label": "Client Secret", "description": "Valore del segreto da Certificati e segreti" },
-        { "label": "Dominio Tenant", "description": "ID tenant, nome tenant o dominio onmicrosoft.com" },
-        { "label": "Redirect URI", "description": "Deve corrispondere esattamente al callback in Azure AD" },
-        { "label": "Auto-Provisioning", "description": "Lascia disabilitato (consigliato): possono accedere solo utenti già presenti in Industrace" },
-        { "label": "Restrizione Dominio", "description": "Opzionale: limita l'accesso a un dominio email specifico" }
+        {
+          "label": "Tipo Provider",
+          "description": "Azure AD (EntraID)"
+        },
+        {
+          "label": "Client ID",
+          "description": "ID applicazione (client) da Azure AD"
+        },
+        {
+          "label": "Client Secret",
+          "description": "Valore del segreto da Certificati e segreti"
+        },
+        {
+          "label": "Dominio Tenant",
+          "description": "ID tenant, nome tenant o dominio onmicrosoft.com"
+        },
+        {
+          "label": "Redirect URI",
+          "description": "Deve corrispondere esattamente al callback in Azure AD"
+        },
+        {
+          "label": "Auto-Provisioning",
+          "description": "Lascia disabilitato (consigliato): possono accedere solo utenti già presenti in Industrace"
+        },
+        {
+          "label": "Restrizione Dominio",
+          "description": "Opzionale: limita l'accesso a un dominio email specifico"
+        }
       ]
     },
     "step5": {
@@ -196,5 +217,6 @@
     "title": "Errore di accesso SSO",
     "message": "Si è verificato un errore durante il tentativo di accesso tramite SSO.",
     "backToLogin": "Torna al login"
-  }
+  },
+  "clientSecretDecryptError": "Errore nella decifratura del segreto client"
 }

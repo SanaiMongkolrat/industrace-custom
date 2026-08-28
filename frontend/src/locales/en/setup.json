@@ -56,7 +56,43 @@
       "defaultTemplate2": "Compact Asset Summary",
       "templatesInitialized": "Default templates initialized successfully",
       "templatesAlreadyExist": "Templates already exist for this tenant",
-      "templatesInitError": "Error initializing templates"
+      "templatesInitError": "Error initializing templates",
+      "addField": "Add field",
+      "advancedFields": "Advanced fields",
+      "advancedFieldsDescription": "Configure advanced print fields.",
+      "basicInfo": "Basic information",
+      "component": "Component",
+      "descriptionPlaceholder": "Template description",
+      "fieldLabel": "Field label",
+      "fieldLabelPlaceholder": "Field label",
+      "fieldName": "Field name",
+      "fieldSection": "Section",
+      "fieldVisible": "Visible",
+      "fieldWidth": "Width",
+      "icon": "Icon",
+      "includeAuditLog": "Include audit log",
+      "includeConnections": "Include connections",
+      "includeCustomFields": "Include custom fields",
+      "includePhoto": "Include photo",
+      "includeQR": "Include QR code",
+      "includeRiskMatrix": "Include risk matrix",
+      "keyFormat": "Key format",
+      "keyPlaceholder": "template-key",
+      "keyRequired": "Key is required",
+      "namePlaceholder": "Template name",
+      "nameRequired": "Name is required",
+      "printOptions": "Print options",
+      "resetToDefault": "Reset to default",
+      "saveError": "Error saving template",
+      "selectComponent": "Select component",
+      "selectField": "Select field",
+      "selectIcon": "Select icon",
+      "selectSection": "Select section",
+      "templateCreated": "Template created",
+      "templateDescription": "Template description",
+      "templateKey": "Template key",
+      "templateName": "Template name",
+      "templateUpdated": "Template updated"
     },
     "printedKit": {
       "title": "Printed Kit",
@@ -127,5 +163,70 @@
     "templatesInitError": "Error initializing templates",
     "featuresSaved": "Module settings saved. Reload the page if menu items do not update.",
     "featuresSaveError": "Error saving module settings"
-  }
+  },
+  "admin": {
+    "description": "Create the administrator account.",
+    "email": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "name": "Name",
+    "namePlaceholder": "Administrator name",
+    "password": "Password",
+    "passwordPlaceholder": "Minimum 8 characters",
+    "title": "Administrator"
+  },
+  "back": "Back",
+  "description": "Set up your Industrace instance.",
+  "errors": {
+    "installationFailed": "Installation failed",
+    "invalidEmail": "Invalid email address",
+    "invalidSlug": "Invalid slug",
+    "passwordTooShort": "Password is too short",
+    "required": "This field is required"
+  },
+  "goToLogin": "Go to login",
+  "install": "Install",
+  "next": "Next",
+  "organization": {
+    "description": "Enter your organization details.",
+    "language": "Language",
+    "languagePlaceholder": "Select language",
+    "name": "Organization name",
+    "namePlaceholder": "Your organization",
+    "slug": "Slug",
+    "slugPlaceholder": "organization-slug",
+    "title": "Organization"
+  },
+  "printTemplates": {
+    "createTemplate": "Create template",
+    "descriptionPlaceholder": "Template description",
+    "editTemplate": "Edit template"
+  },
+  "refresh": "Refresh",
+  "review": {
+    "admin": "Administrator",
+    "description": "Review your configuration.",
+    "organization": "Organization",
+    "title": "Review"
+  },
+  "steps": {
+    "admin": "Administrator",
+    "complete": "Complete",
+    "organization": "Organization",
+    "review": "Review",
+    "systemCheck": "System check"
+  },
+  "success": {
+    "credentials": "Save these credentials securely.",
+    "description": "Your instance is ready.",
+    "installed": "Installation complete",
+    "title": "Success",
+    "warning": "Store the credentials now."
+  },
+  "systemCheck": {
+    "database": "Database",
+    "description": "Checking system requirements.",
+    "freshInstall": "Fresh install detected",
+    "title": "System check"
+  },
+  "welcome": "Welcome to Industrace"
 }

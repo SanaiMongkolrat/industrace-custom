@@ -1,7 +1,7 @@
 {
   "title": "Dispositivi",
   "description": "Gestisci dispositivi e asset industriali",
- "actions": {
+  "actions": {
     "addProtocol": "Aggiungi protocollo"
   },
   "fields": {
@@ -38,7 +38,9 @@
     "purdueLevel": "Livello Purdue",
     "impactValue": "Valore di Impatto",
     "exposureLevel": "Livello di Esposizione",
-    "updateStatus": "Stato di Aggiornamento"
+    "updateStatus": "Stato di Aggiornamento",
+    "macAddress": "Indirizzo MAC",
+    "name": "Nome"
   },
   "interfaces": {
     "ipAddress": "Indirizzo IP",
@@ -91,7 +93,31 @@
     "fetchSitesError": "Errore nel caricamento dei siti",
     "noInterfaces": "Nessuna interfaccia di rete configurata",
     "noteSaved": "Note salvate con successo",
-    "noteSaveError": "Errore nel salvataggio delle note"
+    "noteSaveError": "Errore nel salvataggio delle note",
+    "assetUpdated": "Asset aggiornato con successo",
+    "bulkSoftDeleteError": "Errore nello spostamento degli asset nel cestino",
+    "bulkSoftDeleteErrors": "Alcuni asset non possono essere spostati nel cestino",
+    "bulkSoftDeleted": "Asset spostati nel cestino",
+    "bulkUpdateError": "Errore nell'aggiornamento degli asset",
+    "bulkUpdated": "Asset aggiornati",
+    "confirmBulkSoftDelete": "Spostare gli asset selezionati nel cestino?",
+    "confirmBulkSoftDeleteMessage": "Questo sposterà {count} asset nel cestino.",
+    "deleteSuccess": "Asset eliminato",
+    "errorLoadingAsset": "Errore nel caricamento dell'asset",
+    "errorUpdatingAsset": "Errore nell'aggiornamento dell'asset",
+    "fetchAreasError": "Errore nel caricamento delle aree",
+    "fetchAssetTypesError": "Errore nel caricamento dei tipi di asset",
+    "fetchLocationsError": "Errore nel caricamento delle posizioni",
+    "fetchManufacturersError": "Errore nel caricamento dei produttori",
+    "hardDeleteError": "Errore nell'eliminazione definitiva dell'asset",
+    "hardDeleted": "Asset eliminato definitivamente",
+    "importErrors": "Errori di importazione",
+    "importedInfo": "Importazione completata",
+    "restoreError": "Errore nel ripristino dell'asset",
+    "restored": "Asset ripristinato",
+    "saveError": "Errore nel salvataggio dell'asset",
+    "trashEmptied": "Cestino svuotato",
+    "trashEmptyError": "Errore nello svuotamento del cestino"
   },
   "strings": {
     "totalAssets": "Totale dispositivi",
@@ -184,12 +210,7 @@
     "mediumTitle": "Rischio Medio",
     "mediumMessage": "Questo asset presenta un rischio medio ({score}). Monitorare regolarmente."
   },
-  "status": {
-    "active": "Attivo",
-    "inactive": "Inattivo",
-    "maintenance": "In Manutenzione",
-    "decommissioned": "Dismesso"
-  },
+  "status": "Stato",
   "relations": {
     "graphTitle": "Grafico Relazioni",
     "graphPlaceholder": "Grafico visuale delle relazioni dell'asset",
@@ -316,8 +337,9 @@
     "chooseLabel": "Scegli Documento",
     "uploadLabel": "Carica",
     "documentsUploaded": "Documenti caricati con successo",
-    "uploadDocuments": "Carica Documenti"
-  } ,
+    "uploadDocuments": "Carica Documenti",
+    "downloadError": "Errore nel download del documento"
+  },
   "connections": {
     "title": "Connessioni",
     "uploadConnection": "Carica Connessione",
@@ -490,6 +512,20 @@
     "dateFormat": "Data: formato dd/mm/yyyy",
     "purdueFormat": "Livello Purdue: formato 1-5",
     "tip": "Suggerimento",
-    "tipText": "Scarica il template per vedere esempi di formati validi."
-  }
+    "tipText": "Scarica il template per vedere esempi di formati validi.",
+    "confirm": "Conferma importazione",
+    "differences": "Differenze",
+    "errors": "Errori",
+    "readError": "Errore nella lettura del file",
+    "row": "Riga",
+    "toCreate": "Da creare",
+    "toUpdate": "Da aggiornare"
+  },
+  "assetForm": {
+    "tag": "Tag"
+  },
+  "filters": {
+    "hasCriticalVulns": "Ha vulnerabilità critiche"
+  },
+  "value": "Valore"
 }

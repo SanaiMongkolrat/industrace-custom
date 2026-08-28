@@ -1,16 +1,15 @@
 {
-    "title": "Print",
-    "dialogTitle": "Print Options",
-    "confirmPrint": "Confirm device print",
-    "print": "Print",
-    "templates": {
-        "loadError": "Error loading templates",
-        "tenantSpecific": "Tenant Specific",
-        "global": "Global"
-    },
-    "generation": {
-        "success": "Print generated successfully",
-        "error": "Error generating print"
-    }
+  "title": "Print",
+  "dialogTitle": "Print Options",
+  "confirmPrint": "Confirm device print",
+  "templates": {
+    "loadError": "Error loading templates",
+    "tenantSpecific": "Tenant Specific",
+    "global": "Global",
+    "notFound": "Template not found"
+  },
+  "generation": {
+    "success": "Print generated successfully",
+    "error": "Error generating print"
+  }
 }
-

@@ -1,54 +1,42 @@
 {
-    "title": "Login",
-    "messages": {
-        "emailInvalid": "Inserisci un'email valida",
-        "passwordRequired": "La password è obbligatoria",
-        "success": "Accesso effettuato con successo",
-        "error": "Errore nell'accesso",
-        "error_generic": "Si è verificato un errore",
-        "error_email_required": "L'email è obbligatoria",
-        "error_email_invalid": "Inserisci un'email valida",
-        "error_password_required": "La password è obbligatoria",
-        "error_success": "Accesso effettuato con successo",
-        "ssoRequired": "Questo utente può accedere solo tramite SSO. Utilizza l'autenticazione Single Sign-On.",
-        "ssoRequiredTitle": "Login SSO Richiesto"
-    },
-    "fields": {
-        "fullName": "Nome completo",
-        "firstName": "Nome",
-        "lastName": "Cognome",
-        "phone1": "Telefono 1",
-        "phone2": "Telefono 2",
-        "type": "Tipo",
-        "notes": "Note",
-        "internal": "Interno",
-        "supplier": "Fornitore",
-        "other": "Altro"
-    },
-    "strings": {
-        "email": "Email",
-        "password": "Password",
-        "welcomeMessage": "Benvenuto in Industrace",
-        "signIn": "Accedi",
-        "enterCredentials": "Inserisci le tue credenziali per accedere",
-        "emailPlaceholder": "Inserisci la tua email",
-        "passwordPlaceholder": "Inserisci la tua password",
-        "emailRequired": "L'email è obbligatoria",
-        "emailInvalid": "Inserisci un'email valida",
-        "passwordRequired": "La password è obbligatoria",
-        "rememberMe": "Ricordami",
-        "forgotPassword": "Password dimenticata?",
-        "or": "oppure",
-        "demoMode": "Modalità Demo",
-        "noAccount": "Non hai un account?",
-        "signUp": "Registrati",
-        "submit": "Accedi",
-        "loginWithMicrosoft": "Accedi con Microsoft",
-        "loginWithGoogle": "Accedi con Google",
-        "loginWithOkta": "Accedi con Okta",
-        "loginWithSSO": "Accedi con SSO"
-    },
-    "messages": {
-        "ssoError": "Errore durante il login SSO"
-    }
+  "title": "Login",
+  "messages": {
+    "ssoError": "Accesso SSO non riuscito",
+    "emailRequired": "L'email è obbligatoria"
+  },
+  "fields": {
+    "fullName": "Nome completo",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "phone1": "Telefono 1",
+    "phone2": "Telefono 2",
+    "type": "Tipo",
+    "notes": "Note",
+    "internal": "Interno",
+    "supplier": "Fornitore",
+    "other": "Altro"
+  },
+  "strings": {
+    "email": "Email",
+    "password": "Password",
+    "welcomeMessage": "Benvenuto in Industrace",
+    "signIn": "Accedi",
+    "enterCredentials": "Inserisci le tue credenziali per accedere",
+    "emailPlaceholder": "Inserisci la tua email",
+    "passwordPlaceholder": "Inserisci la tua password",
+    "emailRequired": "L'email è obbligatoria",
+    "emailInvalid": "Inserisci un'email valida",
+    "passwordRequired": "La password è obbligatoria",
+    "rememberMe": "Ricordami",
+    "forgotPassword": "Password dimenticata?",
+    "or": "oppure",
+    "demoMode": "Modalità Demo",
+    "noAccount": "Non hai un account?",
+    "signUp": "Registrati",
+    "submit": "Accedi",
+    "loginWithMicrosoft": "Accedi con Microsoft",
+    "loginWithGoogle": "Accedi con Google",
+    "loginWithOkta": "Accedi con Okta",
+    "loginWithSSO": "Accedi con SSO"
+  }
 }
