@@ -136,7 +136,7 @@
               <span v-else>-</span>
             </template>
           </Column>
-          <Column :header="t('common.actions.actions')">
+          <Column :header="t('common.strings.actions')">
             <template #body="{ data }">
               <div class="flex gap-2">
                 <Button 
@@ -383,7 +383,7 @@
               />
             </template>
           </Column>
-          <Column :header="t('common.actions.actions')">
+          <Column :header="t('common.strings.actions')">
             <template #body="{ data }">
               <Button 
                 icon="pi pi-times" 

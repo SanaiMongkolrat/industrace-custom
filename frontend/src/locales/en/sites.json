@@ -23,7 +23,10 @@
         "locationCreated": "Location created successfully",
         "locationUpdated": "Location updated successfully",
         "updateLocationError": "Error updating location",
-        "importNotImplemented": "Import functionality is not available yet"
+        "importNotImplemented": "Import functionality is not available yet",
+        "fetchContactsError": "Error loading contacts",
+        "updateContactsError": "Error updating contacts",
+        "contactsUpdated": "Contacts updated successfully"
     },
     "fields": {
         "parent": "Parent site",

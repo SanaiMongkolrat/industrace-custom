@@ -72,6 +72,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'primevue/usetoast'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
@@ -81,6 +82,7 @@ import Calendar from 'primevue/calendar'
 import api from '../../api/api'
 
 const { t } = useI18n()
+const toast = useToast()
 
 const props = defineProps({
   manufacturers: { type: Array, default: () => [] },
@@ -135,7 +137,7 @@ onMounted(async () => {
     const res = await api.getAssetTypes()
     assetTypes.value = res.data
   } catch (e) {
-    // Silently fail
+    toast.add({ severity: 'warn', summary: t('common.messages.warning'), detail: t('modelLifecycles.messages.fetchAssetTypesError'), life: 3000 })
   }
 })
 

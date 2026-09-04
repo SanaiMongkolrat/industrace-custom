@@ -78,7 +78,7 @@
     </BaseForm>
   </div>
   <div v-else class="p-4 text-center text-muted">
-    Loading data...
+    {{ t('common.messages.loading') }}
   </div>
 </template>
 

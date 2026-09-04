@@ -124,7 +124,7 @@
                 <span v-else class="text-600">-</span>
               </template>
             </Column>
-            <Column :header="t('common.actions.actions')" v-if="typeof canWrite === 'function' ? canWrite() : canWrite">
+            <Column :header="t('common.strings.actions')" v-if="typeof canWrite === 'function' ? canWrite() : canWrite">
               <template #body="{ data }">
                 <div class="flex gap-2">
                   <Button 

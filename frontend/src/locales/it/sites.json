@@ -23,7 +23,10 @@
         "locationCreated": "Località creata con successo",
         "locationUpdated": "Località aggiornata con successo",
         "updateLocationError": "Errore nell'aggiornamento della località",
-        "importNotImplemented": "La funzione di import non è ancora disponibile"
+        "importNotImplemented": "La funzione di import non è ancora disponibile",
+        "fetchContactsError": "Errore nel caricamento dei contatti",
+        "updateContactsError": "Errore nell'aggiornamento dei contatti",
+        "contactsUpdated": "Contatti aggiornati con successo"
     },
     "fields": {
         "parent": "Sito padre",

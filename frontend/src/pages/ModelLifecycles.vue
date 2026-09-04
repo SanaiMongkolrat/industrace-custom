@@ -90,14 +90,16 @@
           <Button 
             v-if="canWrite('model_lifecycles')"
             icon="pi pi-pencil" 
+            :aria-label="t('common.actions.edit')"
             class="p-button-rounded p-button-text p-button-info" 
             @click="editLifecycle(data)" 
           />
           <Button 
             v-if="canDelete('model_lifecycles')"
             icon="pi pi-trash" 
+            :aria-label="t('common.actions.delete')"
             class="p-button-rounded p-button-text p-button-danger" 
-            @click="deleteLifecycle(data.id)" 
+            @click="deleteLifecycle(data.id)"
           />
         </template>
       </Column>
@@ -129,6 +131,14 @@
         @cancel="onEditCancel" 
       />
     </Dialog>
+
+    <!-- Delete Confirm Dialog -->
+    <BaseConfirmDialog
+      :showConfirmDialog="showDeleteConfirm"
+      :confirmData="{ type: 'delete', message: t('modelLifecycles.deleteConfirm') }"
+      @close="showDeleteConfirm = false"
+      @execute="confirmDelete"
+    />
   </div>
 </template>
 
@@ -145,6 +155,7 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import Tag from 'primevue/tag'
 import InputText from 'primevue/inputtext'
+import BaseConfirmDialog from '../components/base/BaseConfirmDialog.vue'
 
 const toast = useToast()
 const { t } = useI18n()
@@ -156,6 +167,8 @@ const loading = ref(false)
 const showCreateDialog = ref(false)
 const showEditDialog = ref(false)
 const editingLifecycle = ref(null)
+const deleteTargetId = ref(null)
+const showDeleteConfirm = ref(false)
 const stats = ref(null)
 const fileInput = ref(null)
 const templateUrl = '/template_import_model_lifecycle.csv'
@@ -196,7 +209,7 @@ async function fetchManufacturers() {
     const response = await api.getManufacturers()
     manufacturers.value = response.data
   } catch (error) {
-    // Silently fail - manufacturers are optional for the form
+    toast.add({ severity: 'warn', summary: t('common.messages.warning'), detail: t('modelLifecycles.messages.fetchManufacturersError'), life: 3000 })
   }
 }
 
@@ -244,14 +257,22 @@ async function updateLifecycle(data) {
 }
 
 async function deleteLifecycle(id) {
-  if (!confirm(t('modelLifecycles.deleteConfirm'))) return
+  deleteTargetId.value = id
+  showDeleteConfirm.value = true
+}
+
+async function confirmDelete() {
+  if (!deleteTargetId.value) return
   try {
-    await api.deleteModelLifecycle(id)
+    await api.deleteModelLifecycle(deleteTargetId.value)
     toast.add({ severity: 'success', summary: t('common.messages.deleted'), detail: t('modelLifecycles.messages.deleted'), life: 3000 })
     fetchLifecycles()
     fetchStats()
   } catch (err) {
     toast.add({ severity: 'error', summary: t('common.messages.deleteError'), detail: t('modelLifecycles.messages.deleteError'), life: 3000 })
+  } finally {
+    showDeleteConfirm.value = false
+    deleteTargetId.value = null
   }
 }
 

@@ -37,5 +37,9 @@
     "registry": "Registry",
     "utility": "Utility",
     "isa62443": "ISA/IEC 62443"
+  },
+  "sidebar": {
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
   }
 }

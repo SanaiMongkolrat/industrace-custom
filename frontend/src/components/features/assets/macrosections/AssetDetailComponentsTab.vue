@@ -81,8 +81,8 @@
       <Column field="notes" :header="t('common.fields.notes')"></Column>
       <Column :header="t('common.strings.actions')" v-if="canWrite">
         <template #body="{ data }">
-          <Button icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm" @click="editComponent(data)" />
-          <Button icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger p-button-sm" @click="deleteComponent(data.id)" />
+          <Button icon="pi pi-pencil" :aria-label="t('common.actions.edit')" class="p-button-rounded p-button-text p-button-sm" @click="editComponent(data)" />
+          <Button icon="pi pi-trash" :aria-label="t('common.actions.delete')" class="p-button-rounded p-button-text p-button-danger p-button-sm" @click="deleteComponent(data.id)" />
         </template>
       </Column>
     </DataTable>
@@ -149,6 +149,13 @@
         <Button :label="t('assetComponents.bulkApplyConfirm')" icon="pi pi-check" severity="warning" :loading="bulkApplying" @click="executeBulkApply" />
       </template>
     </Dialog>
+    <!-- Delete Confirm Dialog -->
+    <BaseConfirmDialog
+      :showConfirmDialog="showDeleteConfirm"
+      :confirmData="{ type: 'delete', message: t('assetComponents.deleteConfirm') }"
+      @close="showDeleteConfirm = false"
+      @execute="confirmDelete"
+    />
   </div>
 </template>
 
@@ -166,6 +173,7 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import Dropdown from 'primevue/dropdown'
 import Calendar from 'primevue/calendar'
+import BaseConfirmDialog from '@/components/base/BaseConfirmDialog.vue'
 
 const props = defineProps({
   assetId: { type: String, required: true },
@@ -184,6 +192,8 @@ const saving = ref(false)
 const bulkApplying = ref(false)
 const showAddDialog = ref(false)
 const showBulkConfirm = ref(false)
+const showDeleteConfirm = ref(false)
+const deleteTargetId = ref(null)
 const editingComponent = ref(null)
 const modelOptions = ref([])
 
@@ -284,7 +294,7 @@ async function fetchModelOptions() {
       label: `${lc.manufacturer_name || '?'} - ${lc.model_name}${lc.asset_type_name ? ' (' + lc.asset_type_name + ')' : ''}`
     }))
   } catch (err) {
-    // Silently fail
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetComponents.fetchModelOptionsError'), life: 3000 })
   }
 }
 
@@ -337,14 +347,22 @@ async function saveComponent() {
 }
 
 async function deleteComponent(id) {
-  if (!confirm(t('assetComponents.deleteConfirm'))) return
+  deleteTargetId.value = id
+  showDeleteConfirm.value = true
+}
+
+async function confirmDelete() {
+  if (!deleteTargetId.value) return
   try {
-    await api.delete(`/assets/${props.assetId}/components/${id}`)
+    await api.delete(`/assets/${props.assetId}/components/${deleteTargetId.value}`)
     toast.add({ severity: 'success', summary: t('common.messages.deleted'), detail: t('assetComponents.deleted'), life: 3000 })
     fetchComponents()
     emit('updated')
   } catch (err) {
     toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetComponents.deleteError'), life: 3000 })
+  } finally {
+    showDeleteConfirm.value = false
+    deleteTargetId.value = null
   }
 }
 

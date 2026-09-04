@@ -116,6 +116,7 @@
     "restoreError": "Errore nel ripristino dell'asset",
     "restored": "Asset ripristinato",
     "saveError": "Errore nel salvataggio dell'asset",
+    "loadModelsError": "Errore nel caricamento della lista dei modelli",
     "trashEmptied": "Cestino svuotato",
     "trashEmptyError": "Errore nello svuotamento del cestino"
   },

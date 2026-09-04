@@ -39,5 +39,6 @@
   "bulkApplyDone": "Data asset applicata",
   "bulkApplyDoneDetail": "{count} componenti aggiornati con data di installazione {date}",
   "bulkApplyNothing": "Nessun componente vuoto da aggiornare",
-  "bulkApplyError": "Errore nell'applicare la data dell'asset ai componenti"
+  "bulkApplyError": "Errore nell'applicare la data dell'asset ai componenti",
+  "fetchModelOptionsError": "Errore nel caricamento della lista dei modelli"
 }

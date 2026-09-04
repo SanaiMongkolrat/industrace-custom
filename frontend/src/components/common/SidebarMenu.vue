@@ -2,7 +2,7 @@
   <nav :class="['modern-sidebar', { collapsed }]">
     <div class="sidebar-header">
       <img src="@/static/logo_hmc_white.png" alt="HMC Polymers" class="logo" v-if="!collapsed" />
-      <button class="collapse-btn" @click="collapsed = !collapsed">
+      <button class="collapse-btn" :aria-label="collapsed ? t('sidebar.expand') : t('sidebar.collapse')" @click="collapsed = !collapsed">
         <i :class="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
       </button>
     </div>

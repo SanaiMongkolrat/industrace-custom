@@ -31,6 +31,8 @@
   },
   "messages": {
     "fetchError": "Failed to load model lifecycles",
+    "fetchManufacturersError": "Failed to load manufacturers",
+    "fetchAssetTypesError": "Failed to load asset types",
     "created": "Model lifecycle created successfully",
     "createError": "Failed to create model lifecycle",
     "updated": "Model lifecycle updated successfully",

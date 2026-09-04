@@ -190,6 +190,14 @@
         </div>
       </template>
     </BaseDialog>
+
+    <!-- Clear Confirm Dialog -->
+    <BaseConfirmDialog
+      :showConfirmDialog="showClearConfirm"
+      :confirmData="{ type: 'warning', message: t('discoveredDevices.actions.clearConfirm', { target: clearTargetLabel }) }"
+      @close="showClearConfirm = false"
+      @execute="executeClear"
+    />
   </div>
 </template>
 
@@ -208,6 +216,7 @@ import Tag from 'primevue/tag'
 
 import BaseDataTable from '../components/base/BaseDataTable.vue'
 import BaseDialog from '../components/base/BaseDialog.vue'
+import BaseConfirmDialog from '../components/base/BaseConfirmDialog.vue'
 
 const { t } = useI18n()
 const { loading, execute } = useApi()
@@ -295,6 +304,8 @@ const editForm = reactive({
 
 const showOnboardDialog = ref(false)
 const onboardingDevice = ref(null)
+const showClearConfirm = ref(false)
+const clearTargetLabel = ref('')
 const onboardForm = reactive({
   name: '',
   tag: ''
@@ -412,12 +423,12 @@ async function submitOnboard() {
 
 async function clearDiscoveredDevices() {
   const selectedProbe = probes.value.find(p => p.id === filters.probe_id)
-  const targetLabel = selectedProbe?.name || t('discoveredDevices.actions.clearAllLabel')
-  const confirmed = window.confirm(
-    t('discoveredDevices.actions.clearConfirm', { target: targetLabel })
-  )
-  if (!confirmed) return
+  clearTargetLabel.value = selectedProbe?.name || t('discoveredDevices.actions.clearAllLabel')
+  showClearConfirm.value = true
+}
 
+async function executeClear() {
+  showClearConfirm.value = false
   await execute(async () => {
     const params = filters.probe_id ? { probe_id: filters.probe_id } : {}
     await api.clearDiscoveredDevices(params)

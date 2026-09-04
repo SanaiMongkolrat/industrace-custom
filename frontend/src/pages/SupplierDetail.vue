@@ -78,6 +78,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
 import { usePermissions } from '../composables/usePermissions'
 import api from '../api/api'
 import { useI18n } from 'vue-i18n'
@@ -92,6 +93,7 @@ import ContactForm from '../components/forms/ContactForm.vue'
 
 const { t } = useI18n()
 const { canWrite } = usePermissions()
+const toast = useToast()
 
 const route = useRoute()
 const router = useRouter()
@@ -117,21 +119,35 @@ async function fetchDocuments() {
 }
 
 async function fetchAllContacts() {
-  const response = await api.getContacts()
-  allContacts.value = response.data.map(mapContact)
+  try {
+    const response = await api.getContacts()
+    allContacts.value = response.data.map(mapContact)
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('contacts.messages.fetchError'), life: 3000 })
+  }
 }
 
 async function fetchSupplierContacts() {
   loadingContacts.value = true
-  const response = await api.getSupplierContacts(supplierId)
-  supplierContacts.value = response.data.map(mapContact)
-  selectedContactIds.value = supplierContacts.value.map(c => c.id)
-  loadingContacts.value = false
+  try {
+    const response = await api.getSupplierContacts(supplierId)
+    supplierContacts.value = response.data.map(mapContact)
+    selectedContactIds.value = supplierContacts.value.map(c => c.id)
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('suppliers.messages.fetchContactsError'), life: 3000 })
+  } finally {
+    loadingContacts.value = false
+  }
 }
 
 async function updateSupplierContacts() {
-  await api.updateSupplierContacts(supplierId, selectedContactIds.value)
-  await fetchSupplierContacts()
+  try {
+    await api.updateSupplierContacts(supplierId, selectedContactIds.value)
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('suppliers.messages.contactsUpdated'), life: 3000 })
+    await fetchSupplierContacts()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('suppliers.messages.updateContactsError'), life: 3000 })
+  }
 }
 
 async function removeContact(contactId) {

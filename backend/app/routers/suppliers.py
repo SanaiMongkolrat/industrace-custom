@@ -438,6 +438,7 @@ def list_supplier_contacts(
 
 
 @router.put("/{supplier_id}/contacts", response_model=List[ContactSchema])
+@audit_log_action("update", "Supplier")
 def update_supplier_contacts(
     supplier_id: uuid.UUID,
     contact_ids: List[uuid.UUID],

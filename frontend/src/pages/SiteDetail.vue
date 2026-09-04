@@ -157,21 +157,35 @@ async function fetchLocations() {
 }
 
 async function fetchAllContacts() {
-  const response = await api.getContacts()
-  allContacts.value = response.data.map(mapContact)
+  try {
+    const response = await api.getContacts()
+    allContacts.value = response.data.map(mapContact)
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('contacts.messages.fetchError'), life: 3000 })
+  }
 }
 
 async function fetchSiteContacts() {
   loadingContacts.value = true
-  const response = await api.getSiteContacts(siteId)
-  siteContacts.value = response.data.map(mapContact)
-  selectedContactIds.value = siteContacts.value.map(c => c.id)
-  loadingContacts.value = false
+  try {
+    const response = await api.getSiteContacts(siteId)
+    siteContacts.value = response.data.map(mapContact)
+    selectedContactIds.value = siteContacts.value.map(c => c.id)
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('sites.messages.fetchContactsError'), life: 3000 })
+  } finally {
+    loadingContacts.value = false
+  }
 }
 
 async function updateSiteContacts() {
-  await api.updateSiteContacts(siteId, selectedContactIds.value)
-  await fetchSiteContacts()
+  try {
+    await api.updateSiteContacts(siteId, selectedContactIds.value)
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('sites.messages.contactsUpdated'), life: 3000 })
+    await fetchSiteContacts()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('sites.messages.updateContactsError'), life: 3000 })
+  }
 }
 
 async function removeContact(contactId) {

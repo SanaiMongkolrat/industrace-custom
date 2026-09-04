@@ -95,6 +95,7 @@
     "restoreError": "Error restoring asset",
     "restored": "Asset restored",
     "saveError": "Error saving asset",
+    "loadModelsError": "Error loading model list",
     "trashEmptied": "Trash emptied",
     "trashEmptyError": "Error emptying trash"
   },

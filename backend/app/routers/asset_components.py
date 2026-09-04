@@ -105,7 +105,7 @@ def update_component(
     db: Session = Depends(get_db),
 ):
     """Update a component entry"""
-    component = crud_components.update_asset_component(db, component_id, component_update)
+    component = crud_components.update_asset_component(db, component_id, component_update, current_user.tenant_id)
     if not component:
         raise ErrorCodeException(
             status_code=404, error_code=ErrorCode.ASSET_COMPONENT_NOT_FOUND
@@ -123,7 +123,7 @@ def delete_component(
     db: Session = Depends(get_db),
 ):
     """Remove a component from an asset"""
-    if not crud_components.delete_asset_component(db, component_id):
+    if not crud_components.delete_asset_component(db, component_id, current_user.tenant_id):
         raise ErrorCodeException(
             status_code=404, error_code=ErrorCode.ASSET_COMPONENT_NOT_FOUND
         )

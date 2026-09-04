@@ -39,5 +39,6 @@
   "bulkApplyDone": "Asset date applied",
   "bulkApplyDoneDetail": "{count} component(s) updated with installation date {date}",
   "bulkApplyNothing": "No empty components to update",
-  "bulkApplyError": "Failed to apply asset date to components"
+  "bulkApplyError": "Failed to apply asset date to components",
+  "fetchModelOptionsError": "Failed to load model list"
 }

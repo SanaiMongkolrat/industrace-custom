@@ -162,11 +162,13 @@ def create_asset_component(
 
 
 def update_asset_component(
-    db: Session, component_id: uuid.UUID, component_update: AssetComponentUpdate
+    db: Session, component_id: uuid.UUID, component_update: AssetComponentUpdate, tenant_id: uuid.UUID
 ) -> Optional[AssetComponent]:
-    """Update an asset component entry"""
+    """Update an asset component entry. Tenant-scoped to prevent cross-tenant modification."""
     db_component = (
-        db.query(AssetComponent).filter(AssetComponent.id == component_id).first()
+        db.query(AssetComponent)
+        .filter(AssetComponent.id == component_id, AssetComponent.tenant_id == tenant_id)
+        .first()
     )
     if db_component:
         for key, value in component_update.model_dump(exclude_unset=True).items():
@@ -176,10 +178,12 @@ def update_asset_component(
     return db_component
 
 
-def delete_asset_component(db: Session, component_id: uuid.UUID) -> bool:
-    """Remove a component from an asset"""
+def delete_asset_component(db: Session, component_id: uuid.UUID, tenant_id: uuid.UUID) -> bool:
+    """Remove a component from an asset. Tenant-scoped to prevent cross-tenant deletion."""
     db_component = (
-        db.query(AssetComponent).filter(AssetComponent.id == component_id).first()
+        db.query(AssetComponent)
+        .filter(AssetComponent.id == component_id, AssetComponent.tenant_id == tenant_id)
+        .first()
     )
     if db_component:
         db.delete(db_component)

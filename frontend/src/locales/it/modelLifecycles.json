@@ -31,6 +31,8 @@
   },
   "messages": {
     "fetchError": "Errore nel caricamento dei cicli di vita",
+    "fetchManufacturersError": "Errore nel caricamento dei produttori",
+    "fetchAssetTypesError": "Errore nel caricamento dei tipi di asset",
     "created": "Ciclo di vita creato con successo",
     "createError": "Errore nella creazione del ciclo di vita",
     "updated": "Ciclo di vita aggiornato con successo",

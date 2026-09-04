@@ -131,6 +131,7 @@
         <div class="flex gap-2">
           <Button
             icon="pi pi-eye"
+            :aria-label="t('common.actions.view')"
             class="p-button-text p-button-sm"
             :title="t('common.actions.view')"
             @click="openProbeDetails(data)"
@@ -139,6 +140,7 @@
           <Button
             v-if="canManageNetworkProbes"
             icon="pi pi-pencil"
+            :aria-label="t('common.actions.edit')"
             class="p-button-text p-button-sm"
             :title="t('common.actions.edit')"
             @click="openEditProbe(data)"
@@ -147,6 +149,7 @@
           <Button
             v-if="canManageNetworkProbes"
             icon="pi pi-ban"
+            :aria-label="t('networkProbes.actions.deauthorize')"
             class="p-button-text p-button-sm p-button-warning"
             :title="t('networkProbes.actions.deauthorize')"
             @click="deauthorizeProbe(data)"
@@ -155,6 +158,7 @@
           <Button
             v-if="canManageNetworkProbes"
             icon="pi pi-trash"
+            :aria-label="t('common.actions.delete')"
             class="p-button-text p-button-sm p-button-danger"
             :title="t('common.actions.delete')"
             @click="deleteProbe(data)"
@@ -438,6 +442,14 @@
         </div>
       </template>
     </BaseDialog>
+
+    <!-- Confirm Dialog -->
+    <BaseConfirmDialog
+      :showConfirmDialog="showConfirmDialog"
+      :confirmData="confirmDialogData"
+      @close="showConfirmDialog = false"
+      @execute="executeConfirmedAction"
+    />
   </div>
 </template>
 
@@ -463,6 +475,7 @@ import AccordionTab from 'primevue/accordiontab'
 
 import BaseDataTable from '../components/base/BaseDataTable.vue'
 import BaseDialog from '../components/base/BaseDialog.vue'
+import BaseConfirmDialog from '../components/base/BaseConfirmDialog.vue'
 
 import api from '../api/api'
 import { useApi } from '../composables/useApi'
@@ -484,6 +497,10 @@ const overview = ref(null)
 const showApiKeyDialog = ref(false)
 const createdApiKey = ref('')
 const createdProbeId = ref(null)
+const deauthorizeTarget = ref(null)
+const deleteTarget = ref(null)
+const showConfirmDialog = ref(false)
+const confirmDialogData = ref(null)
 
 const serverUrlForProbe = computed(() => {
   // Usa l'origine da cui stai consultando la console come base per la sonda.
@@ -870,50 +887,63 @@ async function submitEditProbe() {
 
 async function deauthorizeProbe(probe) {
   if (!probe?.id) return
-  const ok = window.confirm(t('networkProbes.dialogs.deauthorizeConfirm', { name: probe.name }))
-  if (!ok) return
-
-  await execute(async () => {
-    const response = await api.deauthorizeNetworkProbe(probe.id)
-    return response
-  }, {
-    successMessage: t('networkProbes.messages.deauthorized'),
-    errorContext: t('common.messages.updateError'),
-    showToast: true
-  })
-
-  // Se stiamo guardando i dettagli della stessa sonda, invalidiamo eventuale config in cache
-  if (selectedProbe.value?.id === probe.id) {
-    probeConfiguration.value = null
-    probeApiKeyInput.value = ''
+  deauthorizeTarget.value = probe
+  confirmDialogData.value = {
+    type: 'warning',
+    message: t('networkProbes.dialogs.deauthorizeConfirm', { name: probe.name })
   }
-
-  await fetchProbes()
-  await fetchOverview()
+  showConfirmDialog.value = true
 }
 
 async function deleteProbe(probe) {
   if (!probe?.id) return
-  const ok = window.confirm(t('networkProbes.dialogs.deleteConfirm', { name: probe.name }))
-  if (!ok) return
-
-  await execute(async () => {
-    const response = await api.deleteNetworkProbe(probe.id)
-    return response
-  }, {
-    successMessage: t('networkProbes.messages.deleted'),
-    errorContext: t('common.messages.deleteError'),
-    showToast: true
-  })
-
-  if (selectedProbe.value?.id === probe.id) {
-    showProbeDetailsDialog.value = false
-    selectedProbe.value = null
-    probeStatus.value = null
+  deleteTarget.value = probe
+  confirmDialogData.value = {
+    type: 'delete',
+    message: t('networkProbes.dialogs.deleteConfirm', { name: probe.name })
   }
+  showConfirmDialog.value = true
+}
 
-  await fetchProbes()
-  await fetchOverview()
+async function executeConfirmedAction() {
+  if (deauthorizeTarget.value) {
+    const probe = deauthorizeTarget.value
+    await execute(async () => {
+      const response = await api.deauthorizeNetworkProbe(probe.id)
+      return response
+    }, {
+      successMessage: t('networkProbes.messages.deauthorized'),
+      errorContext: t('common.messages.updateError'),
+      showToast: true
+    })
+    if (selectedProbe.value?.id === probe.id) {
+      probeConfiguration.value = null
+      probeApiKeyInput.value = ''
+    }
+    await fetchProbes()
+    await fetchOverview()
+  } else if (deleteTarget.value) {
+    const probe = deleteTarget.value
+    await execute(async () => {
+      const response = await api.deleteNetworkProbe(probe.id)
+      return response
+    }, {
+      successMessage: t('networkProbes.messages.deleted'),
+      errorContext: t('common.messages.deleteError'),
+      showToast: true
+    })
+    if (selectedProbe.value?.id === probe.id) {
+      showProbeDetailsDialog.value = false
+      selectedProbe.value = null
+      probeStatus.value = null
+    }
+    await fetchProbes()
+    await fetchOverview()
+  }
+  deauthorizeTarget.value = null
+  deleteTarget.value = null
+  showConfirmDialog.value = false
+  confirmDialogData.value = null
 }
 
 async function fetchProbeConfiguration() {

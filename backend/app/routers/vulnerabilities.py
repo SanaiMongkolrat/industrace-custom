@@ -498,6 +498,7 @@ def create_asset_vulnerability(
 
 
 @router.put("/assets/{asset_id}/vulnerabilities/{asset_vulnerability_id}", response_model=AssetVulnerabilityRead)
+@audit_log_action("update", "Vulnerability")
 def update_asset_vulnerability(
     asset_id: uuid.UUID,
     asset_vulnerability_id: uuid.UUID,

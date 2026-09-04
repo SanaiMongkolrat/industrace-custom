@@ -35,5 +35,9 @@
     "registry": "Inventario",
     "utility": "Utility",
     "isa62443": "ISA/IEC 62443"
+    },
+"sidebar": {
+    "collapse": "Chiudi barra laterale",
+    "expand": "Espandi barra laterale"
     }
 }

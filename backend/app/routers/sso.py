@@ -208,23 +208,12 @@ async def sso_connect_start(
 @router.get("/{provider}/authorize")
 async def sso_authorize(
     provider: str,
-    tenant_id: Optional[uuid.UUID] = Query(None),
+    tenant_id: uuid.UUID = Query(..., description="Tenant ID is required"),
     redirect_uri: Optional[str] = Query(None),
     db: Session = Depends(get_db),
 ):
     """OAuth2 authorization endpoint - redirects to identity provider"""
-    # Get tenant from query or use default
-    if not tenant_id:
-        # Try to get from first tenant (for testing)
-        tenant = db.query(Tenant).first()
-        if not tenant:
-            raise ErrorCodeException(
-                status_code=400,
-                error_code=ErrorCode.INVALID_INPUT,
-                detail="tenant_id required"
-            )
-        tenant_id = tenant.id
-    
+    # tenant_id is now required via Query(..., ...), so it will always be present
     sso_config = crud_sso.get_sso_config(db, tenant_id)
     if not sso_config or not sso_config.enabled:
         raise ErrorCodeException(

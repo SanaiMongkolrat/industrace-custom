@@ -109,7 +109,7 @@ async function loadModelOptions() {
     const response = await api.getModelsByManufacturer(manufacturerId)
     modelOptions.value = response.data.map(m => m.model_name)
   } catch (error) {
-    // Silently fail - model dropdown is optional
+    toast.add({ severity: 'warn', summary: t('common.messages.warning'), detail: t('assets.messages.loadModelsError'), life: 3000 })
     modelOptions.value = []
   }
 }

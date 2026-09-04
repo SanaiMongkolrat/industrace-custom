@@ -109,7 +109,7 @@ async function fetchModelOptions() {
       label: `${lc.manufacturer_name || '?'} - ${lc.model_name}${lc.asset_type_name ? ' (' + lc.asset_type_name + ')' : ''}`
     }))
   } catch (err) {
-    // Silently fail — model list will be empty
+    toast.add({ severity: 'warn', summary: t('common.messages.warning'), detail: t('assetComponents.fetchModelOptionsError'), life: 3000 })
   }
 }
 

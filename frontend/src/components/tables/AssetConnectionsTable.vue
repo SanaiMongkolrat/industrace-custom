@@ -49,15 +49,16 @@
             />
           </td>
           <td>
-            <Button 
+            <Button
               v-if="!row.dependency_status?.has_dependency"
-              icon="pi pi-plus" 
-              class="p-button-text p-button-sm mr-2" 
+              icon="pi pi-plus"
+              :aria-label="t('assetDependencies.createDependencyFromConnection')"
+              class="p-button-text p-button-sm mr-2"
               @click="$emit('create-dependency', row)"
               v-tooltip.top="t('assetDependencies.createDependencyFromConnection')"
             />
-            <Button icon="pi pi-pencil" class="p-button-text p-button-sm mr-2" @click="$emit('edit-connection', row)" />
-            <Button icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" @click="$emit('delete-connection', row)" />
+            <Button icon="pi pi-pencil" :aria-label="t('common.actions.edit')" class="p-button-text p-button-sm mr-2" @click="$emit('edit-connection', row)" />
+            <Button icon="pi pi-trash" :aria-label="t('common.actions.delete')" class="p-button-text p-button-danger p-button-sm" @click="$emit('delete-connection', row)" />
           </td>
         </tr>
       </tbody>
