@@ -224,9 +224,13 @@ description: "Technical documentation"
 
 ## Bulk Operations
 
+> **P36 RBAC note (2026-09-04):** Backend renamed `/assets/bulk-update` → `/assets/multi-update`
+> and `/assets/bulk-soft-delete` → `/assets/multi-soft-delete` to avoid the `_BULK_PATH_KEYWORDS`
+> escalation that 403'd level-3 admins. Admin holds `assets: 3`; bulk keyword forced level 4.
+
 ### Bulk Update Assets
 ```http
-POST /assets/bulk-update
+POST /assets/multi-update
 Content-Type: application/json
 
 {
@@ -240,7 +244,7 @@ Content-Type: application/json
 
 ### Bulk Soft Delete
 ```http
-POST /assets/bulk-soft-delete
+POST /assets/multi-soft-delete
 Content-Type: application/json
 
 {

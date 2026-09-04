@@ -998,7 +998,7 @@ function onAssetImport(result) {
 async function onBulkUpdate(bulkData) {
   try {
     const assetIds = selectedAssets.value.map(asset => asset.id)
-    await api.bulkUpdateAssets(assetIds, { [bulkData.field]: bulkData.value })
+    await api.multiUpdateAssets(assetIds, { [bulkData.field]: bulkData.value })
     toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.bulkUpdated'), life: 3000 })
     selectedAssets.value = []
     await fetchAssets()
@@ -1018,11 +1018,11 @@ function confirmBulkSoftDelete() {
   )
 }
 
-async function bulkSoftDelete(assets) {
+async function bulkSoftDelete(assets) {  // function name kept to avoid touching @bulkUpdate event handler on line 301
   try {
     const assetIds = assets.map(asset => asset.id)
-    
-    const response = await api.bulkSoftDeleteAssets(assetIds)
+
+    const response = await api.multiSoftDeleteAssets(assetIds)
     
     const deletedCount = response.data.deleted ? response.data.deleted.length : 0
     const errorCount = response.data.errors ? response.data.errors.length : 0

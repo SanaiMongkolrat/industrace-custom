@@ -1415,8 +1415,8 @@ def import_assets_xlsx_confirm(
     return sanitize_for_json({"created": created, "updated": updated, "errors": errors})
 
 
-@router.post("/bulk-update")
-def bulk_update_assets(
+@router.post("/multi-update")
+def multi_update_assets(
     req: AssetBulkUpdateRequest,
     request: Request,
     db: Session = Depends(get_db),
@@ -1468,9 +1468,9 @@ def bulk_update_assets(
     return {"updated": updated, "errors": errors}
 
 
-# Bulk soft delete
-@router.post("/bulk-soft-delete")
-def bulk_soft_delete_assets(
+# Bulk soft delete (renamed from /bulk-soft-delete to /multi-soft-delete for P36 RBAC fix)
+@router.post("/multi-soft-delete")
+def multi_soft_delete_assets(
     req: AssetBulkSoftDeleteRequest,
     request: Request,
     db: Session = Depends(get_db),

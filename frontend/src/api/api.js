@@ -829,11 +829,17 @@ export default {
     formData.append('file', file)
     return api.post('/assets/import/xlsx/confirm', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
   },
-  bulkUpdateAssets(ids, fields) {
-    return api.post('/assets/bulk-update', { ids, fields })
+  multiUpdateAssets(ids, fields) {
+    // Renamed from bulkUpdateAssets (P36 RBAC fix 2026-09-04): backend route
+    // moved from /assets/bulk-update to /assets/multi-update to avoid the
+    // _BULK_PATH_KEYWORDS escalation that 403'd level-3 admins.
+    return api.post('/assets/multi-update', { ids, fields })
   },
-  bulkSoftDeleteAssets(ids) {
-    return api.post('/assets/bulk-soft-delete', { ids })
+  multiSoftDeleteAssets(ids) {
+    // Renamed from bulkSoftDeleteAssets (P36 RBAC fix 2026-09-04): backend route
+    // moved from /assets/bulk-soft-delete to /assets/multi-soft-delete for the
+    // same reason.
+    return api.post('/assets/multi-soft-delete', { ids })
   },
   getLocationsTrash() {
     return api.get('/locations/trash')
