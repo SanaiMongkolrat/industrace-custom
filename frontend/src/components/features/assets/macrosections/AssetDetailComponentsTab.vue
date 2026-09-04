@@ -2,22 +2,24 @@
   <div class="asset-components-tab">
     <div class="flex justify-content-between align-items-center mb-3">
       <h3 class="m-0">{{ t('assetComponents.title') }}</h3>
-      <Button
-        v-if="canWrite"
-        :label="t('common.actions.add')"
-        icon="pi pi-plus"
-        class="p-button-sm"
-        @click="showAddDialog = true"
-      />
-      <Button
-        v-if="canWrite && props.assetInstallationDate && nullComponentCount > 0"
-        :label="t('assetComponents.bulkApplyAssetDate', { count: nullComponentCount })"
-        icon="pi pi-calendar-clock"
-        severity="secondary"
-        class="p-button-sm"
-        :loading="bulkApplying"
-        @click="confirmBulkApply"
-      />
+      <div class="flex gap-2 align-items-center">
+        <Button
+          v-if="canWrite && props.assetInstallationDate && nullComponentCount > 0"
+          :label="t('assetComponents.bulkApplyAssetDate', { count: nullComponentCount })"
+          icon="pi pi-calendar-clock"
+          severity="secondary"
+          class="p-button-sm"
+          :loading="bulkApplying"
+          @click="confirmBulkApply"
+        />
+        <Button
+          v-if="canWrite"
+          :label="t('common.actions.add')"
+          icon="pi pi-plus"
+          class="p-button-sm"
+          @click="showAddDialog = true"
+        />
+      </div>
     </div>
 
     <DataTable :value="components" :loading="loading" paginator :rows="10" :rowsPerPageOptions="[5, 10, 25]">
@@ -42,6 +44,40 @@
           </div>
         </template>
       </Column>
+      <Column field="lifespan_years" :header="t('assetComponents.lifespanYears')" sortable>
+        <template #body="{ data }">
+          <span v-if="data.lifespan_years !== null && data.lifespan_years !== undefined">{{ formatNumber(data.lifespan_years) }}</span>
+          <span v-else class="text-muted">-</span>
+        </template>
+      </Column>
+      <Column field="effective_useful_life" :header="t('assetComponents.usefulLife')" sortable>
+        <template #body="{ data }">
+          <div v-if="data.effective_useful_life !== null">
+            <span>{{ data.effective_useful_life }}</span>
+            <small class="text-muted d-block">{{ getUsefulLifeSourceLabel(data.useful_life_source) }}</small>
+          </div>
+          <span v-else class="text-muted">-</span>
+        </template>
+      </Column>
+      <Column field="years_remaining" :header="t('assetComponents.yearsRemaining')" sortable>
+        <template #body="{ data }">
+          <span v-if="data.years_remaining !== null && data.years_remaining !== undefined"
+                :class="data.years_remaining < 0 ? 'text-red-600 font-bold' : ''">
+            {{ formatNumber(data.years_remaining) }}
+          </span>
+          <span v-else class="text-muted">-</span>
+        </template>
+      </Column>
+      <Column field="lifecycle_status" :header="t('assetComponents.lifecycleStatus')" sortable>
+        <template #body="{ data }">
+          <Tag
+            v-if="data.lifecycle_status"
+            :value="getLifecycleStatusLabel(data.lifecycle_status)"
+            :severity="getLifecycleStatusSeverity(data.lifecycle_status)"
+          />
+          <span v-else class="text-muted">-</span>
+        </template>
+      </Column>
       <Column field="notes" :header="t('common.fields.notes')"></Column>
       <Column :header="t('common.strings.actions')" v-if="canWrite">
         <template #body="{ data }">
@@ -56,18 +92,18 @@
     </div>
 
     <!-- Add/Edit Dialog -->
-    <Dialog 
-      v-model:visible="showAddDialog" 
+    <Dialog
+      v-model:visible="showAddDialog"
       :header="editingComponent ? t('common.actions.edit') : t('common.actions.add')"
-      :modal="true" 
+      :modal="true"
       :style="{ width: '500px' }"
     >
       <div class="p-fluid">
         <div class="field">
           <label>{{ t('assetComponents.selectModel') }}</label>
-          <Dropdown 
-            v-model="form.model_lifecycle_id" 
-            :options="modelOptions" 
+          <Dropdown
+            v-model="form.model_lifecycle_id"
+            :options="modelOptions"
             optionValue="id"
             optionLabel="label"
             :placeholder="t('assetComponents.selectModel')"
@@ -164,10 +200,14 @@ const nullComponentCount = computed(() => {
 
 function formatDate(value) {
   if (!value) return '-'
-  // Backend returns ISO date string (YYYY-MM-DD) or Date object
   const d = typeof value === 'string' ? new Date(value) : value
   if (isNaN(d)) return value
   return d.toISOString().slice(0, 10)
+}
+
+function formatNumber(value) {
+  if (value === null || value === undefined) return '-'
+  return Number(value).toFixed(2)
 }
 
 function isInherited(comp) {
@@ -179,6 +219,45 @@ function isInherited(comp) {
   return true
 }
 
+function getStatusLabel(status) {
+  const map = {
+    'in_support': t('modelLifecycles.status.in_support'),
+    'phase_out': t('modelLifecycles.status.phase_out'),
+    'limited_support': t('modelLifecycles.status.limited_support'),
+    'no_spare_parts': t('modelLifecycles.status.no_spare_parts'),
+    'obsolete': t('modelLifecycles.status.obsolete'),
+    'not_applicable': t('modelLifecycles.status.not_applicable'),
+  }
+  return map[status] || status
+}
+
+function getStatusSeverity(status) {
+  const map = { 'in_support': 'success', 'phase_out': 'warn', 'limited_support': 'warn', 'no_spare_parts': 'danger', 'obsolete': 'danger', 'not_applicable': 'info' }
+  return map[status] || 'info'
+}
+
+function getLifecycleStatusLabel(status) {
+  const map = {
+    'endOfLife': t('assetComponents.status.endOfLife'),
+    'normal': t('assetComponents.status.normal'),
+  }
+  return map[status] || status
+}
+
+function getLifecycleStatusSeverity(status) {
+  const map = { 'endOfLife': 'danger', 'normal': 'success' }
+  return map[status] || 'info'
+}
+
+function getUsefulLifeSourceLabel(source) {
+  const map = {
+    'model': t('assetComponents.usefulLifeSourceModel'),
+    'inherited_from_asset_type': t('assetComponents.usefulLifeSourceInherited'),
+    'not_set': t('assetComponents.usefulLifeSourceNotSet'),
+  }
+  return map[source] || source
+}
+
 onMounted(() => {
   fetchComponents()
   fetchModelOptions()
@@ -187,7 +266,8 @@ onMounted(() => {
 async function fetchComponents() {
   loading.value = true
   try {
-    const res = await api.get(`/assets/${props.assetId}/components`)
+    // Use lifecycle-status endpoint to get computed columns
+    const res = await api.get(`/assets/${props.assetId}/components/lifecycle-status`)
     components.value = res.data
   } catch (err) {
     toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetComponents.fetchError'), life: 3000 })
@@ -210,11 +290,6 @@ async function fetchModelOptions() {
 
 function editComponent(comp) {
   editingComponent.value = comp
-  // Prefill logic:
-  // - If the component already has an installation_date set by the user, use it
-  // - Otherwise, default to the parent asset's installation_date as a hint
-  //   (user can clear it, override it, or save as-is — only their explicit
-  //    choice is persisted)
   const existingDate = comp.installation_date ? new Date(comp.installation_date) : null
   const prefillDate = existingDate || (props.assetInstallationDate ? new Date(props.assetInstallationDate) : null)
   form.value = {
@@ -229,7 +304,6 @@ function editComponent(comp) {
 function closeDialog() {
   showAddDialog.value = false
   editingComponent.value = null
-  // On Add, also prefill from asset date so new components inherit by default
   const prefillDate = props.assetInstallationDate ? new Date(props.assetInstallationDate) : null
   form.value = { model_lifecycle_id: null, quantity: 1, installation_date: prefillDate, notes: '' }
 }
@@ -237,7 +311,6 @@ function closeDialog() {
 async function saveComponent() {
   saving.value = true
   try {
-    // Convert Date object from DatePicker to ISO YYYY-MM-DD string for the API
     const payload = {
       ...form.value,
       installation_date: form.value.installation_date
@@ -282,7 +355,6 @@ function confirmBulkApply() {
 async function executeBulkApply() {
   bulkApplying.value = true
   try {
-    // Empty body — backend will use the parent asset's installation_date
     const res = await api.post(`/assets/${props.assetId}/components/apply-asset-date`, {})
     const count = res.data?.updated_count ?? 0
     const date = res.data?.installation_date ?? ''
@@ -309,23 +381,6 @@ async function executeBulkApply() {
     bulkApplying.value = false
   }
 }
-
-function getStatusLabel(status) {
-  const map = {
-    'in_support': t('modelLifecycles.status.in_support'),
-    'phase_out': t('modelLifecycles.status.phase_out'),
-    'limited_support': t('modelLifecycles.status.limited_support'),
-    'no_spare_parts': t('modelLifecycles.status.no_spare_parts'),
-    'obsolete': t('modelLifecycles.status.obsolete'),
-    'not_applicable': t('modelLifecycles.status.not_applicable'),
-  }
-  return map[status] || status
-}
-
-function getStatusSeverity(status) {
-  const map = { 'in_support': 'success', 'phase_out': 'warn', 'limited_support': 'warn', 'no_spare_parts': 'danger', 'obsolete': 'danger', 'not_applicable': 'info' }
-  return map[status] || 'info'
-}
 </script>
 
 <style scoped>
@@ -337,5 +392,14 @@ function getStatusSeverity(status) {
 .installation-date-cell small {
   font-size: 0.75rem;
   font-style: italic;
+}
+.text-red-600 {
+  color: #dc2626;
+}
+.font-bold {
+  font-weight: 600;
+}
+.d-block {
+  display: block;
 }
 </style>

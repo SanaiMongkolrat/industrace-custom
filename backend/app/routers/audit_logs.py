@@ -1,6 +1,6 @@
 import uuid
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from io import StringIO
 import csv
@@ -62,6 +62,10 @@ def list_audit_logs(
     return result
 
 
+MAX_EXPORT_LIMIT = 100_000
+DEFAULT_EXPORT_LIMIT = 10_000
+
+
 @router.get("/export")
 def export_audit_logs(
     from_date: Optional[datetime] = Query(None, alias="from"),
@@ -70,10 +74,16 @@ def export_audit_logs(
     entity: Optional[str] = None,
     entity_id: Optional[uuid.UUID] = Query(None, alias="entity_id"),
     user_id: Optional[uuid.UUID] = None,
+    limit: int = Query(DEFAULT_EXPORT_LIMIT, ge=1, le=MAX_EXPORT_LIMIT, description=f"Max records to export (default {DEFAULT_EXPORT_LIMIT}, max {MAX_EXPORT_LIMIT})"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
     perm=Depends(require_permission("audit_logs", 1)),
 ):
+    """Export audit logs as CSV.
+
+    Supports time-bound exports via from_date / to_date and enforces a maximum
+    record limit to prevent server memory exhaustion on large tenants.
+    """
     query = db.query(AuditLog).filter(AuditLog.tenant_id == current_user.tenant_id)
     if from_date:
         query = query.filter(AuditLog.timestamp >= from_date)
@@ -88,7 +98,7 @@ def export_audit_logs(
     if user_id:
         query = query.filter(AuditLog.user_id == user_id)
     query = query.order_by(AuditLog.timestamp.desc())
-    logs = query.all()
+    logs = query.limit(limit).all()
 
     def iter_csv():
         output = StringIO()

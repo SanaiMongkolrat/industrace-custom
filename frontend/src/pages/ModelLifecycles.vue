@@ -68,7 +68,7 @@
       </Column>
       <Column field="useful_life_years" :header="t('modelLifecycles.fields.usefulLifeYears')" sortable>
         <template #body="{ data }">
-          <span v-if="data.useful_life_years">{{ data.useful_life_years }} {{ t('common.messages.years') }}</span>
+          <span v-if="data.useful_life_years">{{ t('common.messages.years', { n: data.useful_life_years }) }}</span>
           <span v-else>-</span>
         </template>
       </Column>

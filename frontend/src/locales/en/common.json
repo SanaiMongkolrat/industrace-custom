@@ -119,7 +119,7 @@
     "updateError": "Error in update",
     "updated": "Updated",
     "warning": "Warning",
-    "years": "Years",
+    "years": "{n} years",
     "bulkUpdated": "Items updated",
     "confirm": "Confirm",
     "importError": "Error importing",

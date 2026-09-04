@@ -20,6 +20,17 @@
   "installationDateHint": "When this component was installed in the asset. Update this date when the component is replaced in the field.",
   "installationDateInherited": "(inherited from asset)",
   "installationDateHintDefault": "Defaults to the asset's installation date ({date}) when unset. Clear to leave empty, or set a different date for field replacements.",
+  "lifespanYears": "Lifespan (yrs)",
+  "usefulLife": "Useful Life",
+  "yearsRemaining": "Remaining",
+  "lifecycleStatus": "Status",
+  "usefulLifeSourceModel": "from model",
+  "usefulLifeSourceInherited": "from type",
+  "usefulLifeSourceNotSet": "not set",
+  "status": {
+    "endOfLife": "END-OF-LIFE",
+    "normal": "NORMAL"
+  },
   "bulkApplyAssetDate": "Pull asset date to all empty ({count})",
   "bulkApplyTitle": "Apply asset installation date to empty components",
   "bulkApplyConfirmMessage": "Apply the asset's installation date ({date}) to {count} component(s) that have no date set?",

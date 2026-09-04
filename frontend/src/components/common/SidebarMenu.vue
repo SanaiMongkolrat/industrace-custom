@@ -1,7 +1,7 @@
 <template>
   <nav :class="['modern-sidebar', { collapsed }]">
     <div class="sidebar-header">
-      <img src="@/static/industrace_square.png" alt="Industrace" class="logo" v-if="!collapsed" />
+      <img src="@/static/logo_hmc_white.png" alt="HMC Polymers" class="logo" v-if="!collapsed" />
       <button class="collapse-btn" @click="collapsed = !collapsed">
         <i :class="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
       </button>
@@ -181,8 +181,11 @@ function changeLocale(e) {
   border-bottom: 1px solid #2d323c;
 }
 .logo {
-  width: 150px;
-  height: 150px;
+  max-width: 200px;
+  max-height: 90px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 .app-title {
   font-size: 1.3rem;

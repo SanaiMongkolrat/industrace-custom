@@ -27,6 +27,20 @@
           <span v-else>-</span>
         </template>
       </Column>
+      <Column field="useful_life_years" :header="t('assettypes.fields.usefulLifeYearsShort')" sortable>
+        <template #body="{ data }">
+          <span v-if="data.useful_life_years !== null && data.useful_life_years !== undefined">
+            {{ data.useful_life_years }}
+          </span>
+          <span v-else class="p-text-secondary">-</span>
+        </template>
+      </Column>
+      <Column field="useful_life_inheritance_enabled" :header="t('assettypes.fields.inherit')">
+        <template #body="{ data }">
+          <i v-if="data.useful_life_inheritance_enabled" class="pi pi-check" :title="t('assettypes.strings.inheritanceOn')"></i>
+          <i v-else class="pi pi-times" :title="t('assettypes.strings.inheritanceOff')"></i>
+        </template>
+      </Column>
       <Column v-if="canWrite('asset_types') || canDelete('asset_types')" :header="t('common.strings.actions')">
         <template #body="{ data }">
           <Button 

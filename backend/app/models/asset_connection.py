@@ -13,9 +13,9 @@ class AssetConnection(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id"), nullable=False)
     parent_asset_id = Column(
-        UUID(as_uuid=True), ForeignKey("assets.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("assets.id", ondelete="CASCADE"), nullable=False
     )
-    child_asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id"), nullable=False)
+    child_asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id", ondelete="CASCADE"), nullable=False)
     connection_type = Column(String(50), nullable=False)
     port_parent = Column(String(50))
     port_child = Column(String(50))

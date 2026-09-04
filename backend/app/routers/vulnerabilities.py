@@ -363,7 +363,7 @@ def create_vulnerability(
     perm=Depends(require_permission("vulnerabilities", 2)),
 ):
     """Create a new vulnerability"""
-    new_vulnerability = crud_vulns.create_vulnerability(db, vulnerability)
+    new_vulnerability = crud_vulns.create_vulnerability(db, vulnerability, current_user.tenant_id)
     
     # Auto-match vulnerabilità a tutti gli asset in background
     from app.services.vulnerability_auto_match import VulnerabilityAutoMatcher

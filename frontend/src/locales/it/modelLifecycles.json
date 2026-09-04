@@ -2,13 +2,17 @@
   "title": "Cicli di Vita Modelli",
   "fields": {
     "lifecycleStatus": "Stato Ciclo di Vita",
+    "modelName": "Nome Modello",
     "statusDate": "Data Stato",
     "eolDate": "Fine Vita (EOL)",
+    "usefulLife": "Vita Utile",
+    "usefulLifeYears": "Vita Utile (Anni)",
     "eosDate": "Fine Supporto (EOS)",
     "spareParts": "Ricambi",
     "replacement": "Modello Sostitutivo",
     "replacementManufacturer": "Produttore Sostitutivo",
     "assetCount": "Asset",
+    "assetType": "Tipo di Asset",
     "lastReviewed": "Ultima Revisione"
   },
   "status": {
@@ -17,6 +21,7 @@
     "limited_support": "Supporto Limitato",
     "no_spare_parts": "Senza Ricambi",
     "obsolete": "Obsoleto",
+    "not_applicable": "Non Applicabile",
     "total": "Totale"
   },
   "spareParts": {

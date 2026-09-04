@@ -29,4 +29,8 @@ class ApiKey(Base):
     created_by_user = relationship("User", foreign_keys=[created_by])
 
     def __repr__(self):
-        return f"<ApiKey(id={self.id}, name='{self.name}', tenant_id={self.tenant_id})>"
+        return f"<ApiKey(id={self.id}, name={self.name}, tenant_id={self.tenant_id})>"
+
+
+# Alias for routers that import APIKey (uppercase)
+APIKey = ApiKey

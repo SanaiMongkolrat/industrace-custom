@@ -1,7 +1,12 @@
 {
   "title": "Asset Types",
   "fields": {
-    "purdueLevel": "Purdue Level"
+    "purdueLevel": "Purdue Level",
+    "usefulLifeYears": "Useful Life (Years)",
+    "usefulLifeYearsShort": "Useful Life",
+    "usefulLifeInheritance": "Models inherit useful life from this type (uncheck to allow per-model override)",
+    "inherit": "Inherit",
+    "years": "years"
   },
   "messages": {
     "fetchError": "Error loading asset types",
@@ -11,7 +16,11 @@
     "updateError": "Error updating asset type"
   },
   "strings": {
-    "selectPurdueLevel": "Select Purdue Level"
+    "selectPurdueLevel": "Select Purdue Level",
+    "inheritFromType": "Leave empty to inherit from model",
+    "usefulLifeHelp": "When inheritance is enabled, models of this type use this value unless they specify their own.",
+    "inheritanceOn": "Models inherit useful life from this type",
+    "inheritanceOff": "Models can specify their own useful life"
   },
   "level0": "0",
   "level1": "1",

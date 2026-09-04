@@ -9,7 +9,7 @@ from datetime import datetime
 class AssetInterface(Base):
     __tablename__ = "asset_interfaces"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id"), nullable=False)
+    asset_id = Column(UUID(as_uuid=True), ForeignKey("assets.id", ondelete="CASCADE"), nullable=False)
     name = Column(String(50))  
     type = Column(String(50))   
     vlan = Column(String(50), nullable=True)

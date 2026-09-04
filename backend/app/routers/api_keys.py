@@ -4,10 +4,10 @@ from typing import List
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import User
+from app.models import User, APIKey
 from app.schemas.api_key import ApiKeyCreate, ApiKeyRead, ApiKeyUpdate, ApiKeyResponse
 from app.services.auth import get_current_user
-from app.services.rbac import require_section_access
+from app.services.rbac import require_section_access, require_permission
 from app.services.audit_decorator import audit_log_action
 from app.crud import api_keys as crud_api_keys
 from app.errors.exceptions import ErrorCodeException
@@ -145,10 +145,12 @@ def activate_api_key(
     return {"message": "API Key reactivated successfully"}
 
 
-@router.post("/cleanup-expired")
+@router.post("/cleanup-expired", dependencies=[Depends(require_permission("api_keys", 4))])
+@audit_log_action("cleanup", "ApiKey", model_class=APIKey)
 def cleanup_expired_api_keys(
+    request: Request,
     current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ):
-    """Clean up all expired API Keys"""
-    count = crud_api_keys.cleanup_expired_api_keys(db)
+    """Clean up all expired API Keys for the current tenant"""
+    count = crud_api_keys.cleanup_expired_api_keys(db, current_user.tenant_id)
     return {"message": f"Cleanup completed", "deactivated_count": count}

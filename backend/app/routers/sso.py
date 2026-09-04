@@ -46,21 +46,14 @@ router = APIRouter(
 # Public endpoint to check if SSO is enabled (for login page)
 @router.get("/enabled")
 async def check_sso_enabled(
-    tenant_id: Optional[uuid.UUID] = Query(None),
+    tenant_id: uuid.UUID = Query(..., description="Tenant ID is required"),
     db: Session = Depends(get_db),
 ):
     """
     Public endpoint to check if SSO is enabled for a tenant.
     Used by login page to show/hide SSO button.
+    B8 FIX: tenant_id is now required - no more leaking first tenant's SSO config.
     """
-    # If tenant_id not provided, try to get from first tenant (for testing)
-    if not tenant_id:
-        tenant = db.query(Tenant).first()
-        if tenant:
-            tenant_id = tenant.id
-        else:
-            return {"enabled": False, "provider": None}
-    
     sso_config = crud_sso.get_sso_config(db, tenant_id)
     if not sso_config or not sso_config.enabled:
         return {"enabled": False, "provider": None}

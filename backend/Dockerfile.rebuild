@@ -1,0 +1,4 @@
+# Rebuild backend image FROM existing 2.3.8 — reuses cached python deps,
+# only swaps /app source code. Avoids needing python:3.11-slim on swarm.
+FROM 192.168.99.58:5000/industrace-backend:2.3.8
+COPY --chown=appuser:appuser . /app/

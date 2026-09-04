@@ -18,7 +18,7 @@ from .tenant_smtp_config import TenantSMTPConfig
 from .tenant_syslog_config import TenantSyslogConfig
 from .print_template import PrintTemplate
 from .print_history import PrintHistory
-from .api_key import ApiKey
+from .api_key import ApiKey, APIKey  # noqa: F401
 
 # Notification models
 from .notification_template import NotificationTemplate

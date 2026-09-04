@@ -1,7 +1,12 @@
 {
   "title": "Tipi di Dispositivi",
   "fields": {
-    "purdueLevel": "Livello Purdue"
+    "purdueLevel": "Livello Purdue",
+    "usefulLifeYears": "Vita Utile (Anni)",
+    "usefulLifeYearsShort": "Vita Utile",
+    "usefulLifeInheritance": "I modelli ereditano la vita utile da questo tipo (disabilita per consentire override per modello)",
+    "inherit": "Eredita",
+    "years": "anni"
   },
   "messages": {
     "fetchError": "Errore nel caricamento dei tipi di dispositivi",
@@ -9,6 +14,13 @@
     "createError": "Errore nella creazione del tipo di dispositivo",
     "updated": "Tipo di dispositivo aggiornato con successo",
     "updateError": "Errore nell'aggiornamento del tipo di dispositivo"
+  },
+  "strings": {
+    "selectPurdueLevel": "Seleziona Livello Purdue",
+    "inheritFromType": "Lascia vuoto per ereditare dal modello",
+    "usefulLifeHelp": "Quando l'ereditarietà è abilitata, i modelli di questo tipo usano questo valore a meno che non ne specifichino uno proprio.",
+    "inheritanceOn": "I modelli ereditano la vita utile da questo tipo",
+    "inheritanceOff": "I modelli possono specificare la propria vita utile"
   },
   "level0": "0",
   "level1": "1",

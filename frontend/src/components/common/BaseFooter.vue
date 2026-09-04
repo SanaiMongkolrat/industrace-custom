@@ -3,11 +3,11 @@
     <div class="footer-content">
       <div class="footer-section">
         <div class="footer-brand">
-          <img src="@/static/logo_besafe.png" alt="BeSafe logo" class="besafe-logo" />
+          <img src="@/static/logo_hmc_original.png" alt="HMC Polymers" class="besafe-logo" />
           <div class="brand-info">
             <span class="powered-by">{{ $t('footer.powered_by') }}</span>
             <a :href="appConfig.links.website" target="_blank" rel="noopener" class="besafe-link">
-              BeSafe
+              {{ t('footer.underlying_software') }}
             </a>
           </div>
         </div>
@@ -89,7 +89,7 @@ const copyrightText = computed(() =>
 }
 
 .besafe-logo {
-  height: 24px;
+  height: 48px;
   width: auto;
 }
 

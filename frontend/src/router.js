@@ -46,6 +46,7 @@ const routes = [
   { path: '/auth/sso/error', name: 'SSOError', component: SSOError },
   { path: '/', name: 'Dashboard', component: Dashboard, meta: { requiresAuth: true } },
   { path: '/assets', name: 'Assets', component: Assets, meta: { requiresAuth: true } },
+  { path: '/assets/new', name: 'AssetDetailNew', component: AssetDetailNew, meta: { requiresAuth: true } },
   { path: '/assets/:id', name: 'AssetDetail', component: AssetDetail, meta: { requiresAuth: true } },
   { path: '/assets-new/:id', name: 'AssetDetailNew', component: AssetDetailNew, meta: { requiresAuth: true } },
   { path: '/asset-reviews', name: 'AssetReviews', component: AssetReviews, meta: { requiresAuth: true, requiresPermission: 'asset_reviews' } },

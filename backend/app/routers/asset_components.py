@@ -14,6 +14,7 @@ from app.schemas.asset_component import (
     AssetComponent as AssetComponentSchema,
     AssetComponentCreate,
     AssetComponentUpdate,
+    AssetComponentLifecycleStatus,
 )
 from app.services.auth import get_current_user
 from app.services.rbac import require_section_access
@@ -38,6 +39,28 @@ def list_components(
     )
 
 
+@router.get("/lifecycle-status", response_model=List[AssetComponentLifecycleStatus])
+def get_components_lifecycle_status(
+    asset_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """List components with computed lifecycle fields.
+
+    Each item includes:
+      - lifespan_years: years since effective install date (component's own or parent's)
+      - effective_useful_life: useful life in years (model override else asset_type default)
+      - useful_life_source: 'model' | 'inherited_from_asset_type' | 'not_set'
+      - years_remaining: useful_life - lifespan_years (negative = past end-of-life)
+      - lifecycle_status: 'END-OF-LIFE' if lifespan >= useful_life else 'NORMAL'
+
+    These fields are computed at request time, not stored — values are always current.
+    """
+    return crud_components.list_components_lifecycle_status(
+        db, asset_id=asset_id, tenant_id=current_user.tenant_id
+    )
+
+
 @router.get("/{component_id}", response_model=AssetComponentSchema)
 def get_component(
     asset_id: uuid.UUID,
@@ -46,7 +69,7 @@ def get_component(
     db: Session = Depends(get_db),
 ):
     """Get a single component entry"""
-    component = crud_components.get_asset_component(db, component_id)
+    component = crud_components.get_asset_component(db, component_id, current_user.tenant_id)
     if not component:
         raise ErrorCodeException(
             status_code=404, error_code=ErrorCode.ASSET_COMPONENT_NOT_FOUND

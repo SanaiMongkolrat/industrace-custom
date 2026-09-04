@@ -329,10 +329,11 @@ def get_vulnerabilities(
 
 def create_vulnerability(
     db: Session,
-    vulnerability: VulnerabilityCreate
+    vulnerability: VulnerabilityCreate,
+    tenant_id: uuid.UUID
 ) -> Vulnerability:
-    """Create a new vulnerability"""
-    db_vulnerability = Vulnerability(**vulnerability.model_dump())
+    """Create a new vulnerability for a given tenant"""
+    db_vulnerability = Vulnerability(**vulnerability.model_dump(), tenant_id=tenant_id)
     db.add(db_vulnerability)
     db.commit()
     db.refresh(db_vulnerability)

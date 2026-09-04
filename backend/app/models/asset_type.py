@@ -1,6 +1,6 @@
 # backend/models/asset_type.py
 import uuid
-from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, Float
+from sqlalchemy import Column, String, DateTime, ForeignKey, Integer, Float, Boolean
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -18,6 +18,8 @@ class AssetType(Base):
     color = Column(String(7), default="#6366f1")
     fields_schema = Column(JSONB, default=list)
     purdue_level = Column(Float, nullable=True)
+    useful_life_years = Column(Integer, nullable=True)
+    useful_life_inheritance_enabled = Column(Boolean, nullable=False, default=True)
     created_at = Column(DateTime, default=func.now())
     assets = relationship("Asset", back_populates="asset_type")
     model_lifecycles = relationship("ModelLifecycle", back_populates="asset_type")

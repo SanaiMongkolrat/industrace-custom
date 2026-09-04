@@ -20,6 +20,17 @@
   "installationDateHint": "Quando questo componente è stato installato nell'asset. Aggiorna questa data quando il componente viene sostituito sul campo.",
   "installationDateInherited": "(ereditato dall'asset)",
   "installationDateHintDefault": "Predefinito sulla data di installazione dell'asset ({date}) se non impostato. Cancellare per lasciare vuoto, o impostare una data diversa per le sostituzioni sul campo.",
+  "lifespanYears": "Vita (anni)",
+  "usefulLife": "Vita utile",
+  "yearsRemaining": "Rimanenti",
+  "lifecycleStatus": "Stato",
+  "usefulLifeSourceModel": "da modello",
+  "usefulLifeSourceInherited": "da tipo",
+  "usefulLifeSourceNotSet": "non impostata",
+  "status": {
+    "endOfLife": "FINE VITA",
+    "normal": "NORMALE"
+  },
   "bulkApplyAssetDate": "Applica data asset a tutti i vuoti ({count})",
   "bulkApplyTitle": "Applica data di installazione dell'asset ai componenti vuoti",
   "bulkApplyConfirmMessage": "Applicare la data di installazione dell'asset ({date}) a {count} componenti senza data?",

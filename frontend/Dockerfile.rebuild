@@ -1,0 +1,4 @@
+# Build new frontend image on swarm node using existing image as base
+# (avoids needing node:18-alpine / npm on the air-gapped swarm node)
+FROM 192.168.99.58:5000/industrace-frontend:2.3.11
+COPY dist/ /usr/share/nginx/html/

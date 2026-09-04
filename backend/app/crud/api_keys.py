@@ -128,18 +128,22 @@ def get_api_key_by_hash(db: Session, key_hash: str) -> Optional[ApiKey]:
     return db.query(ApiKey).filter(ApiKey.key_hash == key_hash).first()
 
 
-def get_expired_api_keys(db: Session) -> List[ApiKey]:
-    """Retrieve all expired API Keys"""
+def get_expired_api_keys(db: Session, tenant_id: uuid.UUID) -> List[ApiKey]:
+    """Retrieve all expired API Keys for a tenant"""
     return (
         db.query(ApiKey)
-        .filter(ApiKey.expires_at < datetime.utcnow(), ApiKey.is_active == True)
+        .filter(
+            ApiKey.tenant_id == tenant_id,
+            ApiKey.expires_at < datetime.utcnow(),
+            ApiKey.is_active == True,
+        )
         .all()
     )
 
 
-def cleanup_expired_api_keys(db: Session) -> int:
-    """Deactivate all expired API Keys"""
-    expired_keys = get_expired_api_keys(db)
+def cleanup_expired_api_keys(db: Session, tenant_id: uuid.UUID) -> int:
+    """Deactivate all expired API Keys for a tenant"""
+    expired_keys = get_expired_api_keys(db, tenant_id)
     count = 0
 
     for key in expired_keys:
