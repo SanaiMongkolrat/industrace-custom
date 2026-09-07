@@ -14,8 +14,20 @@
 <template>
   <div class="asset-lifecycle-dashboard">
     <div class="dashboard-header">
-      <h1>Asset Lifecycle Dashboard</h1>
-      <p class="subtitle">Years remaining and EoS status for {{ summary.total }} components</p>
+      <div class="header-text">
+        <h1>Asset Lifecycle Dashboard</h1>
+        <p class="subtitle">Years remaining and EoS status for {{ summary.total }} components</p>
+        <p v-if="lastFetchedDisplay" class="last-fetched">Last updated: {{ lastFetchedDisplay }}</p>
+      </div>
+      <div class="header-actions">
+        <Button
+          icon="pi pi-refresh"
+          :loading="loading"
+          :label="loading ? 'Refreshing...' : 'Refresh'"
+          class="p-button-outlined"
+          @click="onRefreshClick"
+        />
+      </div>
     </div>
 
     <!-- V10 — Data gap banner: visible when not_set > 80% -->
@@ -181,7 +193,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useAssetLifecycleDashboardStore } from '../store/assetLifecycleDashboard'
 import { storeToRefs } from 'pinia'
 
@@ -206,12 +218,31 @@ let matrixPluginReady = false
 
 // Store
 const store = useAssetLifecycleDashboardStore()
-const { components, loading, error, filters, kpiSummary, filteredComponents, paginationWarning, activeFilterCount } =
+const { components, loading, error, lastFetched, filters, kpiSummary, filteredComponents, paginationWarning, activeFilterCount } =
   storeToRefs(store)
 const summary = computed(() => kpiSummary.value)
 const fetchDashboard = store.fetchDashboard
 const setFilter = store.setFilter
 const clearFilters = store.clearFilters
+
+// Human-friendly "last updated" formatter (HH:MM:SS local time)
+const lastFetchedDisplay = computed(() => {
+  if (!lastFetched.value) return ''
+  const d = new Date(lastFetched.value)
+  return d.toLocaleTimeString()
+})
+
+// Refresh: manual button click
+async function onRefreshClick() {
+  await fetchDashboard()
+}
+
+// Refresh: browser tab focus / visibility return
+function onVisibilityChange() {
+  if (document.visibilityState === 'visible' && !loading.value) {
+    fetchDashboard()
+  }
+}
 
 // Computed: distribution data for W2 (bar/donut)
 const distributionData = computed(() => {
@@ -323,6 +354,14 @@ function eolSeverity(s) {
 
 onMounted(async () => {
   await fetchDashboard()
+  // Auto-refresh when user returns to the tab (covers the "added components
+  // in another tab" use case without constant polling).
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
+
+// Cleanup listener when component unmounts (e.g., user navigates away)
+onBeforeUnmount(() => {
+  document.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>
 
@@ -332,7 +371,13 @@ onMounted(async () => {
 }
 .dashboard-header {
   margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
 }
+.header-text { flex: 1; }
+.header-actions { padding-top: 0.25rem; }
 .dashboard-header h1 {
   margin: 0 0 0.25rem 0;
   font-size: 1.75rem;
@@ -340,6 +385,12 @@ onMounted(async () => {
 .subtitle {
   color: #6b7280;
   margin: 0;
+}
+.last-fetched {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
 }
 .gap-banner,
 .pagination-banner {

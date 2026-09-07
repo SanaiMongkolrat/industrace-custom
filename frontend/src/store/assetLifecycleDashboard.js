@@ -18,6 +18,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
     const components = ref([])
     const loading = ref(false)
     const error = ref(null)
+    const lastFetched = ref(null) // ISO timestamp of last successful fetch (returned below)
     const filters = ref({
       lifecycleStatus: null, // 'NORMAL' | 'END-OF-LIFE' | null
       usefulLifeSource: null, // 'model' | 'inherited_from_asset_type' | 'not_set' | null
@@ -55,15 +56,20 @@ export const useAssetLifecycleDashboardStore = defineStore(
       return Object.values(filters.value).filter((v) => v !== null).length
     })
 
+    const lastFetched = ref(null) // ISO timestamp of last successful fetch
+
     async function fetchDashboard() {
       loading.value = true
       error.value = null
       try {
         const response = await api.getAssetLifecycleDashboard()
-        components.value = response.components || []
+        // Axios wraps response — actual API body is in response.data
+        components.value = response?.data?.components || []
+        lastFetched.value = new Date().toISOString()
       } catch (err) {
         error.value = err.message || 'Failed to load dashboard data'
         components.value = []
+        lastFetched.value = null
       } finally {
         loading.value = false
       }
@@ -88,6 +94,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
       components,
       loading,
       error,
+      lastFetched,
       filters,
       // getters
       filteredComponents,
