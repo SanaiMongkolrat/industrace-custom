@@ -346,9 +346,9 @@ const handleSubmit = async () => {
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.03) 0%, transparent 50%),
-    linear-gradient(45deg, transparent 40%, rgba(102, 126, 234, 0.02) 50%, transparent 60%);
+    radial-gradient(circle at 25% 25%, rgba(13, 124, 138, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(10, 103, 115, 0.04) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 40%, rgba(13, 124, 138, 0.02) 50%, transparent 60%);
   animation: backgroundFloat 20s ease-in-out infinite;
 }
 
@@ -410,7 +410,7 @@ const handleSubmit = async () => {
   transform: translate(-50%, -50%);
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(13, 124, 138, 0.12) 0%, transparent 70%);
   border-radius: 50%;
   animation: logoGlow 3s ease-in-out infinite alternate;
 }
@@ -424,11 +424,10 @@ const handleSubmit = async () => {
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 0.5rem 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  letter-spacing: -0.02em;
+  /* Solid HMC teal — no gradient text. Gradient-on-text is the most common
+     AI-default effect; solid color reads as designed/branded. */
+  color: #0a6773;
 }
 
 .brand-subtitle {
@@ -497,7 +496,7 @@ const handleSubmit = async () => {
 }
 
 .form-label i {
-  color: #667eea;
+  color: var(--primary-color);
   font-size: 0.8rem;
 }
 
@@ -516,8 +515,8 @@ const handleSubmit = async () => {
 }
 
 .form-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-color-soft);
   outline: none;
 }
 
@@ -531,7 +530,7 @@ const handleSubmit = async () => {
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #667eea;
+  color: var(--primary-color);
   z-index: 2;
 }
 
@@ -563,7 +562,7 @@ const handleSubmit = async () => {
 }
 
 .forgot-password {
-  color: #667eea;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -577,20 +576,20 @@ const handleSubmit = async () => {
 .login-button {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  border-radius: 12px;
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: var(--main-radius);
   color: white;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.15s ease;
   margin-bottom: 1rem;
 }
 
 .login-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  background: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
 }
 
 .login-button:disabled {
@@ -668,7 +667,7 @@ const handleSubmit = async () => {
 }
 
 .signup-link {
-  color: #667eea;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
@@ -731,8 +730,8 @@ const handleSubmit = async () => {
 }
 
 :deep(.p-password-input:focus) {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-color-soft);
   outline: none;
 }
 
@@ -747,11 +746,11 @@ const handleSubmit = async () => {
 
 :deep(.p-checkbox .p-checkbox-box) {
   border-radius: 4px;
-  border-color: #667eea;
+  border-color: var(--primary-color);
 }
 
 :deep(.p-checkbox .p-checkbox-box.p-highlight) {
-  background: #667eea;
-  border-color: #667eea;
+  background: var(--primary-color);
+  border-color: var(--primary-color);
 }
 </style>

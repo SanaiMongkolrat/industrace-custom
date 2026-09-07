@@ -449,7 +449,7 @@ onMounted(async () => {
 
 .action-center-header i {
   font-size: 1.5rem;
-  color: #667eea;
+  color: var(--primary-color);
 }
 
 .action-center-header h3 {

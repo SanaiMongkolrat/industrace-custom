@@ -1,6 +1,8 @@
-/* frontend/src/static/main.css */
+/* frontend/src/static/main.css
+   Theme: HMC Polymers branded. Avoids generic-AI defaults (no indigo #6366f1,
+   no purple-blue gradients). Industrial process-control palette: deep teal
+   primary, amber accent for lifecycle warnings. */
 
-/* Palette allineata a aura-dark-indigo PrimeVue */
 :root {
   --background-color: #f4f6fa;      /* contenuto chiaro */
   --card-bg: #fff;                  /* card bianche */
@@ -10,13 +12,25 @@
   --text-color: #23272f;
   --text-color-light: #6b7280;
   --border-color: #e5e7eb;
-  --primary-color: #6366f1;
-  --primary-color-dark: #4f46e5;
-  --success-color: #22c55e;
-  --danger-color: #ef4444;
-  --warning-color: #eab308;
-  --info-color: #06b6d4;
-  --main-radius: 8px;
+
+  /* Brand: deep teal — petrochemical / industrial control room. Distinct
+     from the common indigo/blue "AI app" palette. Pairs with the white HMC
+     logo on the dark sidebar and the colored HMC logo on the login screen. */
+  --primary-color: #0d7c8a;
+  --primary-color-dark: #0a6773;
+  --primary-color-soft: rgba(13, 124, 138, 0.08);
+
+  /* Amber for warnings (EoL, near-EoL) instead of the generic yellow.
+     Reads as "alarm state" without being aggressive. */
+  --warning-color: #d97706;
+  --warning-color-soft: rgba(217, 119, 6, 0.12);
+
+  --success-color: #16a34a;
+  --danger-color: #dc2626;
+  --info-color: #0284c7;
+
+  /* Tighter radius — less "soft app", more "industrial tool". */
+  --main-radius: 6px;
 }
 
 * {
@@ -142,7 +156,7 @@ a:hover {
 .form-control:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.08);
+  box-shadow: 0 0 0 3px var(--primary-color-soft);
 }
 
 /* Button Styles */
@@ -151,7 +165,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: var(--main-radius);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -160,7 +174,7 @@ a:hover {
 
 .btn-primary {
   background-color: var(--primary-color);
-  color: #23272f;
+  color: #fff;
   border: 1px solid var(--primary-color);
 }
 
@@ -176,7 +190,7 @@ a:hover {
 }
 
 .btn-outline:hover {
-  background-color: rgba(255, 215, 0, 0.08);
+  background-color: var(--primary-color-soft);
 }
 
 /* Status Badges */
