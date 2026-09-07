@@ -48,4 +48,16 @@ class ModelLifecycle(ModelLifecycleBase):
     asset_count: Optional[int] = None
     asset_type_name: Optional[str] = None
 
+    # Useful-life inheritance resolved value (model override → asset_type fallback)
+    # Added 2026-09-07: when model.useful_life_years is NULL and asset_type has it
+    # (with inheritance_enabled), this is the asset_type's value.
+    effective_useful_life: Optional[int] = Field(
+        None,
+        description="Resolved useful life in years: model.useful_life_years if set, else asset_type.useful_life_years if inherited, else NULL",
+    )
+    useful_life_source: Optional[str] = Field(
+        None,
+        description="Where the effective value came from: 'model', 'inherited_from_asset_type', or 'not_set'",
+    )
+
     model_config = ConfigDict(from_attributes=True)

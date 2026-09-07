@@ -6,6 +6,23 @@ import uuid
 from typing import List, Optional
 
 
+def _resolve_effective_useful_life(
+    ml_useful_life: Optional[int],
+    at_useful_life: Optional[int],
+    at_inheritance_enabled: Optional[bool],
+) -> tuple[Optional[int], str]:
+    """Resolve useful life: model override -> asset_type fallback (if enabled).
+
+    Returns (effective_useful_life, source) where source is one of:
+    'model', 'inherited_from_asset_type', or 'not_set'.
+    """
+    if ml_useful_life is not None:
+        return ml_useful_life, "model"
+    if at_useful_life is not None and at_inheritance_enabled:
+        return at_useful_life, "inherited_from_asset_type"
+    return None, "not_set"
+
+
 def get_model_lifecycle(db: Session, lifecycle_id: uuid.UUID) -> Optional[dict]:
     """Retrieve a model lifecycle record by ID"""
     repl_mfr = aliased(Manufacturer)
@@ -15,6 +32,8 @@ def get_model_lifecycle(db: Session, lifecycle_id: uuid.UUID) -> Optional[dict]:
             Manufacturer.name.label("manufacturer_name"),
             repl_mfr.name.label("replacement_manufacturer_name"),
             AssetType.name.label("asset_type_name"),
+            AssetType.useful_life_years.label("at_useful_life"),
+            AssetType.useful_life_inheritance_enabled.label("at_inheritance"),
         )
         .outerjoin(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
         .outerjoin(
@@ -27,7 +46,7 @@ def get_model_lifecycle(db: Session, lifecycle_id: uuid.UUID) -> Optional[dict]:
     )
     if not result:
         return None
-    lifecycle, mfr_name, repl_mfr_name, at_name = result
+    (lifecycle, mfr_name, repl_mfr_name, at_name, at_useful, at_inheritance) = result
     lifecycle_dict = lifecycle.__dict__.copy()
     lifecycle_dict["manufacturer_name"] = mfr_name
     lifecycle_dict["replacement_manufacturer_name"] = repl_mfr_name
@@ -37,6 +56,11 @@ def get_model_lifecycle(db: Session, lifecycle_id: uuid.UUID) -> Optional[dict]:
         .filter(Asset.model == lifecycle.model_name)
         .scalar()
     )
+    eff, source = _resolve_effective_useful_life(
+        lifecycle.useful_life_years, at_useful, at_inheritance
+    )
+    lifecycle_dict["effective_useful_life"] = eff
+    lifecycle_dict["useful_life_source"] = source
     return lifecycle_dict
 
 
@@ -54,6 +78,8 @@ def list_model_lifecycles(
             ModelLifecycle,
             Manufacturer.name.label("manufacturer_name"),
             AssetType.name.label("asset_type_name"),
+            AssetType.useful_life_years.label("at_useful_life"),
+            AssetType.useful_life_inheritance_enabled.label("at_inheritance"),
         )
         .outerjoin(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
         .outerjoin(AssetType, AssetType.id == ModelLifecycle.asset_type_id)
@@ -70,7 +96,7 @@ def list_model_lifecycles(
     results = query.offset(skip).limit(limit).all()
     output = []
     for row in results:
-        lifecycle, mfr_name, at_name = row
+        (lifecycle, mfr_name, at_name, at_useful, at_inheritance) = row
         lifecycle_dict = lifecycle.__dict__.copy()
         lifecycle_dict["manufacturer_name"] = mfr_name
         lifecycle_dict["asset_type_name"] = at_name
@@ -79,6 +105,11 @@ def list_model_lifecycles(
             .filter(Asset.model == lifecycle.model_name)
             .scalar()
         )
+        eff, source = _resolve_effective_useful_life(
+            lifecycle.useful_life_years, at_useful, at_inheritance
+        )
+        lifecycle_dict["effective_useful_life"] = eff
+        lifecycle_dict["useful_life_source"] = source
         output.append(lifecycle_dict)
     return output
 
