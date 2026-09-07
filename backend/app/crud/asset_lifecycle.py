@@ -15,7 +15,7 @@ from typing import Optional
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_
 
-from app.models import AssetComponent, ModelLifecycle, Manufacturer, Asset, Site, Area, AssetType
+from app.models import AssetComponent, ModelLifecycle, Manufacturer, Asset, Site, Area, AssetType, Location
 from app.crud.asset_components import _annotate_with_lifecycle
 
 
@@ -53,6 +53,7 @@ def list_asset_lifecycle_status(
             joinedload(AssetComponent.asset).joinedload(Asset.area),
             joinedload(AssetComponent.asset).joinedload(Asset.asset_type),
             joinedload(AssetComponent.model_lifecycle).joinedload(ModelLifecycle.manufacturer),
+            joinedload(AssetComponent.location),
         )
         .join(Asset, Asset.id == AssetComponent.asset_id)
         .outerjoin(ModelLifecycle, ModelLifecycle.id == AssetComponent.model_lifecycle_id)
@@ -74,6 +75,7 @@ def list_asset_lifecycle_status(
         ml = c.model_lifecycle
         mfr = ml.manufacturer if ml else None
         at = asset.asset_type if asset else None
+        loc = c.location  # may be None
 
         # Build the component dict (mirror _annotate_with_lifecycle's input shape)
         d = {
@@ -85,6 +87,7 @@ def list_asset_lifecycle_status(
             "notes": c.notes,
             "created_at": c.created_at,
             "updated_at": c.updated_at,
+            "location_id": c.location_id,
         }
 
         # Attach the joined fields the existing helper expects via setattr
@@ -129,6 +132,9 @@ def list_asset_lifecycle_status(
             "model_useful_life_years": ml_useful,
             "asset_type_useful_life_years": at_useful,
             "useful_life_inheritance_enabled": at_inheritance,
+            "location_id": str(d["location_id"]) if d.get("location_id") else None,
+            "location_name": loc.name if loc else None,
+            "location_code": loc.code if loc else None,
         })
 
     # Summary

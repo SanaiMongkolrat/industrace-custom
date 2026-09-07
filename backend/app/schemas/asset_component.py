@@ -34,6 +34,7 @@ class AssetComponentUpdate(BaseModel):
     quantity: Optional[int] = Field(None, ge=1)
     installation_date: Optional[date] = None
     notes: Optional[str] = Field(None, max_length=10000)
+    location_id: Optional[uuid.UUID] = None
 
 
 class AssetComponent(AssetComponentBase):
@@ -45,6 +46,9 @@ class AssetComponent(AssetComponentBase):
     model_lifecycle_model_name: Optional[str] = None
     model_lifecycle_asset_type_name: Optional[str] = None
     model_lifecycle_lifecycle_status: Optional[str] = None
+    # Denormalized location fields (joined from locations table for frontend convenience)
+    location_name: Optional[str] = None
+    location_code: Optional[str] = None
 
     # Lifecycle computed fields (added 2026-09-04, populated by backend)
     lifespan_years: Optional[float] = Field(
@@ -89,6 +93,10 @@ class AssetComponentLifecycleStatus(BaseModel):
     model_lifecycle_model_name: Optional[str] = None
     model_lifecycle_asset_type_name: Optional[str] = None
     model_lifecycle_lifecycle_status: Optional[str] = None
+    # Denormalized location fields (joined from locations table for frontend convenience)
+    location_id: Optional[uuid.UUID] = None
+    location_name: Optional[str] = None
+    location_code: Optional[str] = None
     effective_install_date: Optional[date] = None
     lifespan_years: Optional[float] = None
     effective_useful_life: Optional[int] = None

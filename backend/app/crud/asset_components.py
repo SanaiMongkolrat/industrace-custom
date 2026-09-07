@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func, or_, case
-from app.models import AssetComponent, ModelLifecycle, Manufacturer, AssetType, Asset
+from app.models import AssetComponent, ModelLifecycle, Manufacturer, AssetType, Asset, Location
 from app.schemas.asset_component import AssetComponentCreate, AssetComponentUpdate
 import uuid
 from datetime import date
@@ -74,22 +74,27 @@ def get_asset_component(db: Session, component_id: uuid.UUID, tenant_id: uuid.UU
             AssetType.useful_life_years.label("at_useful_life"),
             AssetType.useful_life_inheritance_enabled.label("at_inheritance"),
             ModelLifecycle.lifecycle_status.label("model_lifecycle_lifecycle_status"),
+            Location.name.label("location_name"),
+            Location.code.label("location_code"),
         )
         .join(ModelLifecycle, ModelLifecycle.id == AssetComponent.model_lifecycle_id)
         .outerjoin(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
         .outerjoin(AssetType, AssetType.id == ModelLifecycle.asset_type_id)
+        .outerjoin(Location, Location.id == AssetComponent.location_id)
         .filter(AssetComponent.id == component_id, AssetComponent.tenant_id == tenant_id)
         .first()
     )
     if not result:
         return None
-    (comp, mfr_name, model_name, ml_useful, at_name, at_useful, at_inheritance, ls) = result
+    (comp, mfr_name, model_name, ml_useful, at_name, at_useful, at_inheritance, ls, loc_name, loc_code) = result
     d = comp.__dict__.copy()
     d.pop('_sa_instance_state', None)
     d["model_lifecycle_manufacturer_name"] = mfr_name
     d["model_lifecycle_model_name"] = model_name
     d["model_lifecycle_asset_type_name"] = at_name
     d["model_lifecycle_lifecycle_status"] = ls
+    d["location_name"] = loc_name
+    d["location_code"] = loc_code
     _annotate_with_lifecycle(d, ml_useful, at_useful, at_inheritance)
     return d
 
@@ -110,10 +115,13 @@ def list_asset_components(
             AssetType.useful_life_years.label("at_useful_life"),
             AssetType.useful_life_inheritance_enabled.label("at_inheritance"),
             ModelLifecycle.lifecycle_status.label("model_lifecycle_lifecycle_status"),
+            Location.name.label("location_name"),
+            Location.code.label("location_code"),
         )
         .join(ModelLifecycle, ModelLifecycle.id == AssetComponent.model_lifecycle_id)
         .outerjoin(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
         .outerjoin(AssetType, AssetType.id == ModelLifecycle.asset_type_id)
+        .outerjoin(Location, Location.id == AssetComponent.location_id)
         .filter(AssetComponent.asset_id == asset_id)
     )
     if tenant_id:
@@ -124,13 +132,15 @@ def list_asset_components(
     results = query.all()
     output = []
     for row in results:
-        (comp, mfr_name, model_name, ml_useful, at_name, at_useful, at_inheritance, ls) = row
+        (comp, mfr_name, model_name, ml_useful, at_name, at_useful, at_inheritance, ls, loc_name, loc_code) = row
         d = comp.__dict__.copy()
         d.pop('_sa_instance_state', None)
         d["model_lifecycle_manufacturer_name"] = mfr_name
         d["model_lifecycle_model_name"] = model_name
         d["model_lifecycle_asset_type_name"] = at_name
         d["model_lifecycle_lifecycle_status"] = ls
+        d["location_name"] = loc_name
+        d["location_code"] = loc_code
         _annotate_with_lifecycle(d, ml_useful, at_useful, at_inheritance)
         output.append(d)
     return output
