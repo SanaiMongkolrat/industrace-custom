@@ -56,8 +56,6 @@ export const useAssetLifecycleDashboardStore = defineStore(
       return Object.values(filters.value).filter((v) => v !== null).length
     })
 
-    const lastFetched = ref(null) // ISO timestamp of last successful fetch
-
     async function fetchDashboard() {
       loading.value = true
       error.value = null
