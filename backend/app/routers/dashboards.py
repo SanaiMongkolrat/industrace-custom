@@ -434,3 +434,27 @@ def get_evidence_missing(
     return {
         "missing_evidence_count": 0
     }
+
+
+@router.get("/asset-lifecycle")
+def get_asset_lifecycle_dashboard(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Asset Lifecycle Monitoring Dashboard.
+
+    Returns all components for the current user's tenant with computed
+    lifecycle fields (lifespan_years, years_remaining, lifecycle_status)
+    and joined context (asset, site, area, manufacturer, model, asset_type).
+
+    Client-side interactive model: frontend loads all rows once, then filters
+    client-side via Pinia store. No pagination at current fleet size (~832
+    components); see MAX_COMPONENTS_NO_PAGINATION in
+    frontend/src/stores/assetLifecycleDashboard.js for migration trigger.
+
+    RBAC: inherits router-level require_section_access("utility") from line 30.
+    P36 trap: path /asset-lifecycle does NOT contain bulk/multi/recalculate/empty.
+    """
+    from app.crud.asset_lifecycle import list_asset_lifecycle_status
+    data = list_asset_lifecycle_status(db, current_user.tenant_id)
+    return clean_float_values(data)
