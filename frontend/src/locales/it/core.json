@@ -276,6 +276,7 @@
   "INVALID_ASSET_PHOTO_FORMAT": "Formato foto dispositivo non valido",
   "INVALID_ASSET_DOCUMENT_FORMAT": "Formato documento dispositivo non valido",
   "INVALID_USER_CREATION": "Creazione utente non valida",
+  "WEAK_PASSWORD": "La password non soddisfa i requisiti di sicurezza (minimo 12 caratteri con maiuscole, minuscole, numeri e caratteri speciali)",
   "INVALID_ROLE_CREATION": "Creazione ruolo non valida",
   "MANUFACTURER_LINKED_TO_ASSETS": "Impossibile eliminare il produttore perché è associato ad uno o più asset. Rimuovi prima l'associazione",
   "TENANT_MISMATCH": "Conflitto di tenant",

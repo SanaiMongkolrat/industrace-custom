@@ -2,6 +2,7 @@ import uuid
 from typing import List
 import csv
 from io import StringIO
+import logging
 import pandas as pd
 from fastapi import UploadFile, File
 from fastapi.responses import StreamingResponse
@@ -110,14 +111,16 @@ def create_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    from app.schemas.validators import validate_password_strength
-    
+    from app.schemas.validators import validate_password_strength, InvalidPasswordError
+
+    logger = logging.getLogger(__name__)
+
     try:
         # Validate password strength
         # Allow weak passwords only if password_change_required is True
         allow_weak = user.password_change_required if hasattr(user, 'password_change_required') else False
         validate_password_strength(user.password, allow_weak=allow_weak)
-        
+
         hashed_password = get_password_hash(user.password)
         db_user = User(
             tenant_id=current_user.tenant_id,
@@ -132,6 +135,12 @@ def create_user(
         db.commit()
         db.refresh(db_user)
         return db_user
+    except InvalidPasswordError:
+        db.rollback()
+        raise ErrorCodeException(
+            status_code=400,
+            error_code=ErrorCode.WEAK_PASSWORD,
+        )
     except IntegrityError:
         db.rollback()
         raise ErrorCodeException(
@@ -140,6 +149,7 @@ def create_user(
         )
     except Exception as e:
         db.rollback()
+        logger.exception("User creation failed: %s", e)
         raise ErrorCodeException(
             status_code=500,
             error_code=ErrorCode.INVALID_USER_CREATION,
