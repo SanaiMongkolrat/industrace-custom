@@ -127,10 +127,10 @@
     <template v-else>
       <!-- W1: KPI strip — filter-aware, lifecycle-focused -->
       <div class="kpi-strip">
-        <div class="kpi-card" @click="setFilter('lifecycleStatus', null)">
-          <div class="kpi-value">{{ summary.total }}</div>
+        <div class="kpi-card" @click="clearFilters">
+          <div class="kpi-value">{{ activeFilterCount > 0 ? filteredComponents.length : summary.total }}</div>
           <div class="kpi-label">Total Components</div>
-          <div v-if="activeFilterCount > 0" class="kpi-sub">after filters</div>
+          <div class="kpi-sub">{{ activeFilterCount > 0 ? `of ${summary.total} (click to clear)` : 'across all sites/areas' }}</div>
         </div>
         <div class="kpi-card kpi-good" @click="setFilter('lifecycleStatus', 'NORMAL')">
           <div class="kpi-value">{{ kpis.healthy }}</div>
