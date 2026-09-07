@@ -26,6 +26,12 @@
       <Column field="model_lifecycle_manufacturer_name" :header="t('common.fields.manufacturer')" sortable></Column>
       <Column field="model_lifecycle_model_name" :header="t('common.fields.model')" sortable></Column>
       <Column field="model_lifecycle_asset_type_name" :header="t('modelLifecycles.fields.assetType')" sortable></Column>
+      <Column field="location_name" :header="t('assetComponents.location')" sortable>
+        <template #body="{ data }">
+          <span v-if="data.location_name">{{ data.location_name }}</span>
+          <span v-else class="text-muted">-</span>
+        </template>
+      </Column>
       <Column field="quantity" :header="t('assetComponents.quantity')" sortable>
         <template #body="{ data }">
           <Tag :value="data.quantity" severity="info" />
@@ -116,6 +122,19 @@
           <InputNumber v-model="form.quantity" :min="1" class="w-full" />
         </div>
         <div class="field">
+          <label>{{ t('assetComponents.location') }}</label>
+          <Dropdown
+            v-model="form.location_id"
+            :options="locationOptions"
+            optionValue="id"
+            optionLabel="label"
+            :placeholder="t('common.actions.select') || 'Select location'"
+            :filter="true"
+            :showClear="true"
+            class="w-full"
+          />
+        </div>
+        <div class="field">
           <label for="installation_date">{{ t('assetComponents.installationDate') }}</label>
           <Calendar id="installation_date" v-model="form.installation_date" dateFormat="yy-mm-dd" :showIcon="true" class="w-full" />
           <small class="text-muted">
@@ -196,12 +215,14 @@ const showDeleteConfirm = ref(false)
 const deleteTargetId = ref(null)
 const editingComponent = ref(null)
 const modelOptions = ref([])
+const locationOptions = ref([])
 
 const form = ref({
   model_lifecycle_id: null,
   quantity: 1,
   installation_date: null,
-  notes: ''
+  notes: '',
+  location_id: null
 })
 
 const nullComponentCount = computed(() => {
@@ -271,6 +292,7 @@ function getUsefulLifeSourceLabel(source) {
 onMounted(() => {
   fetchComponents()
   fetchModelOptions()
+  fetchLocationOptions()
 })
 
 async function fetchComponents() {
@@ -298,6 +320,19 @@ async function fetchModelOptions() {
   }
 }
 
+async function fetchLocationOptions() {
+  try {
+    const res = await api.get('/locations', { params: { limit: 1000 } })
+    locationOptions.value = (res.data || res.data?.items || []).map(loc => ({
+      id: loc.id,
+      label: loc.code ? `${loc.name} (${loc.code})` : loc.name
+    }))
+  } catch (err) {
+    // Non-fatal: the location dropdown just stays empty
+    locationOptions.value = []
+  }
+}
+
 function editComponent(comp) {
   editingComponent.value = comp
   const existingDate = comp.installation_date ? new Date(comp.installation_date) : null
@@ -306,7 +341,8 @@ function editComponent(comp) {
     model_lifecycle_id: comp.model_lifecycle_id,
     quantity: comp.quantity,
     installation_date: prefillDate,
-    notes: comp.notes || ''
+    notes: comp.notes || '',
+    location_id: comp.location_id || null
   }
   showAddDialog.value = true
 }
@@ -315,7 +351,7 @@ function closeDialog() {
   showAddDialog.value = false
   editingComponent.value = null
   const prefillDate = props.assetInstallationDate ? new Date(props.assetInstallationDate) : null
-  form.value = { model_lifecycle_id: null, quantity: 1, installation_date: prefillDate, notes: '' }
+  form.value = { model_lifecycle_id: null, quantity: 1, installation_date: prefillDate, notes: '', location_id: null }
 }
 
 async function saveComponent() {

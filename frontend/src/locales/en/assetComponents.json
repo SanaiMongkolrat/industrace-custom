@@ -1,6 +1,7 @@
 {
   "title": "Components",
   "quantity": "Qty",
+  "location": "Location",
   "noComponents": "No components added to this asset",
   "selectModel": "Select Model",
   "fetchError": "Failed to load components",

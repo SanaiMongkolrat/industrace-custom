@@ -68,8 +68,17 @@
         :max-selected-labels="3"
         class="filter-multi"
       />
+      <MultiSelect
+        v-model="filters.locations"
+        :options="filterOptions.locations"
+        placeholder="All locations"
+        display="chip"
+        filter
+        :max-selected-labels="3"
+        class="filter-multi"
+      />
       <Button
-        v-if="filters.sites.length || filters.areas.length || filters.assetTypes.length || filters.manufacturers.length"
+        v-if="filters.sites.length || filters.areas.length || filters.assetTypes.length || filters.manufacturers.length || filters.locations.length"
         label="Clear filters"
         icon="pi pi-times"
         class="p-button-text p-button-sm clear-filters-btn"
@@ -234,6 +243,13 @@
               </template>
             </Column>
             <Column field="plant_name" header="Site" sortable />
+            <Column field="area_name" header="Area" sortable />
+            <Column field="location_name" header="Location" sortable>
+              <template #body="slotProps">
+                <span v-if="slotProps.data.location_name">{{ slotProps.data.location_name }}</span>
+                <span v-else class="muted">—</span>
+              </template>
+            </Column>
           </DataTable>
         </template>
       </Card>

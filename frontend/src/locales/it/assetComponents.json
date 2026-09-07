@@ -1,6 +1,7 @@
 {
   "title": "Componenti",
   "quantity": "Qtà",
+  "location": "Ubicazione",
   "noComponents": "Nessun componente aggiunto a questo asset",
   "selectModel": "Seleziona Modello",
   "fetchError": "Caricamento componenti fallito",

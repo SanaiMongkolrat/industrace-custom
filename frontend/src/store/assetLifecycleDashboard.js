@@ -27,6 +27,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
       areas: [], // string[] — multi-select from the filter bar
       assetTypes: [], // string[] — multi-select from the filter bar
       manufacturers: [], // string[] — multi-select from the filter bar
+      locations: [], // string[] — multi-select from the filter bar (cabinet name)
     })
 
     const filteredComponents = computed(() => {
@@ -39,6 +40,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
         if (filters.value.areas.length > 0 && !filters.value.areas.includes(c.area_name)) return false
         if (filters.value.assetTypes.length > 0 && !filters.value.assetTypes.includes(c.asset_type_name)) return false
         if (filters.value.manufacturers.length > 0 && !filters.value.manufacturers.includes(c.manufacturer)) return false
+        if (filters.value.locations.length > 0 && !filters.value.locations.includes(c.location_name)) return false
         return true
       })
     })
@@ -50,17 +52,20 @@ export const useAssetLifecycleDashboardStore = defineStore(
       const areas = new Set()
       const assetTypes = new Set()
       const manufacturers = new Set()
+      const locations = new Set()
       for (const c of components.value) {
         if (c.plant_name) sites.add(c.plant_name)
         if (c.area_name) areas.add(c.area_name)
         if (c.asset_type_name) assetTypes.add(c.asset_type_name)
         if (c.manufacturer) manufacturers.add(c.manufacturer)
+        if (c.location_name) locations.add(c.location_name)
       }
       return {
         sites: Array.from(sites).sort(),
         areas: Array.from(areas).sort(),
         assetTypes: Array.from(assetTypes).sort(),
         manufacturers: Array.from(manufacturers).sort(),
+        locations: Array.from(locations).sort(),
       }
     })
 
@@ -118,6 +123,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
         areas: [],
         assetTypes: [],
         manufacturers: [],
+        locations: [],
       }
     }
 

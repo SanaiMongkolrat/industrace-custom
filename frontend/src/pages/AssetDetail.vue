@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <!-- TABS: Rischio, Documenti, Contatti, Timeline -->
+    <!-- TABS: Components (2nd), Risk, Documents, Contatti, Timeline -->
     <TabView class="modern-tabs" :scrollable="true">
       <TabPanel>
         <template #header>
@@ -41,6 +41,14 @@
           </span>
         </template>
         <AssetDetailRiskTab ref="riskTabRef" :assetId="asset.id" />
+      </TabPanel>
+      <TabPanel>
+        <template #header>
+          <span :title="t('assets.tabs.componentsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
+            <i class="pi pi-box"></i> {{ t('assets.tabs.components') }}
+          </span>
+        </template>
+        <AssetDetailComponentsTab :assetId="asset.id" :assetInstallationDate="asset.installation_date" :canWrite="canWrite('assets')" @updated="fetchAsset" />
       </TabPanel>
       <TabPanel>
         <template #header>
@@ -137,14 +145,6 @@
           </span>
         </template>
         <AssetDetailVulnerabilitiesTab :assetId="asset.id" :canWrite="canWrite('vulnerabilities')" @updated="fetchAsset" />
-      </TabPanel>
-      <TabPanel>
-        <template #header>
-          <span :title="t('assets.tabs.componentsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-box"></i> {{ t('assets.tabs.components') }}
-          </span>
-        </template>
-        <AssetDetailComponentsTab :assetId="asset.id" :assetInstallationDate="asset.installation_date" :canWrite="canWrite('assets')" @updated="fetchAsset" />
       </TabPanel>
       <TabPanel v-if="isIec62443Enabled">
         <template #header>
