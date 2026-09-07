@@ -5,18 +5,27 @@
   Store:  src/store/assetLifecycleDashboard.js
 
   Widgets:
-    1. KPI strip (4 tiles)
-    2. Years remaining distribution (bar + donut)
-    3. Assets needing attention (sortable, filterable table)
-    4. Site x lifecycle heatmap (chartjs-chart-matrix or grouped bar fallback)
+    1. KPI strip (5 cards: Total, Healthy, Near EoL, Past Useful Life, Avg Remaining) — filter-aware
+    2. Years remaining distribution (bar) — filter-aware
+    3. Components by Site & Lifecycle Status (grouped bar) — filter-aware
+    4. Assets Needing Attention (sortable, filterable table)
     5. Status badges (inline in table)
+
+  All widgets react to the filter bar (sites/areas/assetTypes/manufacturers/locations).
 -->
 <template>
   <div class="asset-lifecycle-dashboard">
     <div class="dashboard-header">
       <div class="header-text">
         <h1>Asset Lifecycle Dashboard</h1>
-        <p class="subtitle">Years remaining and EoS status for {{ summary.total }} components</p>
+        <p class="subtitle">
+          <template v-if="activeFilterCount > 0">
+            <strong>{{ filteredComponents.length }}</strong> of {{ summary.total }} components
+          </template>
+          <template v-else>
+            Years remaining and EoS status for {{ summary.total }} components
+          </template>
+        </p>
         <p v-if="lastFetchedDisplay" class="last-fetched">Last updated: {{ lastFetchedDisplay }}</p>
       </div>
       <div class="header-actions">
@@ -116,23 +125,32 @@
     <Message v-else-if="error" severity="error">{{ error }}</Message>
 
     <template v-else>
-      <!-- W1: KPI strip -->
+      <!-- W1: KPI strip — filter-aware, lifecycle-focused -->
       <div class="kpi-strip">
-        <div class="kpi-card" @click="setFilter('usefulLifeSource', null)">
+        <div class="kpi-card" @click="setFilter('lifecycleStatus', null)">
           <div class="kpi-value">{{ summary.total }}</div>
           <div class="kpi-label">Total Components</div>
+          <div v-if="activeFilterCount > 0" class="kpi-sub">after filters</div>
         </div>
-        <div class="kpi-card kpi-good" @click="setFilter('usefulLifeSource', 'not_set')">
-          <div class="kpi-value">{{ summary.not_set }}</div>
-          <div class="kpi-label">Needs Configuration</div>
+        <div class="kpi-card kpi-good" @click="setFilter('lifecycleStatus', 'NORMAL')">
+          <div class="kpi-value">{{ kpis.healthy }}</div>
+          <div class="kpi-label">Healthy</div>
+          <div class="kpi-sub">years_remaining &gt; 2</div>
         </div>
-        <div class="kpi-card kpi-info" @click="setFilter('usefulLifeSource', null)">
-          <div class="kpi-value">{{ summary.with_data }}</div>
-          <div class="kpi-label">With Data</div>
+        <div class="kpi-card kpi-warn" @click="setFilter('lifecycleStatus', 'NORMAL')">
+          <div class="kpi-value">{{ kpis.near_eol }}</div>
+          <div class="kpi-label">Near EoL (≤ 2 yrs)</div>
+          <div class="kpi-sub">plan replacement</div>
         </div>
-        <div class="kpi-card kpi-warn" @click="setFilter('lifecycleStatus', 'END-OF-LIFE')">
-          <div class="kpi-value">{{ summary.end_of_life + summary.near_eol }}</div>
-          <div class="kpi-label">Near EoL / EoL</div>
+        <div class="kpi-card kpi-bad" @click="setFilter('lifecycleStatus', 'END-OF-LIFE')">
+          <div class="kpi-value">{{ kpis.end_of_life }}</div>
+          <div class="kpi-label">Past Useful Life</div>
+          <div class="kpi-sub">immediate action</div>
+        </div>
+        <div class="kpi-card kpi-info">
+          <div class="kpi-value">{{ kpis.avg_years_remaining }}</div>
+          <div class="kpi-label">Avg Years Remaining</div>
+          <div class="kpi-sub">across all components</div>
         </div>
       </div>
 
@@ -175,9 +193,9 @@
         </template>
       </Card>
 
-      <!-- W4: Site x lifecycle (rendered as grouped bar — matrix plugin not installable in this env) -->
+      <!-- W4: Site x lifecycle (grouped bar — filter-aware, matrix plugin not available) -->
       <Card class="widget">
-        <template #title>Site x Lifecycle Status</template>
+        <template #title>Components by Site & Lifecycle Status</template>
         <template #content>
           <div v-if="heatmapBarData.labels.length > 0" class="chart-container">
             <Bar :data="heatmapBarData" :options="heatmapBarOptions" />
@@ -316,22 +334,47 @@ function onVisibilityChange() {
   }
 }
 
-// Computed: distribution data for W2 (bar/donut)
+// Computed: KPI stats — derived from FILTERED components so they react to filter bar
+const kpis = computed(() => {
+  let healthy = 0      // years_remaining > 2
+  let near_eol = 0     // 0 < years_remaining <= 2
+  let end_of_life = 0  // years_remaining <= 0
+  let sumRemaining = 0
+  let countWithRemaining = 0
+  for (const c of filteredComponents.value) {
+    if (c.years_remaining === null) continue
+    sumRemaining += c.years_remaining
+    countWithRemaining++
+    if (c.years_remaining <= 0) end_of_life++
+    else if (c.years_remaining <= 2) near_eol++
+    else healthy++
+  }
+  return {
+    healthy,
+    near_eol,
+    end_of_life,
+    avg_years_remaining: countWithRemaining > 0 ? (sumRemaining / countWithRemaining).toFixed(1) : '—',
+  }
+})
+
+// Computed: distribution data for W2 (bar/donut) — uses filteredComponents
 const distributionData = computed(() => {
   const buckets = {
     'Past useful life': 0,
     '≤ 1 year': 0,
-    '1-3 years': 0,
-    '3-5 years': 0,
-    '> 5 years': 0,
+    '1-2 years': 0,
+    '2-5 years': 0,
+    '5-10 years': 0,
+    '> 10 years': 0,
   }
-  for (const c of components.value) {
+  for (const c of filteredComponents.value) {
     if (c.years_remaining === null) continue
     if (c.years_remaining < 0) buckets['Past useful life']++
     else if (c.years_remaining <= 1) buckets['≤ 1 year']++
-    else if (c.years_remaining <= 3) buckets['1-3 years']++
-    else if (c.years_remaining <= 5) buckets['3-5 years']++
-    else buckets['> 5 years']++
+    else if (c.years_remaining <= 2) buckets['1-2 years']++
+    else if (c.years_remaining <= 5) buckets['2-5 years']++
+    else if (c.years_remaining <= 10) buckets['5-10 years']++
+    else buckets['> 10 years']++
   }
   return {
     labels: Object.keys(buckets),
@@ -339,7 +382,7 @@ const distributionData = computed(() => {
       {
         label: 'Components',
         data: Object.values(buckets),
-        backgroundColor: ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#3b82f6'],
+        backgroundColor: ['#7f1d1d', '#ef4444', '#f59e0b', '#eab308', '#22c55e', '#3b82f6'],
       },
     ],
   }
@@ -381,18 +424,18 @@ const barOptions = {
   },
 }
 
-// Computed: Site x Lifecycle as a grouped/stacked bar chart (matrix plugin not available).
+// Computed: Site x Lifecycle as a grouped bar chart (filter-aware, matrix plugin not available).
 // Each site is a label on the X axis; one dataset per lifecycle status.
 const heatmapBarData = computed(() => {
   const sitesSet = new Set()
   const statusCounts = new Map() // key: `${site}::${status}` -> count
-  for (const c of components.value) {
+  for (const c of filteredComponents.value) {
     if (!c.plant_name) continue
     sitesSet.add(c.plant_name)
     const key = `${c.plant_name}::${c.lifecycle_status}`
     statusCounts.set(key, (statusCounts.get(key) || 0) + 1)
   }
-  const sites = Array.from(sitesSet)
+  const sites = Array.from(sitesSet).sort()
   const statusOrder = ['NORMAL', 'END-OF-LIFE']
   const colors = { 'NORMAL': '#22c55e', 'END-OF-LIFE': '#ef4444' }
   const datasets = statusOrder
@@ -542,7 +585,25 @@ onBeforeUnmount(() => {
 }
 .kpi-good .kpi-value { color: #16a34a; }
 .kpi-warn .kpi-value { color: #f59e0b; }
+.kpi-bad .kpi-value { color: #dc2626; }
 .kpi-info .kpi-value { color: #3b82f6; }
+.kpi-sub {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 1100px) {
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 700px) {
+  .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+}
 .widget {
   margin-bottom: 1.5rem;
 }
