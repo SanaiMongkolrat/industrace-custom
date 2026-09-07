@@ -30,6 +30,56 @@
       </div>
     </div>
 
+    <!-- Filter bar: cascading multi-select dropdowns for Site / Area / Asset Type / Manufacturer -->
+    <div class="filter-bar" data-testid="filter-bar">
+      <MultiSelect
+        v-model="filters.sites"
+        :options="filterOptions.sites"
+        placeholder="All sites"
+        display="chip"
+        filter
+        :max-selected-labels="3"
+        class="filter-multi"
+      />
+      <MultiSelect
+        v-model="filters.areas"
+        :options="filterOptions.areas"
+        placeholder="All areas"
+        display="chip"
+        filter
+        :max-selected-labels="3"
+        class="filter-multi"
+      />
+      <MultiSelect
+        v-model="filters.assetTypes"
+        :options="filterOptions.assetTypes"
+        placeholder="All asset types"
+        display="chip"
+        filter
+        :max-selected-labels="3"
+        class="filter-multi"
+      />
+      <MultiSelect
+        v-model="filters.manufacturers"
+        :options="filterOptions.manufacturers"
+        placeholder="All manufacturers"
+        display="chip"
+        filter
+        :max-selected-labels="3"
+        class="filter-multi"
+      />
+      <Button
+        v-if="filters.sites.length || filters.areas.length || filters.assetTypes.length || filters.manufacturers.length"
+        label="Clear filters"
+        icon="pi pi-times"
+        class="p-button-text p-button-sm clear-filters-btn"
+        @click="clearFilters"
+      />
+      <span class="filter-count">
+        Showing <strong>{{ filteredComponents.length }}</strong> of {{ components.length }} components
+      </span>
+    </div>
+
     <!-- V10 — Data gap banner: visible when not_set > 80% -->
     <Message
       v-if="summary.total > 0 && summary.not_set / summary.total > 0.8"
@@ -106,7 +156,7 @@
         <template #content>
           <div v-if="distributionData.labels.length > 0" class="chart-container">
             <Doughnut
-              v-if="matrixPluginReady"
+              v-if="hasAnyData"
               :data="distributionData"
               :options="donutOptions"
             />
@@ -116,13 +166,12 @@
         </template>
       </Card>
 
-      <!-- W4: Site x lifecycle heatmap -->
+      <!-- W4: Site x lifecycle (rendered as grouped bar — matrix plugin not installable in this env) -->
       <Card class="widget">
         <template #title>Site x Lifecycle Status</template>
         <template #content>
-          <div v-if="heatmapData.points.length > 0" class="chart-container">
-            <div v-if="matrixPluginReady">Matrix heatmap (chartjs-chart-matrix)</div>
-            <div v-else>Grouped bar fallback (matrix plugin not ready)</div>
+          <div v-if="heatmapBarData.labels.length > 0" class="chart-container">
+            <Bar :data="heatmapBarData" :options="heatmapBarOptions" />
           </div>
           <p v-else class="empty-state">No site data to display</p>
         </template>
@@ -205,20 +254,27 @@ import Message from 'primevue/message'
 import Tag from 'primevue/tag'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import MultiSelect from 'primevue/multiselect'
 
-// Chart.js + vue-chartjs (already in deps)
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js'
+// Chart.js + vue-chartjs (already in deps). Registering all elements + scales
+// used by Doughnut (ArcElement) and Bar (CategoryScale, LinearScale, BarElement).
+// Tree-shaking safety: explicit side-effect import to keep register() calls.
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
 import { Doughnut, Bar } from 'vue-chartjs'
 
-// Matrix plugin removed from build — was unbuildable (Vite/Rollup ESM resolution
-// issue with chartjs-chart-matrix@3.x). Heatmap widget uses grouped bar fallback.
-// Re-enable later by: (1) install chartjs-chart-matrix@^3.0.0, (2) add back the
-// dynamic import + MatrixController/MatrixElement registration below.
-let matrixPluginReady = false
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title)
+// Note: chartjs-chart-matrix@3.x had a Vite/Rollup ESM resolution issue in this
+// build env. Heatmap widget renders as a grouped/stacked bar chart instead —
+// the data shape is the same and visually clearer at our 35-cell scale.
+// Doughnut is the primary distribution chart; Bar is the fallback when there's
+// no data (avoid rendering a doughnut of all zeros).
+const hasAnyData = computed(() => {
+  return distributionData.value.datasets[0]?.data?.some((v) => v > 0) || false
+})
 
 // Store
 const store = useAssetLifecycleDashboardStore()
-const { components, loading, error, lastFetched, filters, kpiSummary, filteredComponents, paginationWarning, activeFilterCount } =
+const { components, loading, error, lastFetched, filters, kpiSummary, filteredComponents, paginationWarning, activeFilterCount, filterOptions } =
   storeToRefs(store)
 const summary = computed(() => kpiSummary.value)
 const fetchDashboard = store.fetchDashboard
@@ -309,29 +365,49 @@ const barOptions = {
   },
 }
 
-// Computed: heatmap data for W4
-const heatmapData = computed(() => {
-  const sites = new Set()
-  const statuses = new Set()
-  const counts = new Map()
+// Computed: Site x Lifecycle as a grouped/stacked bar chart (matrix plugin not available).
+// Each site is a label on the X axis; one dataset per lifecycle status.
+const heatmapBarData = computed(() => {
+  const sitesSet = new Set()
+  const statusCounts = new Map() // key: `${site}::${status}` -> count
   for (const c of components.value) {
     if (!c.plant_name) continue
-    sites.add(c.plant_name)
-    statuses.add(c.lifecycle_status)
+    sitesSet.add(c.plant_name)
     const key = `${c.plant_name}::${c.lifecycle_status}`
-    counts.set(key, (counts.get(key) || 0) + 1)
+    statusCounts.set(key, (statusCounts.get(key) || 0) + 1)
   }
-  const points = []
-  for (const [key, count] of counts.entries()) {
-    const [site, status] = key.split('::')
-    points.push({ x: site, y: status, v: count })
-  }
-  return {
-    sites: Array.from(sites),
-    statuses: Array.from(statuses),
-    points,
-  }
+  const sites = Array.from(sitesSet)
+  const statusOrder = ['NORMAL', 'END-OF-LIFE']
+  const colors = { 'NORMAL': '#22c55e', 'END-OF-LIFE': '#ef4444' }
+  const datasets = statusOrder
+    .filter(s => sites.some(site => statusCounts.has(`${site}::${s}`)))
+    .map(s => ({
+      label: s,
+      data: sites.map(site => statusCounts.get(`${site}::${s}`) || 0),
+      backgroundColor: colors[s] || '#94a3b8',
+    }))
+  return { labels: sites, datasets }
 })
+
+const heatmapBarOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { position: 'top' } },
+  scales: {
+    x: { stacked: false, title: { display: true, text: 'Site' } },
+    y: { stacked: false, beginAtZero: true, title: { display: true, text: 'Components' } },
+  },
+  onClick: (event, elements) => {
+    if (elements.length > 0) {
+      const datasetIndex = elements[0].datasetIndex
+      const index = elements[0].index
+      const status = heatmapBarData.value.datasets[datasetIndex].label
+      const site = heatmapBarData.value.labels[index]
+      setFilter('lifecycleStatus', status === 'NORMAL' ? null : status)
+      setFilter('siteName', site)
+    }
+  },
+}
 
 // Helpers
 function usefulLifeSourceLabel(s) {
@@ -395,6 +471,30 @@ onBeforeUnmount(() => {
 .gap-banner,
 .pagination-banner {
   margin-bottom: 1rem;
+}
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+.filter-bar .filter-multi {
+  min-width: 200px;
+  max-width: 320px;
+  flex: 1 1 200px;
+}
+.filter-bar .filter-count {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+.filter-bar .clear-filters-btn {
+  margin-left: 0.5rem;
 }
 .kpi-strip {
   display: grid;

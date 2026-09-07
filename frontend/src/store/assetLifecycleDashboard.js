@@ -18,11 +18,15 @@ export const useAssetLifecycleDashboardStore = defineStore(
     const components = ref([])
     const loading = ref(false)
     const error = ref(null)
-    const lastFetched = ref(null) // ISO timestamp of last successful fetch (returned below)
+    const lastFetched = ref(null) // ISO timestamp of last successful fetch
     const filters = ref({
       lifecycleStatus: null, // 'NORMAL' | 'END-OF-LIFE' | null
       usefulLifeSource: null, // 'model' | 'inherited_from_asset_type' | 'not_set' | null
-      siteName: null, // string | null
+      siteName: null, // string | null (legacy single-value, kept for KPI click-to-filter)
+      sites: [], // string[] — multi-select from the filter bar
+      areas: [], // string[] — multi-select from the filter bar
+      assetTypes: [], // string[] — multi-select from the filter bar
+      manufacturers: [], // string[] — multi-select from the filter bar
     })
 
     const filteredComponents = computed(() => {
@@ -30,8 +34,34 @@ export const useAssetLifecycleDashboardStore = defineStore(
         if (filters.value.lifecycleStatus && c.lifecycle_status !== filters.value.lifecycleStatus) return false
         if (filters.value.usefulLifeSource && c.useful_life_source !== filters.value.usefulLifeSource) return false
         if (filters.value.siteName && c.plant_name !== filters.value.siteName) return false
+        // Multi-select filters (any-of semantics: empty array = no filter)
+        if (filters.value.sites.length > 0 && !filters.value.sites.includes(c.plant_name)) return false
+        if (filters.value.areas.length > 0 && !filters.value.areas.includes(c.area_name)) return false
+        if (filters.value.assetTypes.length > 0 && !filters.value.assetTypes.includes(c.asset_type_name)) return false
+        if (filters.value.manufacturers.length > 0 && !filters.value.manufacturers.includes(c.manufacturer)) return false
         return true
       })
+    })
+
+    // Distinct values for filter dropdowns (derived from the full dataset, not
+    // the filtered one, so the dropdown options don't disappear as you filter).
+    const filterOptions = computed(() => {
+      const sites = new Set()
+      const areas = new Set()
+      const assetTypes = new Set()
+      const manufacturers = new Set()
+      for (const c of components.value) {
+        if (c.plant_name) sites.add(c.plant_name)
+        if (c.area_name) areas.add(c.area_name)
+        if (c.asset_type_name) assetTypes.add(c.asset_type_name)
+        if (c.manufacturer) manufacturers.add(c.manufacturer)
+      }
+      return {
+        sites: Array.from(sites).sort(),
+        areas: Array.from(areas).sort(),
+        assetTypes: Array.from(assetTypes).sort(),
+        manufacturers: Array.from(manufacturers).sort(),
+      }
     })
 
     const kpiSummary = computed(() => {
@@ -84,6 +114,10 @@ export const useAssetLifecycleDashboardStore = defineStore(
         lifecycleStatus: null,
         usefulLifeSource: null,
         siteName: null,
+        sites: [],
+        areas: [],
+        assetTypes: [],
+        manufacturers: [],
       }
     }
 
@@ -99,6 +133,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
       kpiSummary,
       paginationWarning,
       activeFilterCount,
+      filterOptions,
       // actions
       fetchDashboard,
       setFilter,
