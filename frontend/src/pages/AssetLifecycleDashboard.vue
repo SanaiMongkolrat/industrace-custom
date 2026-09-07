@@ -223,7 +223,7 @@
             <Column field="model_name" header="Model" sortable />
             <Column field="lifespan_years" header="Lifespan (yrs)" sortable>
               <template #body="slotProps">
-                {{ slotProps.data.lifespan_years !== null ? slotProps.data.lifespan_years.toFixed(2) : '—' }}
+                {{ slotProps.data.lifespan_years !== null ? slotProps.data.lifespan_years : '—' }}
               </template>
             </Column>
             <Column field="effective_useful_life" header="Useful Life" sortable>
@@ -240,13 +240,13 @@
                 <span
                   v-else-if="slotProps.data.years_remaining < 0"
                   class="years-red"
-                >{{ slotProps.data.years_remaining.toFixed(2) }}</span>
+                >{{ slotProps.data.years_remaining }}</span>
                 <span
                   v-else-if="slotProps.data.years_remaining <= 1"
                   class="years-amber"
-                >{{ slotProps.data.years_remaining.toFixed(2) }}</span>
+                >{{ slotProps.data.years_remaining }}</span>
                 <span v-else class="years-green">
-                  {{ slotProps.data.years_remaining.toFixed(2) }}
+                  {{ slotProps.data.years_remaining }}
                 </span>
               </template>
             </Column>
@@ -353,7 +353,7 @@ const kpis = computed(() => {
     healthy,
     near_eol,
     end_of_life,
-    avg_years_remaining: countWithRemaining > 0 ? (sumRemaining / countWithRemaining).toFixed(1) : '—',
+    avg_years_remaining: countWithRemaining > 0 ? Math.round(sumRemaining / countWithRemaining) : '—',
   }
 })
 

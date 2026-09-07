@@ -238,7 +238,7 @@ function formatDate(value) {
 
 function formatNumber(value) {
   if (value === null || value === undefined) return '-'
-  return Number(value).toFixed(2)
+  return Number(value).toFixed(0)
 }
 
 function isInherited(comp) {

@@ -13,7 +13,7 @@ def _compute_lifecycle_fields(install_date, useful_life_override, useful_life_in
     """Compute lifespan_years, years_remaining, and lifecycle_status."""
     if install_date is None:
         return None, None, 'NORMAL'
-    # Years since install (fractional: years + months/12)
+    # Years since install (rounded down to whole years — fractional precision is misleading)
     today = date.today()
     years_delta = today.year - install_date.year
     months_delta = today.month - install_date.month
@@ -22,14 +22,14 @@ def _compute_lifecycle_fields(install_date, useful_life_override, useful_life_in
     if months_delta < 0:
         years_delta -= 1
         months_delta += 12
-    lifespan = round(years_delta + months_delta / 12.0, 2)
+    lifespan = round(years_delta + months_delta / 12.0)
 
     # Determine effective useful life
     eff_useful = useful_life_override if useful_life_override is not None else useful_life_inherited
     if eff_useful is None:
         return lifespan, None, 'NORMAL'
 
-    years_remaining = round(eff_useful - lifespan, 2)
+    years_remaining = round(eff_useful - lifespan)
     status = 'END-OF-LIFE' if lifespan >= eff_useful else 'NORMAL'
     return lifespan, years_remaining, status
 
