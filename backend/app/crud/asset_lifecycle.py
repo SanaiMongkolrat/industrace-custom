@@ -117,6 +117,7 @@ def list_asset_lifecycle_status(
             "asset_name": asset.name if asset else None,
             "asset_tag": asset.tag if asset else None,
             "plant_name": asset.site.name if asset and asset.site else None,
+            "site_code": asset.site.code if asset and asset.site else None,
             "area_name": asset.area.name if asset and asset.area else None,
             "model_lifecycle_id": str(d["model_lifecycle_id"]) if d["model_lifecycle_id"] else None,
             "model_name": ml.model_name if ml else None,

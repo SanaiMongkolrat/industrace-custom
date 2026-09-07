@@ -260,7 +260,7 @@
                 <span v-else class="muted">In support</span>
               </template>
             </Column>
-            <Column field="plant_name" header="Site" sortable />
+            <Column field="site_code" header="Site" sortable />
             <Column field="area_name" header="Area" sortable />
             <Column field="location_name" header="Location" sortable>
               <template #body="slotProps">
@@ -430,9 +430,9 @@ const heatmapBarData = computed(() => {
   const sitesSet = new Set()
   const statusCounts = new Map() // key: `${site}::${status}` -> count
   for (const c of filteredComponents.value) {
-    if (!c.plant_name) continue
-    sitesSet.add(c.plant_name)
-    const key = `${c.plant_name}::${c.lifecycle_status}`
+    if (!c.site_code) continue
+    sitesSet.add(c.site_code)
+    const key = `${c.site_code}::${c.lifecycle_status}`
     statusCounts.set(key, (statusCounts.get(key) || 0) + 1)
   }
   const sites = Array.from(sitesSet).sort()

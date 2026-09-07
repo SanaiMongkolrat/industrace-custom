@@ -34,9 +34,9 @@ export const useAssetLifecycleDashboardStore = defineStore(
       return components.value.filter((c) => {
         if (filters.value.lifecycleStatus && c.lifecycle_status !== filters.value.lifecycleStatus) return false
         if (filters.value.usefulLifeSource && c.useful_life_source !== filters.value.usefulLifeSource) return false
-        if (filters.value.siteName && c.plant_name !== filters.value.siteName) return false
+        if (filters.value.siteName && c.site_code !== filters.value.siteName) return false
         // Multi-select filters (any-of semantics: empty array = no filter)
-        if (filters.value.sites.length > 0 && !filters.value.sites.includes(c.plant_name)) return false
+        if (filters.value.sites.length > 0 && !filters.value.sites.includes(c.site_code)) return false
         if (filters.value.areas.length > 0 && !filters.value.areas.includes(c.area_name)) return false
         if (filters.value.assetTypes.length > 0 && !filters.value.assetTypes.includes(c.asset_type_name)) return false
         if (filters.value.manufacturers.length > 0 && !filters.value.manufacturers.includes(c.manufacturer)) return false
@@ -54,7 +54,7 @@ export const useAssetLifecycleDashboardStore = defineStore(
       const manufacturers = new Set()
       const locations = new Set()
       for (const c of components.value) {
-        if (c.plant_name) sites.add(c.plant_name)
+        if (c.site_code) sites.add(c.site_code)
         if (c.area_name) areas.add(c.area_name)
         if (c.asset_type_name) assetTypes.add(c.asset_type_name)
         if (c.manufacturer) manufacturers.add(c.manufacturer)
