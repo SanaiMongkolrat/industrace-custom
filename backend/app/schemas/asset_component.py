@@ -13,6 +13,10 @@ class AssetComponentBase(BaseModel):
         description="When this component was installed in the parent asset (overwritten on field replacement)",
     )
     notes: Optional[str] = Field(None, max_length=10000)
+    location_id: Optional[uuid.UUID] = Field(
+        None,
+        description="FK to locations.id — the cabinet/location where this component is physically placed",
+    )
 
     model_config = ConfigDict(protected_namespaces=())
 

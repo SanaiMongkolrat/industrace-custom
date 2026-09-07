@@ -16,8 +16,10 @@ class AssetComponent(Base):
     quantity = Column(Integer, nullable=False, default=1)
     installation_date = Column(Date, nullable=True)
     notes = Column(Text, nullable=True)
+    location_id = Column(UUID(as_uuid=True), ForeignKey("locations.id", ondelete="SET NULL"), nullable=True, index=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
     asset = relationship("Asset", back_populates="components")
     model_lifecycle = relationship("ModelLifecycle")
+    location = relationship("Location")
