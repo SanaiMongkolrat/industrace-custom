@@ -11,7 +11,7 @@
       <!-- Logo e titolo -->
       <div class="login-brand">
         <div class="logo-container">
-          <img src="@/static/logo_black.png" alt="Industrace" class="login-logo" />
+          <img src="@/static/logo_hmc_original.png" alt="HMC Polymers" class="login-logo" />
           <div class="logo-glow"></div>
         </div>
         <h1 class="brand-title">{{ $t('login.title') }}</h1>
@@ -111,6 +111,8 @@
       </div>
     </div>
 
+    <BaseFooter />
+
     <!-- Toast per notifiche -->
     <Toast position="top-right" />
   </div>
@@ -130,6 +132,7 @@ import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Checkbox from 'primevue/checkbox'
 import Toast from 'primevue/toast'
+import BaseFooter from '../components/common/BaseFooter.vue'
 
 const email = ref('')
 const password = ref('')
@@ -309,11 +312,21 @@ const handleSubmit = async () => {
 .login-container {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  padding-bottom: 0;
+}
+
+/* Ensure footer is pushed to the bottom even when content is short */
+.login-container > .footer {
+  margin-top: auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 /* Background con pattern */

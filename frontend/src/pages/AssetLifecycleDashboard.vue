@@ -217,6 +217,17 @@
             responsiveLayout="scroll"
             class="lifecycle-table"
           >
+            <!-- Leading Edit column — quick per-row edit (no need to drill into the asset). -->
+            <Column :header="t('common.actions.edit')" v-if="canEditComponents" style="width: 4rem">
+              <template #body="slotProps">
+                <Button
+                  icon="pi pi-pencil"
+                  :aria-label="t('common.actions.edit')"
+                  class="p-button-rounded p-button-text p-button-sm"
+                  @click="openEditDialog(slotProps.data)"
+                />
+              </template>
+            </Column>
             <Column field="asset_tag" header="Asset Tag" sortable />
             <Column field="asset_name" header="Asset Name" sortable />
             <Column field="manufacturer" header="Manufacturer" sortable />
@@ -272,13 +283,25 @@
         </template>
       </Card>
     </template>
+
+    <!-- Inline edit dialog — same UX as editing from the asset detail page. -->
+    <ComponentEditDialog
+      v-model:visible="showEditDialog"
+      :component="editingComponent"
+      :asset-id="editingAssetId"
+      :asset-installation-date="editingAssetInstallationDate"
+      @saved="onDialogSaved"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAssetLifecycleDashboardStore } from '../store/assetLifecycleDashboard'
 import { storeToRefs } from 'pinia'
+import { usePermissions } from '../composables/usePermissions'
+import ComponentEditDialog from '../components/features/assets/ComponentEditDialog.vue'
 
 // PrimeVue
 import Card from 'primevue/card'
@@ -289,6 +312,13 @@ import Tag from 'primevue/tag'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import MultiSelect from 'primevue/multiselect'
+
+// i18n
+const { t } = useI18n()
+
+// Permissions (RBAC) — show edit affordances only when the user can write 'assets'
+const { canWrite } = usePermissions()
+const canEditComponents = computed(() => canWrite('assets'))
 
 // Chart.js + vue-chartjs (already in deps). Registering all elements + scales
 // used by Doughnut (ArcElement) and Bar (CategoryScale, LinearScale, BarElement).
@@ -493,6 +523,36 @@ onMounted(async () => {
   // in another tab" use case without constant polling).
   document.addEventListener('visibilitychange', onVisibilityChange)
 })
+
+// Inline edit dialog state
+const showEditDialog = ref(false)
+const editingComponent = ref(null)
+const editingAssetId = ref('')
+const editingAssetInstallationDate = ref(null)
+
+function openEditDialog(row) {
+  // The dashboard row carries the lifecycle-flattened fields we need for the
+  // shared dialog: model_lifecycle_id, quantity, installation_date, notes,
+  // location_id, and the parent asset_id (used to build the PUT URL).
+  editingComponent.value = {
+    id: row.component_id,
+    model_lifecycle_id: row.model_lifecycle_id,
+    quantity: row.quantity,
+    installation_date: row.effective_install_date || row.installation_date || null,
+    notes: row.notes || '',
+    location_id: row.location_id || null,
+  }
+  editingAssetId.value = row.asset_id
+  editingAssetInstallationDate.value = row.asset_installation_date || null
+  showEditDialog.value = true
+}
+
+async function onDialogSaved() {
+  // Component edit may change install_date / model / location / notes — all of
+  // which feed the computed lifecycle columns. Refetch the full dashboard so
+  // KPIs, charts, and the table all reflect the new values consistently.
+  await fetchDashboard()
+}
 
 // Cleanup listener when component unmounts (e.g., user navigates away)
 onBeforeUnmount(() => {

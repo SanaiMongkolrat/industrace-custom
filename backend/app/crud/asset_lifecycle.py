@@ -116,6 +116,11 @@ def list_asset_lifecycle_status(
             "asset_id": str(d["asset_id"]),
             "asset_name": asset.name if asset else None,
             "asset_tag": asset.tag if asset else None,
+            "asset_installation_date": (
+                asset.installation_date.isoformat()
+                if asset is not None and asset.installation_date is not None
+                else None
+            ),
             "plant_name": asset.site.name if asset and asset.site else None,
             "site_code": asset.site.code if asset and asset.site else None,
             "area_name": asset.area.name if asset and asset.area else None,
@@ -129,6 +134,8 @@ def list_asset_lifecycle_status(
                 if d.get("effective_install_date") is not None
                 else None
             ),
+            "quantity": d.get("quantity"),
+            "notes": d.get("notes"),
             "lifespan_years": d.get("lifespan_years"),
             "effective_useful_life": d.get("effective_useful_life"),
             "years_remaining": d.get("years_remaining"),

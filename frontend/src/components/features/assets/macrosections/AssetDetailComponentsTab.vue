@@ -17,12 +17,23 @@
           :label="t('common.actions.add')"
           icon="pi pi-plus"
           class="p-button-sm"
-          @click="showAddDialog = true"
+          @click="openAddDialog"
         />
       </div>
     </div>
 
     <DataTable :value="components" :loading="loading" paginator :rows="10" :rowsPerPageOptions="[5, 10, 25]">
+      <!-- Leading Edit column — quick edit per row. Delete stays in trailing Actions. -->
+      <Column :header="t('common.actions.edit')" v-if="canWrite" style="width: 4rem">
+        <template #body="{ data }">
+          <Button
+            icon="pi pi-pencil"
+            :aria-label="t('common.actions.edit')"
+            class="p-button-rounded p-button-text p-button-sm"
+            @click="openEditDialog(data)"
+          />
+        </template>
+      </Column>
       <Column field="model_lifecycle_manufacturer_name" :header="t('common.fields.manufacturer')" sortable></Column>
       <Column field="model_lifecycle_model_name" :header="t('common.fields.model')" sortable></Column>
       <Column field="model_lifecycle_asset_type_name" :header="t('modelLifecycles.fields.assetType')" sortable></Column>
@@ -87,7 +98,6 @@
       <Column field="notes" :header="t('common.fields.notes')"></Column>
       <Column :header="t('common.strings.actions')" v-if="canWrite">
         <template #body="{ data }">
-          <Button icon="pi pi-pencil" :aria-label="t('common.actions.edit')" class="p-button-rounded p-button-text p-button-sm" @click="editComponent(data)" />
           <Button icon="pi pi-trash" :aria-label="t('common.actions.delete')" class="p-button-rounded p-button-text p-button-danger p-button-sm" @click="deleteComponent(data.id)" />
         </template>
       </Column>
@@ -97,61 +107,14 @@
       {{ t('assetComponents.noComponents') }}
     </div>
 
-    <!-- Add/Edit Dialog -->
-    <Dialog
+    <!-- Add/Edit Dialog (shared with Asset Lifecycle Dashboard) -->
+    <ComponentEditDialog
       v-model:visible="showAddDialog"
-      :header="editingComponent ? t('common.actions.edit') : t('common.actions.add')"
-      :modal="true"
-      :style="{ width: '500px' }"
-    >
-      <div class="p-fluid">
-        <div class="field">
-          <label>{{ t('assetComponents.selectModel') }}</label>
-          <Dropdown
-            v-model="form.model_lifecycle_id"
-            :options="modelOptions"
-            optionValue="id"
-            optionLabel="label"
-            :placeholder="t('assetComponents.selectModel')"
-            :filter="true"
-            class="w-full"
-          />
-        </div>
-        <div class="field">
-          <label>{{ t('assetComponents.quantity') }}</label>
-          <InputNumber v-model="form.quantity" :min="1" class="w-full" />
-        </div>
-        <div class="field">
-          <label>{{ t('assetComponents.location') }}</label>
-          <Dropdown
-            v-model="form.location_id"
-            :options="locationOptions"
-            optionValue="id"
-            optionLabel="label"
-            :placeholder="t('common.actions.select') || 'Select location'"
-            :filter="true"
-            :showClear="true"
-            class="w-full"
-          />
-        </div>
-        <div class="field">
-          <label for="installation_date">{{ t('assetComponents.installationDate') }}</label>
-          <Calendar id="installation_date" v-model="form.installation_date" dateFormat="yy-mm-dd" :showIcon="true" class="w-full" />
-          <small class="text-muted">
-            <span v-if="props.assetInstallationDate">{{ t('assetComponents.installationDateHintDefault', { date: formatDate(props.assetInstallationDate) }) }}</span>
-            <span v-else>{{ t('assetComponents.installationDateHint') }}</span>
-          </small>
-        </div>
-        <div class="field">
-          <label>{{ t('common.fields.notes') }}</label>
-          <Textarea v-model="form.notes" :rows="3" class="w-full" />
-        </div>
-      </div>
-      <template #footer>
-        <Button :label="t('common.actions.cancel')" icon="pi pi-times" class="p-button-text" @click="closeDialog" />
-        <Button :label="t('common.actions.save')" icon="pi pi-check" :loading="saving" @click="saveComponent" />
-      </template>
-    </Dialog>
+      :component="editingComponent"
+      :asset-id="props.assetId"
+      :asset-installation-date="props.assetInstallationDate"
+      @saved="onDialogSaved"
+    />
 
     <Dialog
       v-model:visible="showBulkConfirm"
@@ -183,15 +146,12 @@ import { ref, computed, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useI18n } from 'vue-i18n'
 import api from '../../../../api/api'
-import InputNumber from 'primevue/inputnumber'
-import Textarea from 'primevue/textarea'
+import ComponentEditDialog from '../ComponentEditDialog.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Tag from 'primevue/tag'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
-import Dropdown from 'primevue/dropdown'
-import Calendar from 'primevue/calendar'
 import BaseConfirmDialog from '@/components/base/BaseConfirmDialog.vue'
 
 const props = defineProps({
@@ -207,23 +167,12 @@ const { t } = useI18n()
 
 const components = ref([])
 const loading = ref(false)
-const saving = ref(false)
 const bulkApplying = ref(false)
 const showAddDialog = ref(false)
 const showBulkConfirm = ref(false)
 const showDeleteConfirm = ref(false)
 const deleteTargetId = ref(null)
 const editingComponent = ref(null)
-const modelOptions = ref([])
-const locationOptions = ref([])
-
-const form = ref({
-  model_lifecycle_id: null,
-  quantity: 1,
-  installation_date: null,
-  notes: '',
-  location_id: null
-})
 
 const nullComponentCount = computed(() => {
   return components.value.filter(c => !c.installation_date).length
@@ -291,8 +240,6 @@ function getUsefulLifeSourceLabel(source) {
 
 onMounted(() => {
   fetchComponents()
-  fetchModelOptions()
-  fetchLocationOptions()
 })
 
 async function fetchComponents() {
@@ -308,78 +255,20 @@ async function fetchComponents() {
   }
 }
 
-async function fetchModelOptions() {
-  try {
-    const res = await api.getModelLifecycles({ limit: 500 })
-    modelOptions.value = (res.data || []).map(lc => ({
-      id: lc.id,
-      label: `${lc.manufacturer_name || '?'} - ${lc.model_name}${lc.asset_type_name ? ' (' + lc.asset_type_name + ')' : ''}`
-    }))
-  } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetComponents.fetchModelOptionsError'), life: 3000 })
-  }
-}
-
-async function fetchLocationOptions() {
-  try {
-    const res = await api.get('/locations', { params: { limit: 1000 } })
-    locationOptions.value = (res.data || res.data?.items || []).map(loc => ({
-      id: loc.id,
-      label: loc.code ? `${loc.name} (${loc.code})` : loc.name
-    }))
-  } catch (err) {
-    // Non-fatal: the location dropdown just stays empty
-    locationOptions.value = []
-  }
-}
-
-function editComponent(comp) {
+function openEditDialog(comp) {
   editingComponent.value = comp
-  const existingDate = comp.installation_date ? new Date(comp.installation_date) : null
-  const prefillDate = existingDate || (props.assetInstallationDate ? new Date(props.assetInstallationDate) : null)
-  form.value = {
-    model_lifecycle_id: comp.model_lifecycle_id,
-    quantity: comp.quantity,
-    installation_date: prefillDate,
-    notes: comp.notes || '',
-    location_id: comp.location_id || null
-  }
   showAddDialog.value = true
 }
 
-function closeDialog() {
-  showAddDialog.value = false
+function openAddDialog() {
   editingComponent.value = null
-  const prefillDate = props.assetInstallationDate ? new Date(props.assetInstallationDate) : null
-  form.value = { model_lifecycle_id: null, quantity: 1, installation_date: prefillDate, notes: '', location_id: null }
+  showAddDialog.value = true
 }
 
-async function saveComponent() {
-  saving.value = true
-  try {
-    const payload = {
-      ...form.value,
-      installation_date: form.value.installation_date
-        ? (typeof form.value.installation_date === 'string'
-            ? form.value.installation_date
-            : form.value.installation_date.toISOString().slice(0, 10))
-        : null
-    }
-    if (editingComponent.value) {
-      await api.put(`/assets/${props.assetId}/components/${editingComponent.value.id}`, payload)
-      toast.add({ severity: 'success', summary: t('common.messages.updated'), detail: t('assetComponents.updated'), life: 3000 })
-    } else {
-      await api.post(`/assets/${props.assetId}/components`, payload)
-      toast.add({ severity: 'success', summary: t('common.messages.created'), detail: t('assetComponents.created'), life: 3000 })
-    }
-    closeDialog()
-    fetchComponents()
-    emit('updated')
-  } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetComponents.saveError'), life: 3000 })
-  } finally {
-    saving.value = false
-  }
+function onDialogSaved() {
+  // Shared dialog emits 'saved' after PUT/POST success — refetch the list to reflect computed columns.
+  fetchComponents()
+  emit('updated')
 }
 
 async function deleteComponent(id) {
