@@ -94,6 +94,10 @@ def list_asset_lifecycle_status(
         # on a wrapper object — simplest path is to call the helper with
         # a dict copy and then override the join field names.
         ml_useful = ml.useful_life_years if ml else None
+        # BUGFIX 2026-09-07: Use MODEL's asset_type, not asset's. Top-level assets
+        # are typed as DCS-System/ESD-System/GDS-System with useful_life_years NULL;
+        # the granular asset_type (PDB, PLC, Relay) lives on the model_lifecycle.
+        at = ml.asset_type if ml else None
         at_useful = at.useful_life_years if at else None
         at_inheritance = at.useful_life_inheritance_enabled if at else None
 
@@ -118,6 +122,7 @@ def list_asset_lifecycle_status(
             "model_name": ml.model_name if ml else None,
             "manufacturer": mfr.name if mfr else None,
             "asset_type_name": at.name if at else None,
+            "container_type_name": (asset.asset_type.name if asset and asset.asset_type else None),
             "effective_install_date": (
                 d["effective_install_date"].isoformat()
                 if d.get("effective_install_date") is not None
