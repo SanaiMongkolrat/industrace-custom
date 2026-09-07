@@ -1,6 +1,7 @@
 {
-"navigation": {
+  "navigation": {
     "dashboard": "Dashboard",
+    "assetLifecycle": "Asset Lifecycle",
     "assets": "Dispositivi",
     "assetReviews": "Review Asset",
     "securityZones": "Security Zones",
@@ -29,15 +30,15 @@
     "settings": "Impostazioni",
     "logout": "Esci",
     "utility": "Utility"
-    },
-"section": {
+  },
+  "section": {
     "management": "Gestione",
     "registry": "Inventario",
     "utility": "Utility",
     "isa62443": "ISA/IEC 62443"
-    },
-"sidebar": {
+  },
+  "sidebar": {
     "collapse": "Chiudi barra laterale",
     "expand": "Espandi barra laterale"
-    }
+  }
 }

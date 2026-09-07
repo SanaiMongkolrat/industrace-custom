@@ -198,20 +198,11 @@ import Column from 'primevue/column'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js'
 import { Doughnut, Bar } from 'vue-chartjs'
 
-// Matrix plugin — try to load; fall back to bar if not available
+// Matrix plugin removed from build — was unbuildable (Vite/Rollup ESM resolution
+// issue with chartjs-chart-matrix@3.x). Heatmap widget uses grouped bar fallback.
+// Re-enable later by: (1) install chartjs-chart-matrix@^3.0.0, (2) add back the
+// dynamic import + MatrixController/MatrixElement registration below.
 let matrixPluginReady = false
-let MatrixController, MatrixElement
-try {
-  const matrix = await import('chartjs-chart-matrix')
-  MatrixController = matrix.MatrixController
-  MatrixElement = matrix.MatrixElement
-  ChartJS.register(MatrixController, MatrixElement, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
-  matrixPluginReady = true
-} catch (err) {
-  console.warn('[AssetLifecycleDashboard] chartjs-chart-matrix not available, falling back to bar charts', err)
-  ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
-  matrixPluginReady = false
-}
 
 // Store
 const store = useAssetLifecycleDashboardStore()

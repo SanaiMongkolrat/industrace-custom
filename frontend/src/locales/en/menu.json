@@ -1,6 +1,7 @@
 {
   "navigation": {
     "dashboard": "Dashboard",
+    "assetLifecycle": "Asset Lifecycle",
     "assets": "Assets",
     "assetReviews": "Asset Reviews",
     "securityZones": "Security Zones",

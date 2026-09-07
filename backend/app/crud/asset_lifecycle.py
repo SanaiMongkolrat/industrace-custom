@@ -54,6 +54,11 @@ def list_asset_lifecycle_status(
             joinedload(AssetComponent.asset).joinedload(Asset.asset_type),
             joinedload(AssetComponent.model_lifecycle).joinedload(ModelLifecycle.manufacturer),
         )
+        .join(Asset, Asset.id == AssetComponent.asset_id)
+        .outerjoin(ModelLifecycle, ModelLifecycle.id == AssetComponent.model_lifecycle_id)
+        .join(Manufacturer, Manufacturer.id == ModelLifecycle.manufacturer_id)
+        .outerjoin(Site, Site.id == Asset.site_id)
+        .outerjoin(Area, Area.id == Asset.area_id)
         .filter(
             and_(
                 AssetComponent.tenant_id == tenant_id,

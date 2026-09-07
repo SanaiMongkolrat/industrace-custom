@@ -56,7 +56,8 @@ const menuSections = computed(() => {
   sections.push({
     label: 'Dashboard',
     items: [
-      { label: t('menu.navigation.dashboard'), icon: 'pi-chart-bar', to: '/' }
+      { label: t('menu.navigation.dashboard'), icon: 'pi-chart-bar', to: '/' },
+      { label: t('menu.navigation.assetLifecycle', 'Asset Lifecycle'), icon: 'pi-calendar-clock', to: '/utility/asset-lifecycle' }
     ]
   })
 
