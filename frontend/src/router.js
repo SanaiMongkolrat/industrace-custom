@@ -16,6 +16,7 @@ import Sites from './pages/Sites.vue'
 import Areas from './pages/Areas.vue'
 import Users from './pages/Users.vue'
 import Utility from './pages/Utility.vue'
+import AssetLifecycleDashboard from './pages/AssetLifecycleDashboard.vue'
 import LifecycleStatuses from './pages/LifecycleStatuses.vue'
 import AssetStatuses from './pages/AssetStatuses.vue'
 import Locations from './pages/Locations.vue'
@@ -67,6 +68,7 @@ const routes = [
   { path: '/asset-types/:id', name: 'AssetTypeDetail', component: AssetTypeDetail, meta: { requiresAuth: true } },
   { path: '/model-lifecycles', name: 'ModelLifecycles', component: () => import('./pages/ModelLifecycles.vue'), meta: { requiresAuth: true, requiresPermission: 'model_lifecycles' } },  
   { path: '/utility', name: 'Utility', component: Utility, meta: { requiresAuth: true } },
+  { path: '/utility/asset-lifecycle', name: 'AssetLifecycleDashboard', component: AssetLifecycleDashboard, meta: { requiresAuth: true } },
   { path: '/users', name: 'Users', component: Users, meta: { requiresAuth: true } },
   { path: '/users/:id', name: 'UserDetail', component: () => import('./pages/UserDetail.vue'), meta: { requiresAuth: true } },
   { path: '/asset-statuses', name: 'AssetStatuses', component: AssetStatuses, meta: { requiresAuth: true } },

@@ -208,6 +208,9 @@ export default {
   getEvidenceMissing() {
     return api.get('/dashboard/evidence-missing')
   },
+  getAssetLifecycleDashboard() {
+    return api.get('/dashboard/asset-lifecycle')
+  },
   getAssetConnections(id) {
     return api.get(`/assets/${id}/connections`)
   },
